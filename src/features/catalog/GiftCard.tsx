@@ -3,9 +3,9 @@ import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { selectGiftByCode } from '@/domain/selectors'
-import type { CatalogEntry, GiftVisualState } from '@/domain/types'
 import { Bath, BedDouble, CookingPot, Lamp, WashingMachine } from 'lucide-react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { getGiftAvailabilityPresentation } from './gift-presentation'
 
 const categoryIcons = {
   'cooking-pot': CookingPot,
@@ -13,22 +13,6 @@ const categoryIcons = {
   bath: Bath,
   'washing-machine': WashingMachine,
   lamp: Lamp,
-}
-
-function getAvailabilityLabel(entry: CatalogEntry) {
-  const { availability } = entry
-  if (availability.visualState === 'available') return 'Disponível'
-  if (availability.visualState === 'partially-reserved') {
-    return `${availability.remainingQuantity} de ${availability.desiredQuantity} disponíveis`
-  }
-  if (availability.visualState === 'received') return 'Presente recebido'
-  return 'Indisponível'
-}
-
-function getBadgeTone(visualState: GiftVisualState) {
-  if (visualState === 'available' || visualState === 'partially-reserved') return 'available'
-  if (visualState === 'received') return 'received'
-  return 'reserved'
 }
 
 export interface GiftCardProps {
@@ -45,6 +29,7 @@ export function GiftCard({ code }: GiftCardProps) {
   const Icon = categoryIcons[entry.category.icon]
   const canReserve = entry.availability.canReserve
   const actionLabel = canReserve ? 'Quero dar este presente' : 'Ver detalhes'
+  const availabilityPresentation = getGiftAvailabilityPresentation(entry.availability)
 
   return (
     <Card className="gift-card">
@@ -55,9 +40,7 @@ export function GiftCard({ code }: GiftCardProps) {
         <div className="gift-card__content">
           <p className="gift-card__category">{entry.category.name}</p>
           <h2>{entry.gift.name}</h2>
-          <Badge tone={getBadgeTone(entry.availability.visualState)}>
-            {getAvailabilityLabel(entry)}
-          </Badge>
+          <Badge tone={availabilityPresentation.tone}>{availabilityPresentation.label}</Badge>
           <p className="gift-card__preference">{entry.gift.preferences[0]}</p>
         </div>
         <div className="gift-card__action">

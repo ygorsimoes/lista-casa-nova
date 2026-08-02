@@ -72,4 +72,23 @@ describe('CatalogPage', () => {
       'Cafeteira elétrica',
     ])
   })
+
+  it('usa o elemento search para reunir o campo de busca', () => {
+    const { container } = renderWithApp(<CatalogPage />)
+
+    expect(container.querySelector('search')).toContainElement(
+      screen.getByRole('searchbox', { name: /buscar um presente/i }),
+    )
+  })
+
+  it('oferece CTAs do hero com alvos próprios para toque', () => {
+    renderWithApp(<CatalogPage />)
+
+    expect(screen.getByRole('link', { name: /contribuir com qualquer valor/i })).toHaveClass(
+      'catalog-hero__link',
+    )
+    expect(screen.getByRole('link', { name: /ver lista para impressão/i })).toHaveClass(
+      'catalog-hero__link',
+    )
+  })
 })

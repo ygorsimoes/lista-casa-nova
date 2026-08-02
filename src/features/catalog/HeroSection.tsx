@@ -36,8 +36,12 @@ export function HeroSection({ message, title }: HeroSectionProps) {
       </section>
 
       <div className="catalog-hero__links" aria-label="Outras opções da lista">
-        <Link to="/pix">Contribuir com qualquer valor</Link>
-        <Link to="/pdf">Ver lista para impressão</Link>
+        <Link className="catalog-hero__link" to="/pix">
+          Contribuir com qualquer valor
+        </Link>
+        <Link className="catalog-hero__link" to="/pdf">
+          Ver lista para impressão
+        </Link>
       </div>
     </section>
   )

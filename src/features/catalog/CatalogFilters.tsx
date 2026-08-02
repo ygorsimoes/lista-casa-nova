@@ -25,7 +25,7 @@ export function CatalogFilters({
 }: CatalogFiltersProps) {
   return (
     <section className="catalog-filters" aria-label="Filtros do catálogo">
-      <div className="catalog-search" role="search">
+      <search className="catalog-search">
         <Search className="catalog-search__icon" aria-hidden="true" size={22} />
         <Input
           type="search"
@@ -44,7 +44,7 @@ export function CatalogFilters({
             <X aria-hidden="true" size={20} />
           </button>
         ) : null}
-      </div>
+      </search>
       <CategoryList
         categories={categories}
         selectedSlug={categorySlug}
