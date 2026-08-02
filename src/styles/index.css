@@ -1,0 +1,32 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-sand-50: #fbf8f1;
+  --color-sand-100: #f3ecdf;
+  --color-graphite-700: #3f3b37;
+  --color-graphite-900: #211f1d;
+  --color-terracotta-500: #b76549;
+  --color-terracotta-600: #995039;
+  --color-olive-500: #6f7b52;
+  --color-olive-700: #4d5838;
+}
+
+:root {
+  color-scheme: light;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-terracotta-500);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
