@@ -1,4 +1,5 @@
 import { DemoStateProvider } from '@/app/DemoStateProvider'
+import { ToastProvider } from '@/components/ui/Toast'
 import { render } from '@testing-library/react'
 import type { ReactElement } from 'react'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
@@ -15,9 +16,11 @@ export function renderWithApp(
   return render(
     <MemoryRouter initialEntries={[route]}>
       <DemoStateProvider>
-        <Routes>
-          <Route path={routePath} element={ui} />
-        </Routes>
+        <ToastProvider>
+          <Routes>
+            <Route path={routePath} element={ui} />
+          </Routes>
+        </ToastProvider>
       </DemoStateProvider>
     </MemoryRouter>,
   )
