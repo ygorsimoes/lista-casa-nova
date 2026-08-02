@@ -7,12 +7,20 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   error?: string
 }
 
-export function Input({ className, error, hint, id, label, ...props }: InputProps) {
+export function Input({
+  'aria-describedby': consumerDescribedBy,
+  className,
+  error,
+  hint,
+  id,
+  label,
+  ...props
+}: InputProps) {
   const generatedId = useId()
   const inputId = id ?? generatedId
   const hintId = `${inputId}-hint`
   const errorId = `${inputId}-error`
-  const describedBy = [props['aria-describedby'], hint ? hintId : null, error ? errorId : null]
+  const describedBy = [consumerDescribedBy, hint ? hintId : null, error ? errorId : null]
     .filter(Boolean)
     .join(' ')
 
@@ -24,9 +32,9 @@ export function Input({ className, error, hint, id, label, ...props }: InputProp
       <input
         id={inputId}
         className={cn('ui-input', error && 'ui-input--error', className)}
+        {...props}
         aria-describedby={describedBy || undefined}
         aria-invalid={error ? true : undefined}
-        {...props}
       />
       {hint ? (
         <p id={hintId} className="ui-field__hint">

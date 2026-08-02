@@ -7,12 +7,20 @@ export interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElemen
   error?: string
 }
 
-export function Textarea({ className, error, hint, id, label, ...props }: TextareaProps) {
+export function Textarea({
+  'aria-describedby': consumerDescribedBy,
+  className,
+  error,
+  hint,
+  id,
+  label,
+  ...props
+}: TextareaProps) {
   const generatedId = useId()
   const textareaId = id ?? generatedId
   const hintId = `${textareaId}-hint`
   const errorId = `${textareaId}-error`
-  const describedBy = [props['aria-describedby'], hint ? hintId : null, error ? errorId : null]
+  const describedBy = [consumerDescribedBy, hint ? hintId : null, error ? errorId : null]
     .filter(Boolean)
     .join(' ')
 
@@ -24,9 +32,9 @@ export function Textarea({ className, error, hint, id, label, ...props }: Textar
       <textarea
         id={textareaId}
         className={cn('ui-textarea', error && 'ui-input--error', className)}
+        {...props}
         aria-describedby={describedBy || undefined}
         aria-invalid={error ? true : undefined}
-        {...props}
       />
       {hint ? (
         <p id={hintId} className="ui-field__hint">

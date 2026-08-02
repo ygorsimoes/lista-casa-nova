@@ -7,30 +7,36 @@ export interface CheckboxProps extends Omit<InputHTMLAttributes<HTMLInputElement
   error?: string
 }
 
-export function Checkbox({ className, error, hint, id, label, ...props }: CheckboxProps) {
+export function Checkbox({
+  'aria-describedby': consumerDescribedBy,
+  className,
+  error,
+  hint,
+  id,
+  label,
+  ...props
+}: CheckboxProps) {
   const generatedId = useId()
   const checkboxId = id ?? generatedId
   const hintId = `${checkboxId}-hint`
   const errorId = `${checkboxId}-error`
-  const describedBy = [props['aria-describedby'], hint ? hintId : null, error ? errorId : null]
+  const describedBy = [consumerDescribedBy, hint ? hintId : null, error ? errorId : null]
     .filter(Boolean)
     .join(' ')
 
   return (
     <div className="ui-field">
-      <div className="ui-checkbox-row">
+      <label className="ui-checkbox-row">
         <input
           id={checkboxId}
           type="checkbox"
           className={cn('ui-checkbox', error && 'ui-checkbox--error', className)}
+          {...props}
           aria-describedby={describedBy || undefined}
           aria-invalid={error ? true : undefined}
-          {...props}
         />
-        <label className="ui-checkbox__label" htmlFor={checkboxId}>
-          {label}
-        </label>
-      </div>
+        <span className="ui-checkbox__label">{label}</span>
+      </label>
       {hint ? (
         <p id={hintId} className="ui-field__hint">
           {hint}

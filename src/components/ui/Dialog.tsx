@@ -1,6 +1,14 @@
 import { Button } from '@/components/ui/Button'
 import { cn } from '@/lib/cn'
-import { useEffect, useId, useRef, type MouseEvent, type ReactNode, type RefObject } from 'react'
+import {
+  useEffect,
+  useId,
+  useRef,
+  type KeyboardEvent,
+  type MouseEvent,
+  type ReactNode,
+  type RefObject,
+} from 'react'
 
 export interface DialogProps {
   open: boolean
@@ -52,6 +60,38 @@ export function Dialog({
     if (event.target === event.currentTarget) onClose()
   }
 
+  function handleKeyDown(event: KeyboardEvent<HTMLDialogElement>) {
+    if (event.key === 'Escape') {
+      event.preventDefault()
+      onClose()
+      return
+    }
+
+    if (event.key !== 'Tab') return
+
+    const dialog = dialogRef.current
+    if (!dialog) return
+    const focusableElements = Array.from(
+      dialog.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      ),
+    )
+    const firstFocusable = focusableElements.at(0)
+    const lastFocusable = focusableElements.at(-1)
+
+    if (!firstFocusable || !lastFocusable) return
+
+    if (event.shiftKey && document.activeElement === firstFocusable) {
+      event.preventDefault()
+      lastFocusable.focus()
+    }
+
+    if (!event.shiftKey && document.activeElement === lastFocusable) {
+      event.preventDefault()
+      firstFocusable.focus()
+    }
+  }
+
   return (
     <dialog
       ref={dialogRef}
@@ -66,12 +106,7 @@ export function Dialog({
         onClose()
       }}
       onClick={handleBackdropClick}
-      onKeyDown={(event) => {
-        if (event.key === 'Escape') {
-          event.preventDefault()
-          onClose()
-        }
-      }}
+      onKeyDown={handleKeyDown}
     >
       <div className={cn('ui-dialog__surface')}>
         <div className="ui-dialog__header">
