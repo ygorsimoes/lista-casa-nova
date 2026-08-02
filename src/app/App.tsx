@@ -1,7 +1,19 @@
+import { DemoStateProvider } from '@/app/DemoStateProvider'
+import { InitialLoadingGate } from '@/app/InitialLoadingGate'
+import { AppRoutes } from '@/app/routes'
+import { ToastProvider } from '@/components/ui/Toast'
+import { HashRouter } from 'react-router-dom'
+
 export function App() {
   return (
-    <main>
-      <h1>Lista da nossa casa nova</h1>
-    </main>
+    <HashRouter>
+      <DemoStateProvider>
+        <ToastProvider>
+          <InitialLoadingGate>
+            <AppRoutes />
+          </InitialLoadingGate>
+        </ToastProvider>
+      </DemoStateProvider>
+    </HashRouter>
   )
 }

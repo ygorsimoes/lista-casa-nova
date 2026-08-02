@@ -1,0 +1,49 @@
+import { DemoStateProvider } from '@/app/DemoStateProvider'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { describe, expect, it } from 'vitest'
+import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom'
+import { GiftCard } from './GiftCard'
+
+function LocationProbe() {
+  const location = useLocation()
+  return <output>{location.pathname}</output>
+}
+
+function renderCard(code: string) {
+  return render(
+    <MemoryRouter initialEntries={['/']}>
+      <DemoStateProvider>
+        <Routes>
+          <Route path="/" element={<GiftCard code={code} />} />
+          <Route path="/item/:code" element={<LocationProbe />} />
+        </Routes>
+      </DemoStateProvider>
+    </MemoryRouter>,
+  )
+}
+
+describe('GiftCard', () => {
+  it('mostra ação reservável e rótulo disponível para a chaleira', () => {
+    renderCard('CZ-001')
+
+    expect(screen.getByText('Disponível')).toBeVisible()
+    expect(screen.getByRole('button', { name: /quero dar este presente: chaleira/i })).toBeVisible()
+  })
+
+  it('mostra detalhes e indisponibilidade para toalhas recebidas', () => {
+    renderCard('BN-002')
+
+    expect(screen.getByText('Presente recebido')).toBeVisible()
+    expect(screen.getByRole('button', { name: /ver detalhes: jogo de toalhas/i })).toBeVisible()
+  })
+
+  it('navega para o item ao acionar o cartão', async () => {
+    const user = userEvent.setup()
+    renderCard('CZ-001')
+
+    await user.click(screen.getByRole('button', { name: /chaleira/i }))
+
+    expect(screen.getByRole('status')).toHaveTextContent('/item/CZ-001')
+  })
+})
