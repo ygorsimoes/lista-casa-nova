@@ -1,7 +1,19 @@
 import { createInitialDemoState } from '@/data/initial-state'
-import { demoReducer } from '@/domain/demo-reducer'
+import { demoReducer, type DemoAction } from '@/domain/demo-reducer'
 import { selectAvailability } from '@/domain/selectors'
 import { describe, expect, it } from 'vitest'
+
+function deepFreeze<T>(value: T): T {
+  if (value !== null && typeof value === 'object') {
+    Object.freeze(value)
+
+    for (const nestedValue of Object.values(value)) {
+      deepFreeze(nestedValue)
+    }
+  }
+
+  return value
+}
 
 describe('demoReducer', () => {
   it('cria uma reserva e reduz a disponibilidade', () => {
@@ -84,13 +96,44 @@ describe('demoReducer', () => {
     expect(unknown.reservations).toBe(before.reservations)
   })
 
-  it('altera somente a reserva alvo nas transições permitidas', () => {
-    const before = createInitialDemoState()
-    const purchased = demoReducer(before, {
+  it.each([
+    [
+      'marca como comprada',
+      { type: 'reservation/purchased', token: 'reserva-demo-valida' },
+      'purchased',
+    ],
+    ['cancela', { type: 'reservation/cancelled', token: 'reserva-demo-valida' }, 'cancelled'],
+    [
+      'marca como recebida',
+      { type: 'reservation/received', token: 'reserva-demo-valida' },
+      'received',
+    ],
+  ] satisfies readonly [string, DemoAction, string][])(
+    'preserva o estado anterior quando %s uma reserva',
+    (_description, action, expectedStatus) => {
+      const before = deepFreeze(createInitialDemoState())
+      const beforeSnapshot = structuredClone(before)
+      const after = demoReducer(before, action)
+      const targetIndex = before.reservations.findIndex(
+        ({ token }) => token === 'reserva-demo-valida',
+      )
+
+      expect(before).toEqual(beforeSnapshot)
+      expect(after).not.toBe(before)
+      expect(after.reservations).not.toBe(before.reservations)
+      expect(after.reservations[targetIndex]).not.toBe(before.reservations[targetIndex])
+      expect(after.reservations[targetIndex]).toMatchObject({ status: expectedStatus })
+    },
+  )
+
+  it('preserva o estado comprado antes de marcar a reserva como recebida', () => {
+    const purchased = demoReducer(createInitialDemoState(), {
       type: 'reservation/purchased',
       token: 'reserva-demo-valida',
     })
-    const received = demoReducer(purchased, {
+    const before = deepFreeze(purchased)
+    const beforeSnapshot = structuredClone(before)
+    const after = demoReducer(before, {
       type: 'reservation/received',
       token: 'reserva-demo-valida',
     })
@@ -98,11 +141,10 @@ describe('demoReducer', () => {
       ({ token }) => token === 'reserva-demo-valida',
     )
 
-    expect(purchased.reservations[targetIndex]).toMatchObject({ status: 'purchased' })
-    expect(received.reservations[targetIndex]).toMatchObject({ status: 'received' })
-    expect(received.reservations.filter((_, index) => index !== targetIndex)).toEqual(
-      before.reservations.filter((_, index) => index !== targetIndex),
-    )
+    expect(before).toEqual(beforeSnapshot)
+    expect(before.reservations[targetIndex]).toMatchObject({ status: 'purchased' })
+    expect(after.reservations[targetIndex]).toMatchObject({ status: 'received' })
+    expect(after.reservations[targetIndex]).not.toBe(before.reservations[targetIndex])
   })
 
   it('cancela uma reserva e libera sua disponibilidade', () => {
@@ -138,7 +180,7 @@ describe('demoReducer', () => {
     expect(unknown).toBe(before)
   })
 
-  it('limpa o resultado, alterna o acesso administrativo e atualiza apenas ajustes editáveis', () => {
+  it('limpa o resultado e alterna o acesso administrativo', () => {
     const before = createInitialDemoState()
     const withOutcome = demoReducer(before, {
       type: 'reservation/submitted',
@@ -147,7 +189,16 @@ describe('demoReducer', () => {
     const dismissed = demoReducer(withOutcome, { type: 'reservation/outcomeDismissed' })
     const unlocked = demoReducer(dismissed, { type: 'admin/unlocked' })
     const locked = demoReducer(unlocked, { type: 'admin/locked' })
-    const updated = demoReducer(locked, {
+
+    expect(dismissed.reservationOutcome).toBeNull()
+    expect(unlocked.adminUnlocked).toBe(true)
+    expect(locked.adminUnlocked).toBe(false)
+  })
+
+  it('atualiza configurações sem mutar o estado anterior', () => {
+    const before = deepFreeze(createInitialDemoState())
+    const beforeSnapshot = structuredClone(before)
+    const after = demoReducer(before, {
       type: 'settings/updated',
       settings: {
         title: 'Nosso novo lar',
@@ -156,15 +207,15 @@ describe('demoReducer', () => {
       },
     })
 
-    expect(dismissed.reservationOutcome).toBeNull()
-    expect(unlocked.adminUnlocked).toBe(true)
-    expect(locked.adminUnlocked).toBe(false)
-    expect(updated.settings).toEqual({
+    expect(before).toEqual(beforeSnapshot)
+    expect(after).not.toBe(before)
+    expect(after.settings).not.toBe(before.settings)
+    expect(after.settings).toEqual({
       ...before.settings,
       title: 'Nosso novo lar',
       message: 'Uma mensagem demonstrativa atualizada.',
       footer: 'Com carinho.',
     })
-    expect(updated.settings.pix).toBe(before.settings.pix)
+    expect(after.settings.pix).toBe(before.settings.pix)
   })
 })
