@@ -45,10 +45,23 @@ describe('PdfPreviewPage', () => {
 
     expect(createObjectUrl).not.toHaveBeenCalled()
     expect(print).not.toHaveBeenCalled()
-    expect(
-      screen
-        .getAllByRole('status')
-        .some((status) => /nenhum arquivo foi gerado/i.test(status.textContent ?? '')),
-    ).toBe(true)
+    expect(screen.getByText('Download simulado: nenhum arquivo foi gerado.')).toBeVisible()
+  })
+
+  it('mantém itens disponíveis e remove os indisponíveis ao filtrar a prévia', async () => {
+    const user = userEvent.setup()
+    renderWithApp(<PdfPreviewPage />, { route: '/pdf' })
+
+    expect(screen.getByText('Chaleira')).toBeVisible()
+    expect(screen.getByText('Cesto de roupas')).toBeVisible()
+
+    await user.click(screen.getByRole('button', { name: 'Disponíveis' }))
+
+    expect(screen.getByRole('button', { name: 'Disponíveis' })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    )
+    expect(screen.getByText('Chaleira')).toBeVisible()
+    expect(screen.queryByText('Cesto de roupas')).not.toBeInTheDocument()
   })
 })
