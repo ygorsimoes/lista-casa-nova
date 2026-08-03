@@ -22,6 +22,8 @@ describe('ManageReservationPage', () => {
     expect(status).toHaveTextContent(/comprado/i)
     expect(screen.getByRole('heading', { name: /estado da reserva/i })).toHaveFocus()
     expect(screen.queryByRole('button', { name: /já comprei/i })).not.toBeInTheDocument()
+    expect(screen.getByText(/reserva marcada como comprada/i)).toBeVisible()
+    expect(status).toHaveTextContent(/comprado/i)
   })
 
   it('cancela uma reserva apenas após confirmar e move o foco para o novo estado', async () => {
@@ -42,6 +44,10 @@ describe('ManageReservationPage', () => {
     expect(
       screen.queryByRole('button', { name: /cancelar minha reserva/i }),
     ).not.toBeInTheDocument()
+    expect(screen.getByText(/^reserva cancelada\.$/i)).toBeVisible()
+    expect(screen.getByRole('status', { name: /estado da reserva/i })).toHaveTextContent(
+      /reserva cancelada/i,
+    )
   })
 
   it('mantém a reserva quando a pessoa desiste do cancelamento', async () => {

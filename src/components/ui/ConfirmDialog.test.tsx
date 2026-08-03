@@ -52,4 +52,23 @@ describe('ConfirmDialog', () => {
     expect(onConfirm).not.toHaveBeenCalled()
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
+
+  it('fecha com Escape sem desmontar o acionador nem confirmar a ação', async () => {
+    const user = userEvent.setup()
+    const onConfirm = vi.fn()
+    render(<ConfirmDialogHarness onConfirm={onConfirm} />)
+
+    const trigger = screen.getByRole('button', { name: /cancelar minha reserva/i })
+    await user.click(trigger)
+
+    expect(screen.getByRole('dialog', { name: /cancelar reserva/i })).toHaveTextContent(
+      /você quer cancelar a reserva da chaleira/i,
+    )
+    await user.keyboard('{Escape}')
+
+    expect(onConfirm).not.toHaveBeenCalled()
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    expect(trigger).toBeInTheDocument()
+    expect(trigger).toHaveFocus()
+  })
 })
