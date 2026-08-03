@@ -28,6 +28,12 @@ describe('AppRoutes', () => {
     expect(screen.getByRole('heading', { name: heading })).toBeVisible()
   })
 
+  it('carrega a prévia de impressão pela rota sob demanda', async () => {
+    renderWithApp(<AppRoutes />, { route: '/pdf' })
+
+    expect(await screen.findByRole('heading', { name: /prévia para impressão/i })).toBeVisible()
+  })
+
   it('abre detalhes sobre o catálogo e devolve o foco ao cartão ao fechar', async () => {
     const user = userEvent.setup()
     renderWithApp(<AppRoutes />)

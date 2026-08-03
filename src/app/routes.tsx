@@ -7,7 +7,10 @@ import { NotFoundPage } from '@/features/not-found/NotFoundPage'
 import { PixPage } from '@/features/pix/PixPage'
 import { ManageReservationPage } from '@/features/reservations/ManageReservationPage'
 import type { Location } from 'react-router-dom'
+import { lazy, Suspense } from 'react'
 import { Route, Routes, useLocation } from 'react-router-dom'
+
+const PdfPreviewPage = lazy(() => import('@/features/pdf/PdfPreviewPage'))
 
 export interface AppLocationState {
   backgroundLocation?: Location
@@ -32,6 +35,14 @@ export function AppRoutes() {
         <Route path="/colecao/:slug" element={<CollectionPage />} />
         <Route path="/minha-reserva/:token" element={<ManageReservationPage />} />
         <Route path="/pix" element={<PixPage />} />
+        <Route
+          path="/pdf"
+          element={
+            <Suspense fallback={<p role="status">Carregando prévia</p>}>
+              <PdfPreviewPage />
+            </Suspense>
+          }
+        />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
       {backgroundLocation ? (
