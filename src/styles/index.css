@@ -554,6 +554,98 @@ a {
   padding: 1rem;
 }
 
+.confirm-dialog__actions,
+.manage-reservation__actions {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.manage-reservation {
+  display: grid;
+  max-width: 42rem;
+  gap: 1.5rem;
+  margin-inline: auto;
+}
+
+.reservation-summary {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.reservation-summary__eyebrow,
+.reservation-summary__quantity,
+.reservation-summary__hint,
+.reservation-summary__state p {
+  margin: 0;
+}
+
+.reservation-summary__eyebrow {
+  color: var(--color-terracotta-600);
+  font-size: 0.875rem;
+  font-weight: 750;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.reservation-summary > h1 {
+  margin: 0;
+  color: var(--color-graphite-900);
+  font-size: clamp(2.25rem, 9vw, 4rem);
+  letter-spacing: -0.06em;
+  line-height: 1;
+}
+
+.reservation-summary__quantity,
+.reservation-summary__hint,
+.reservation-summary__state p {
+  color: var(--color-graphite-700);
+}
+
+.reservation-summary__state {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+  border: 1px solid rgb(63 59 55 / 0.11);
+  border-radius: 1.25rem;
+  background: white;
+  padding: 1.25rem;
+  box-shadow: var(--shadow-card);
+}
+
+.reservation-summary__state > svg {
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0.65rem;
+  border-radius: 50%;
+  background: rgb(111 123 82 / 0.14);
+  color: var(--color-olive-700);
+}
+
+.reservation-summary__state h2 {
+  margin: 0 0 0.65rem;
+  color: var(--color-graphite-900);
+  font-size: 1.25rem;
+}
+
+.reservation-summary__state .ui-badge {
+  margin-bottom: 0.65rem;
+}
+
+.reservation-summary__hint {
+  border-left: 4px solid var(--color-olive-500);
+  background: rgb(111 123 82 / 0.1);
+  padding: 0.8rem 1rem;
+  color: var(--color-olive-700);
+}
+
+.manage-reservation__back {
+  color: var(--color-terracotta-600);
+  font-weight: 700;
+  text-align: center;
+  text-underline-offset: 0.2em;
+}
+
 @media (min-width: 640px) {
   .gift-details__overview {
     grid-template-columns: minmax(13rem, 0.8fr) minmax(0, 1.2fr);

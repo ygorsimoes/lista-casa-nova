@@ -3,6 +3,7 @@ import { CatalogPage } from '@/features/catalog/CatalogPage'
 import { GiftDetailsDialog } from '@/features/catalog/GiftDetailsDialog'
 import { GiftDetailsPage } from '@/features/catalog/GiftDetailsPage'
 import { NotFoundPage } from '@/features/not-found/NotFoundPage'
+import { ManageReservationPage } from '@/features/reservations/ManageReservationPage'
 import type { Location } from 'react-router-dom'
 import { Route, Routes, useLocation } from 'react-router-dom'
 
@@ -26,6 +27,7 @@ export function AppRoutes() {
           }
         />
         <Route path="/item/:code" element={<GiftDetailsPage />} />
+        <Route path="/minha-reserva/:token" element={<ManageReservationPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
       {backgroundLocation ? (
