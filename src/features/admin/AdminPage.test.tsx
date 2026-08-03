@@ -36,4 +36,19 @@ describe('AdminPage', () => {
 
     expect(screen.getByRole('button', { name: /entrar na demonstração/i })).toBeVisible()
   })
+
+  it('alterna entre as seções operacionais do painel', async () => {
+    const user = userEvent.setup()
+    renderWithApp(<AdminPage />, { route: '/admin' })
+
+    await user.click(screen.getByRole('button', { name: /entrar na demonstração/i }))
+    await user.click(screen.getByRole('button', { name: /^presentes$/i }))
+
+    expect(screen.getByRole('heading', { name: /presentes da lista/i })).toBeVisible()
+    expect(screen.getByText(/código.*categoria.*desejado.*restante/i)).toBeVisible()
+
+    await user.click(screen.getByRole('button', { name: /^configurações$/i }))
+
+    expect(screen.getByRole('heading', { name: /configurações da lista/i })).toBeVisible()
+  })
 })

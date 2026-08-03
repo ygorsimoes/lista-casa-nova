@@ -1074,6 +1074,171 @@ a {
   font-size: 0.95rem;
 }
 
+.admin-panel {
+  display: grid;
+  gap: 1rem;
+  border: 1px solid rgb(63 59 55 / 0.1);
+  border-radius: 1.25rem;
+  background: white;
+  padding: clamp(1rem, 3vw, 1.5rem);
+  box-shadow: var(--shadow-card);
+}
+
+.admin-panel__header h2,
+.admin-gift-list__item h3 {
+  margin: 0;
+  color: var(--color-graphite-900);
+}
+
+.admin-panel__header h2 {
+  font-size: clamp(1.45rem, 4vw, 1.85rem);
+  letter-spacing: -0.045em;
+  line-height: 1.1;
+}
+
+.admin-panel__header p,
+.admin-panel__legend,
+.admin-gift-list__item p,
+.admin-reservation p,
+.admin-reservation dd,
+.admin-reservation dt,
+.site-settings-form__actions p,
+.site-settings-form__pix p {
+  margin: 0;
+  color: var(--color-graphite-700);
+}
+
+.admin-panel__header p {
+  margin-top: 0.45rem;
+}
+
+.admin-panel__legend {
+  border-block: 1px solid rgb(63 59 55 / 0.12);
+  padding-block: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 650;
+}
+
+.admin-panel__feedback {
+  margin: 0;
+  border-left: 4px solid var(--color-olive-500);
+  background: rgb(111 123 82 / 0.1);
+  padding: 0.85rem 1rem;
+  color: var(--color-olive-700);
+  font-weight: 650;
+}
+
+.admin-gift-list,
+.admin-reservations {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.admin-gift-list__item,
+.admin-reservation {
+  display: grid;
+  gap: 0.85rem;
+  border: 1px solid rgb(63 59 55 / 0.12);
+  border-radius: 1rem;
+  padding: 1rem;
+}
+
+.admin-gift-list__code {
+  width: fit-content;
+  border-radius: 999px;
+  background: var(--color-sand-50);
+  padding: 0.25rem 0.5rem;
+  color: var(--color-terracotta-600) !important;
+  font-size: 0.8rem;
+  font-weight: 750;
+}
+
+.admin-gift-list__item h3 {
+  font-size: 1.1rem;
+}
+
+.admin-gift-list__item dl,
+.admin-reservation__details {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 0;
+}
+
+.admin-gift-list__item dt,
+.admin-reservation dt {
+  color: var(--color-graphite-700);
+  font-size: 0.8rem;
+}
+
+.admin-gift-list__item dd,
+.admin-reservation dd {
+  margin: 0.15rem 0 0;
+  color: var(--color-graphite-900);
+  font-weight: 700;
+}
+
+.admin-reservation:focus-visible {
+  outline: 3px solid var(--color-terracotta-500);
+  outline-offset: 3px;
+}
+
+.admin-reservation__identity {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.admin-reservation__name {
+  color: var(--color-graphite-900) !important;
+  font-size: 1.1rem;
+  font-weight: 750;
+}
+
+.admin-reservation__actions {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.admin-reservation__terminal {
+  border-top: 1px solid rgb(63 59 55 / 0.12);
+  padding-top: 0.75rem;
+  font-size: 0.9rem;
+}
+
+.site-settings-form {
+  display: grid;
+  gap: 1rem;
+}
+
+.site-settings-form .ui-textarea {
+  min-height: 7rem;
+}
+
+.site-settings-form__pix {
+  display: grid;
+  gap: 0.4rem;
+  border: 1px solid rgb(63 59 55 / 0.14);
+  border-radius: 1rem;
+  background: var(--color-sand-50);
+  padding: 1rem;
+}
+
+.site-settings-form__pix strong {
+  color: var(--color-graphite-900);
+}
+
+.site-settings-form__pix code {
+  overflow-wrap: anywhere;
+  color: var(--color-graphite-700);
+  font-size: 0.9rem;
+}
+
+.site-settings-form__actions {
+  display: grid;
+  gap: 0.75rem;
+  align-items: center;
+}
+
 @media (max-width: 480px) {
   .site-header__brand span {
     display: none;
@@ -1366,6 +1531,44 @@ a {
 
   .admin-summary {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .admin-gift-list__item {
+    grid-template-columns: auto minmax(11rem, 1fr) minmax(10rem, auto) auto;
+    align-items: center;
+  }
+
+  .admin-reservation {
+    grid-template-columns: minmax(10rem, 1fr) auto;
+    align-items: start;
+  }
+
+  .admin-reservation__details,
+  .admin-reservation__actions,
+  .admin-reservation__terminal {
+    grid-column: 1 / -1;
+  }
+
+  .admin-reservation__details {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .admin-reservation__actions {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .site-settings-form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .site-settings-form__pix,
+  .site-settings-form__actions,
+  .site-settings-form > .ui-field:nth-child(2) {
+    grid-column: 1 / -1;
+  }
+
+  .site-settings-form__actions {
+    grid-template-columns: auto minmax(0, 1fr);
   }
 
   .how-it-works__steps {

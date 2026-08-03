@@ -1,18 +1,23 @@
 import { Button } from '@/components/ui/Button'
 import { selectAdminSummary } from '@/domain/selectors'
 import { useDemoSelector } from '@/app/DemoStateProvider'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { AdminGiftList } from './AdminGiftList'
+import { AdminReservations } from './AdminReservations'
 import { AdminSummary } from './AdminSummary'
+import { SiteSettingsForm } from './SiteSettingsForm'
 
 interface AdminDashboardProps {
   onExit(): void
 }
 
 const sectionLabels = ['Resumo', 'Presentes', 'Reservas', 'Configurações'] as const
+type AdminSection = (typeof sectionLabels)[number]
 
 export function AdminDashboard({ onExit }: AdminDashboardProps) {
   const summary = useDemoSelector(selectAdminSummary)
   const headingRef = useRef<HTMLHeadingElement>(null)
+  const [activeSection, setActiveSection] = useState<AdminSection>('Resumo')
 
   useEffect(() => {
     headingRef.current?.focus()
@@ -39,8 +44,8 @@ export function AdminDashboard({ onExit }: AdminDashboardProps) {
         {sectionLabels.map((label) => (
           <Button
             key={label}
-            aria-current={label === 'Resumo' ? 'page' : undefined}
-            disabled={label !== 'Resumo'}
+            aria-current={label === activeSection ? 'page' : undefined}
+            onClick={() => setActiveSection(label)}
             variant="ghost"
           >
             {label}
@@ -48,11 +53,10 @@ export function AdminDashboard({ onExit }: AdminDashboardProps) {
         ))}
       </nav>
 
-      <AdminSummary summary={summary} />
-      <p className="admin-dashboard__scope">
-        Nesta etapa, a visão geral está disponível. Operações sobre presentes e configurações
-        continuam fora do escopo deste protótipo.
-      </p>
+      {activeSection === 'Resumo' ? <AdminSummary summary={summary} /> : null}
+      {activeSection === 'Presentes' ? <AdminGiftList /> : null}
+      {activeSection === 'Reservas' ? <AdminReservations /> : null}
+      {activeSection === 'Configurações' ? <SiteSettingsForm /> : null}
     </section>
   )
 }

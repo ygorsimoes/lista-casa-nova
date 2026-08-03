@@ -1,7 +1,10 @@
+import { useDemoSelector } from '@/app/DemoStateProvider'
 import { Heart } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 export function SiteFooter() {
+  const footer = useDemoSelector((state) => state.settings.footer)
+
   return (
     <footer className="site-footer">
       <nav className="site-footer__links" aria-label="Links do protótipo">
@@ -11,7 +14,7 @@ export function SiteFooter() {
       </nav>
       <p className="site-footer__note">
         <Heart aria-hidden="true" size={16} strokeWidth={1.8} />
-        Protótipo visual: nenhuma ação é salva.
+        {footer} Protótipo visual: nenhuma ação é salva.
       </p>
     </footer>
   )
