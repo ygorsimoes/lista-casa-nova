@@ -19,6 +19,15 @@ describe('AppRoutes', () => {
     expect(screen.getByRole('button', { name: /voltar ao catálogo/i })).toBeVisible()
   })
 
+  it.each([
+    ['/colecao/sugestoes-cozinha', /sugestões para a cozinha/i],
+    ['/pix', /contribuir por pix/i],
+  ])('abre a rota demonstrativa %s', (route, heading) => {
+    renderWithApp(<AppRoutes />, { route })
+
+    expect(screen.getByRole('heading', { name: heading })).toBeVisible()
+  })
+
   it('abre detalhes sobre o catálogo e devolve o foco ao cartão ao fechar', async () => {
     const user = userEvent.setup()
     renderWithApp(<AppRoutes />)
