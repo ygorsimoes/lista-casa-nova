@@ -125,16 +125,16 @@ será explicitamente fictício.
 
 ## Rotas
 
-| Rota | Finalidade |
-| --- | --- |
-| `#/` | Catálogo, busca, categorias e chamadas principais |
-| `#/item/:code` | Detalhes e início da reserva demonstrativa |
-| `#/colecao/:slug` | Coleção fictícia de sugestões externas |
-| `#/minha-reserva/:token` | Gerenciamento visual de uma reserva |
-| `#/pix` | Contribuição visual com QR e código fictícios |
-| `#/pdf` | Prévia visual da lista para impressão |
-| `#/admin` | Login ilustrativo e painel demonstrativo |
-| `*` | Página de rota não encontrada |
+| Rota                     | Finalidade                                        |
+| ------------------------ | ------------------------------------------------- |
+| `#/`                     | Catálogo, busca, categorias e chamadas principais |
+| `#/item/:code`           | Detalhes e início da reserva demonstrativa        |
+| `#/colecao/:slug`        | Coleção fictícia de sugestões externas            |
+| `#/minha-reserva/:token` | Gerenciamento visual de uma reserva               |
+| `#/pix`                  | Contribuição visual com QR e código fictícios     |
+| `#/pdf`                  | Prévia visual da lista para impressão             |
+| `#/admin`                | Login ilustrativo e painel demonstrativo          |
+| `*`                      | Página de rota não encontrada                     |
 
 Links profundos devem funcionar por meio do `HashRouter`. Códigos e tokens que
 não existirem nas fixtures mostrarão um estado de erro amigável.
