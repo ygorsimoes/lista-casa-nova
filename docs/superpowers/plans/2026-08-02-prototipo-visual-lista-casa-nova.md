@@ -6,7 +6,11 @@
 
 **Architecture:** Uma SPA React com `HashRouter` lê fixtures TypeScript e mantém alterações somente em um `DemoStateProvider` baseado em `useReducer`. Disponibilidade, cartões e resumos administrativos são derivados das reservas, evitando um segundo status mutável nos itens; rotas de PDF e administração são carregadas sob demanda.
 
-**Tech Stack:** Node.js 24, npm, React 19.2.8, TypeScript 7.0.2, Vite 8.2.0, Tailwind CSS 4.3.3, React Router 7.18.2, Lucide React, Vitest 4.1.10, Testing Library e Playwright 1.62.1.
+**Tech Stack:** Node.js 24, npm, React 19.2.8, TypeScript 6.0.3, Vite 8.2.0, Tailwind CSS 4.3.3, React Router 7.18.2, Lucide React, Vitest 4.1.10, Testing Library e Playwright 1.62.1.
+
+O TypeScript permanece fixado em `6.0.3`, versão compatível com a faixa de peer
+dependency `<6.1.0` declarada por `typescript-eslint@8.65.0`. O TypeScript
+`7.0.2` não é executável com essa combinação de versões.
 
 ## Global Constraints
 
@@ -37,10 +41,7 @@
 consome. A quantidade restante é:
 
 ```ts
-remainingQuantity = Math.max(
-  0,
-  gift.desiredQuantity - activeReservationsQuantity,
-);
+remainingQuantity = Math.max(0, gift.desiredQuantity - activeReservationsQuantity)
 ```
 
 O estado visual público é derivado assim:
@@ -187,7 +188,7 @@ Use este manifesto com versões fixas verificadas em 2026-08-02:
     "jsdom": "30.0.1",
     "prettier": "3.9.6",
     "tailwindcss": "4.3.3",
-    "typescript": "7.0.2",
+    "typescript": "6.0.3",
     "typescript-eslint": "8.65.0",
     "vite": "8.2.0",
     "vitest": "4.1.10"
@@ -212,10 +213,7 @@ Use os tsconfigs atuais do template Vite, acrescentando o alias:
 // tsconfig.json
 {
   "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ]
+  "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }]
 }
 ```
 
@@ -268,12 +266,7 @@ Use os tsconfigs atuais do template Vite, acrescentando o alias:
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": [
-    "vite.config.ts",
-    "vitest.config.ts",
-    "playwright.config.ts",
-    "e2e/**/*.ts"
-  ]
+  "include": ["vite.config.ts", "vitest.config.ts", "playwright.config.ts", "e2e/**/*.ts"]
 }
 ```
 
@@ -281,66 +274,61 @@ Configure build e testes assim:
 
 ```ts
 // vite.config.ts
-import { fileURLToPath, URL } from "node:url";
-import tailwindcss from "@tailwindcss/vite";
-import react from "@vitejs/plugin-react";
-import { defineConfig } from "vite";
+import { fileURLToPath, URL } from 'node:url'
+import tailwindcss from '@tailwindcss/vite'
+import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite'
 
 export default defineConfig({
-  base: "/lista-casa-nova/",
+  base: '/lista-casa-nova/',
   plugins: [react(), tailwindcss()],
   resolve: {
-    alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) },
+    alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
   },
-});
+})
 ```
 
 ```ts
 // vitest.config.ts
-import { fileURLToPath, URL } from "node:url";
-import { defineConfig } from "vitest/config";
+import { fileURLToPath, URL } from 'node:url'
+import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
   resolve: {
-    alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) },
+    alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
   },
   test: {
-    environment: "jsdom",
-    setupFiles: ["./src/test/setup.ts"],
+    environment: 'jsdom',
+    setupFiles: ['./src/test/setup.ts'],
     clearMocks: true,
     restoreMocks: true,
-    include: ["src/**/*.test.{ts,tsx}"],
+    include: ['src/**/*.test.{ts,tsx}'],
     coverage: {
-      provider: "v8",
-      reporter: ["text", "html"],
+      provider: 'v8',
+      reporter: ['text', 'html'],
       thresholds: { lines: 80, functions: 80, statements: 80, branches: 75 },
-      exclude: [
-        "src/main.tsx",
-        "src/**/*.d.ts",
-        "src/domain/types.ts",
-        "src/test/**",
-      ],
+      exclude: ['src/main.tsx', 'src/**/*.d.ts', 'src/domain/types.ts', 'src/test/**'],
     },
   },
-});
+})
 ```
 
 Use ESLint flat config e ignore artefatos:
 
 ```js
 // eslint.config.js
-import js from "@eslint/js";
-import prettier from "eslint-config-prettier";
-import reactHooks from "eslint-plugin-react-hooks";
-import reactRefresh from "eslint-plugin-react-refresh";
-import globals from "globals";
-import { defineConfig, globalIgnores } from "eslint/config";
-import tseslint from "typescript-eslint";
+import js from '@eslint/js'
+import prettier from 'eslint-config-prettier'
+import reactHooks from 'eslint-plugin-react-hooks'
+import reactRefresh from 'eslint-plugin-react-refresh'
+import globals from 'globals'
+import { defineConfig, globalIgnores } from 'eslint/config'
+import tseslint from 'typescript-eslint'
 
 export default defineConfig([
-  globalIgnores(["dist", "coverage", "playwright-report", "test-results"]),
+  globalIgnores(['dist', 'coverage', 'playwright-report', 'test-results']),
   {
-    files: ["**/*.{ts,tsx}"],
+    files: ['**/*.{ts,tsx}'],
     extends: [
       js.configs.recommended,
       ...tseslint.configs.recommended,
@@ -353,7 +341,7 @@ export default defineConfig([
       globals: { ...globals.browser, ...globals.node },
     },
   },
-]);
+])
 ```
 
 `.gitignore` deve conter `node_modules/`, `dist/`, `coverage/`,
@@ -364,27 +352,27 @@ Prepare o jsdom sem mocks de rede ou armazenamento:
 
 ```ts
 // src/test/setup.ts
-import "@testing-library/jest-dom/vitest";
-import { cleanup } from "@testing-library/react";
-import { afterEach, vi } from "vitest";
+import '@testing-library/jest-dom/vitest'
+import { cleanup } from '@testing-library/react'
+import { afterEach, vi } from 'vitest'
 
 afterEach(() => {
-  cleanup();
-  vi.useRealTimers();
-  vi.unstubAllGlobals();
-});
+  cleanup()
+  vi.useRealTimers()
+  vi.unstubAllGlobals()
+})
 
-Object.defineProperty(window, "matchMedia", {
+Object.defineProperty(window, 'matchMedia', {
   configurable: true,
   value: vi.fn().mockImplementation((query: string) => ({
-    matches: query.includes("prefers-reduced-motion"),
+    matches: query.includes('prefers-reduced-motion'),
     media: query,
     onchange: null,
     addEventListener: vi.fn(),
     removeEventListener: vi.fn(),
     dispatchEvent: vi.fn(),
   })),
-});
+})
 ```
 
 `src/vite-env.d.ts` contém somente `/// <reference types="vite/client" />`.
@@ -398,18 +386,16 @@ Expected: `package-lock.json` criado sem dependências não declaradas.
 - [ ] **Step 3: Escrever o teste de fumaça antes de criar `App.tsx`**
 
 ```tsx
-import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
-import { App } from "./App";
+import { render, screen } from '@testing-library/react'
+import { describe, expect, it } from 'vitest'
+import { App } from './App'
 
-describe("App", () => {
-  it("apresenta o propósito da lista", () => {
-    render(<App />);
-    expect(
-      screen.getByRole("heading", { name: /lista da nossa casa nova/i }),
-    ).toBeInTheDocument();
-  });
-});
+describe('App', () => {
+  it('apresenta o propósito da lista', () => {
+    render(<App />)
+    expect(screen.getByRole('heading', { name: /lista da nossa casa nova/i })).toBeInTheDocument()
+  })
+})
 ```
 
 - [ ] **Step 4: Executar o teste e confirmar a falha correta**
@@ -427,22 +413,22 @@ export function App() {
     <main>
       <h1>Lista da nossa casa nova</h1>
     </main>
-  );
+  )
 }
 ```
 
 ```tsx
 // src/main.tsx
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
-import { App } from "@/app/App";
-import "@/styles/index.css";
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import { App } from '@/app/App'
+import '@/styles/index.css'
 
-createRoot(document.getElementById("root")!).render(
+createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <App />
   </StrictMode>,
-);
+)
 ```
 
 O CSS começa com `@import "tailwindcss";`, tokens marfim/grafite/terracota/
@@ -456,10 +442,7 @@ e descrição do protótipo.
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="Protótipo visual da lista de presentes da nossa casa nova."
-    />
+    <meta name="description" content="Protótipo visual da lista de presentes da nossa casa nova." />
     <title>Lista da nossa casa nova</title>
   </head>
   <body>
@@ -504,181 +487,168 @@ git commit -m "build: preparar fundação React do protótipo"
 - Produces: `DemoState`, fixtures determinísticas e seletores públicos abaixo.
 
 ```ts
-export type ReservationStatus =
-  "reserved" | "purchased" | "received" | "cancelled";
+export type ReservationStatus = 'reserved' | 'purchased' | 'received' | 'cancelled'
 
 export interface Category {
-  id: string;
-  name: string;
-  slug: string;
-  icon: "cooking-pot" | "bed-double" | "bath" | "washing-machine" | "lamp";
-  sortOrder: number;
+  id: string
+  name: string
+  slug: string
+  icon: 'cooking-pot' | 'bed-double' | 'bath' | 'washing-machine' | 'lamp'
+  sortOrder: number
 }
 
 export interface Suggestion {
-  id: string;
-  label: string;
-  retailer: "Shopee";
-  url: string;
-  featured: boolean;
+  id: string
+  label: string
+  retailer: 'Shopee'
+  url: string
+  featured: boolean
 }
 
 export interface GiftItem {
-  code: string;
-  categoryId: string;
-  name: string;
-  description: string;
-  preferences: readonly string[];
-  desiredQuantity: number;
-  acceptsEquivalent: boolean;
-  demoScenario?: "conflict";
-  suggestions: readonly Suggestion[];
-  sortOrder: number;
+  code: string
+  categoryId: string
+  name: string
+  description: string
+  preferences: readonly string[]
+  desiredQuantity: number
+  acceptsEquivalent: boolean
+  demoScenario?: 'conflict'
+  suggestions: readonly Suggestion[]
+  sortOrder: number
 }
 
 export interface DemoReservation {
-  token: string;
-  itemCode: string;
-  firstName: string;
-  contact?: string;
-  quantity: number;
-  status: ReservationStatus;
-  source: "web" | "paper" | "admin";
-  createdAt: string;
+  token: string
+  itemCode: string
+  firstName: string
+  contact?: string
+  quantity: number
+  status: ReservationStatus
+  source: 'web' | 'paper' | 'admin'
+  createdAt: string
 }
 
 export interface ShoppingCollection {
-  title: string;
-  slug: string;
-  categoryId: string;
-  description: string;
-  url: string;
+  title: string
+  slug: string
+  categoryId: string
+  description: string
+  url: string
 }
 
 export interface SiteSettings {
-  title: string;
-  message: string;
-  howItWorks: string;
-  footer: string;
+  title: string
+  message: string
+  howItWorks: string
+  footer: string
   pix: {
-    recipient: string;
-    institution: string;
-    copyAndPaste: string;
-  };
+    recipient: string
+    institution: string
+    copyAndPaste: string
+  }
 }
 
-export type EditableSiteSettings = Pick<
-  SiteSettings,
-  "title" | "message" | "footer"
->;
+export type EditableSiteSettings = Pick<SiteSettings, 'title' | 'message' | 'footer'>
 
 export interface ReserveGiftInput {
-  itemCode: string;
-  firstName: string;
-  contact?: string;
-  quantity: number;
+  itemCode: string
+  firstName: string
+  contact?: string
+  quantity: number
 }
 
 export type ReservationOutcome =
-  | { kind: "success"; itemCode: string; token: string }
-  | { kind: "conflict"; itemCode: string }
-  | { kind: "unavailable"; itemCode: string };
+  | { kind: 'success'; itemCode: string; token: string }
+  | { kind: 'conflict'; itemCode: string }
+  | { kind: 'unavailable'; itemCode: string }
 
 export interface DemoState {
-  categories: readonly Category[];
-  gifts: readonly GiftItem[];
-  collections: readonly ShoppingCollection[];
-  reservations: readonly DemoReservation[];
-  settings: SiteSettings;
-  nextReservationNumber: number;
-  reservationOutcome: ReservationOutcome | null;
-  adminUnlocked: boolean;
+  categories: readonly Category[]
+  gifts: readonly GiftItem[]
+  collections: readonly ShoppingCollection[]
+  reservations: readonly DemoReservation[]
+  settings: SiteSettings
+  nextReservationNumber: number
+  reservationOutcome: ReservationOutcome | null
+  adminUnlocked: boolean
 }
 
-export type GiftVisualState =
-  "available" | "partially-reserved" | "reserved" | "received";
+export type GiftVisualState = 'available' | 'partially-reserved' | 'reserved' | 'received'
 
 export interface GiftAvailability {
-  desiredQuantity: number;
-  reservedQuantity: number;
-  purchasedQuantity: number;
-  receivedQuantity: number;
-  remainingQuantity: number;
-  canReserve: boolean;
-  visualState: GiftVisualState;
+  desiredQuantity: number
+  reservedQuantity: number
+  purchasedQuantity: number
+  receivedQuantity: number
+  remainingQuantity: number
+  canReserve: boolean
+  visualState: GiftVisualState
 }
 
 export interface CatalogFilters {
-  query: string;
-  categorySlug: string | null;
-  availableOnly: boolean;
+  query: string
+  categorySlug: string | null
+  availableOnly: boolean
 }
 
 export interface CatalogEntry {
-  gift: GiftItem;
-  category: Category;
-  availability: GiftAvailability;
+  gift: GiftItem
+  category: Category
+  availability: GiftAvailability
 }
 
-export function selectAvailability(
-  state: DemoState,
-  itemCode: string,
-): GiftAvailability | undefined;
+export function selectAvailability(state: DemoState, itemCode: string): GiftAvailability | undefined
 
 export function selectCatalogEntries(
   state: DemoState,
   filters: CatalogFilters,
-): readonly CatalogEntry[];
+): readonly CatalogEntry[]
 
-export function selectGiftByCode(
-  state: DemoState,
-  code: string,
-): CatalogEntry | undefined;
+export function selectGiftByCode(state: DemoState, code: string): CatalogEntry | undefined
 
 export function selectReservationByToken(
   state: DemoState,
   token: string,
-): DemoReservation | undefined;
+): DemoReservation | undefined
 
 export function selectCollectionBySlug(
   state: DemoState,
   slug: string,
-): ShoppingCollection | undefined;
+): ShoppingCollection | undefined
 ```
 
 - [ ] **Step 1: Escrever testes de disponibilidade, busca e integridade das fixtures**
 
 ```ts
-it("ignora acentos e caixa ao buscar preferências", () => {
+it('ignora acentos e caixa ao buscar preferências', () => {
   const result = selectCatalogEntries(createInitialDemoState(), {
-    query: "neutros",
+    query: 'neutros',
     categorySlug: null,
     availableOnly: false,
-  });
-  expect(result.map(({ gift }) => gift.code)).toContain("CZ-001");
-});
+  })
+  expect(result.map(({ gift }) => gift.code)).toContain('CZ-001')
+})
 
-it("libera quantidade de reservas canceladas", () => {
-  const state = createInitialDemoState();
-  const availability = selectAvailability(state, "CZ-003");
+it('libera quantidade de reservas canceladas', () => {
+  const state = createInitialDemoState()
+  const availability = selectAvailability(state, 'CZ-003')
   expect(availability).toMatchObject({
     desiredQuantity: 2,
     remainingQuantity: 1,
-    visualState: "partially-reserved",
-  });
-});
+    visualState: 'partially-reserved',
+  })
+})
 
-it("mantém identificadores e URLs demonstrativos seguros", () => {
-  const state = createInitialDemoState();
-  expect(new Set(state.gifts.map(({ code }) => code)).size).toBe(
-    state.gifts.length,
-  );
+it('mantém identificadores e URLs demonstrativos seguros', () => {
+  const state = createInitialDemoState()
+  expect(new Set(state.gifts.map(({ code }) => code)).size).toBe(state.gifts.length)
   expect(
     state.gifts
       .flatMap(({ suggestions }) => suggestions)
-      .every(({ url }) => new URL(url).hostname.endsWith(".invalid")),
-  ).toBe(true);
-});
+      .every(({ url }) => new URL(url).hostname.endsWith('.invalid')),
+  ).toBe(true)
+})
 ```
 
 Também cubra filtros combinados, consulta vazia, ordenação, categoria sem
@@ -732,38 +702,38 @@ As configurações iniciais são:
 As reservas iniciais são:
 
 ```ts
-[
+;[
   {
-    token: "reserva-demo-ana",
-    itemCode: "CZ-003",
+    token: 'reserva-demo-ana',
+    itemCode: 'CZ-003',
     quantity: 1,
-    status: "reserved",
+    status: 'reserved',
   },
   {
-    token: "reserva-demo-paulo",
-    itemCode: "QT-001",
+    token: 'reserva-demo-paulo',
+    itemCode: 'QT-001',
     quantity: 1,
-    status: "purchased",
+    status: 'purchased',
   },
   {
-    token: "reserva-demo-lia",
-    itemCode: "BN-002",
+    token: 'reserva-demo-lia',
+    itemCode: 'BN-002',
     quantity: 2,
-    status: "received",
+    status: 'received',
   },
   {
-    token: "reserva-demo-valida",
-    itemCode: "LV-001",
+    token: 'reserva-demo-valida',
+    itemCode: 'LV-001',
     quantity: 1,
-    status: "reserved",
+    status: 'reserved',
   },
   {
-    token: "reserva-demo-bia",
-    itemCode: "DC-001",
+    token: 'reserva-demo-bia',
+    itemCode: 'DC-001',
     quantity: 1,
-    status: "received",
+    status: 'received',
   },
-];
+]
 ```
 
 Acrescente nomes fictícios, contatos `@example.invalid`, origem e datas ISO
@@ -774,18 +744,14 @@ e iniciar `nextReservationNumber` em 1, `reservationOutcome` em `null` e
 - [ ] **Step 4: Implementar os seletores mínimos**
 
 ```ts
-const consumingStatuses = new Set<ReservationStatus>([
-  "reserved",
-  "purchased",
-  "received",
-]);
+const consumingStatuses = new Set<ReservationStatus>(['reserved', 'purchased', 'received'])
 
 export function normalizeSearch(value: string) {
   return value
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
     .trim()
-    .toLocaleLowerCase("pt-BR");
+    .toLocaleLowerCase('pt-BR')
 }
 ```
 
@@ -824,48 +790,48 @@ git commit -m "feat(catalogo): modelar fixtures e disponibilidade"
 
 ```ts
 export interface DemoActions {
-  reserveGift(input: ReserveGiftInput): void;
-  markReservationPurchased(token: string): void;
-  cancelReservation(token: string): void;
-  markReservationReceived(token: string): void;
-  dismissReservationOutcome(): void;
-  unlockAdmin(): void;
-  lockAdmin(): void;
-  updateSiteSettings(settings: EditableSiteSettings): void;
+  reserveGift(input: ReserveGiftInput): void
+  markReservationPurchased(token: string): void
+  cancelReservation(token: string): void
+  markReservationReceived(token: string): void
+  dismissReservationOutcome(): void
+  unlockAdmin(): void
+  lockAdmin(): void
+  updateSiteSettings(settings: EditableSiteSettings): void
 }
 ```
 
 - [ ] **Step 1: Escrever testes das transições antes do reducer**
 
 ```ts
-it("cria uma reserva e reduz a disponibilidade", () => {
-  const before = createInitialDemoState();
+it('cria uma reserva e reduz a disponibilidade', () => {
+  const before = createInitialDemoState()
   const after = demoReducer(before, {
-    type: "reservation/submitted",
-    input: { itemCode: "CZ-001", firstName: "Nina", quantity: 1 },
-  });
+    type: 'reservation/submitted',
+    input: { itemCode: 'CZ-001', firstName: 'Nina', quantity: 1 },
+  })
 
   expect(after.reservationOutcome).toEqual({
-    kind: "success",
-    itemCode: "CZ-001",
-    token: "reserva-cz-001-1",
-  });
-  expect(selectAvailability(after, "CZ-001")?.remainingQuantity).toBe(0);
-  expect(before.reservations).toHaveLength(5);
-});
+    kind: 'success',
+    itemCode: 'CZ-001',
+    token: 'reserva-cz-001-1',
+  })
+  expect(selectAvailability(after, 'CZ-001')?.remainingQuantity).toBe(0)
+  expect(before.reservations).toHaveLength(5)
+})
 
-it("preserva o estado ao simular conflito", () => {
-  const before = createInitialDemoState();
+it('preserva o estado ao simular conflito', () => {
+  const before = createInitialDemoState()
   const after = demoReducer(before, {
-    type: "reservation/submitted",
-    input: { itemCode: "CZ-004", firstName: "Nina", quantity: 1 },
-  });
-  expect(after.reservations).toBe(before.reservations);
+    type: 'reservation/submitted',
+    input: { itemCode: 'CZ-004', firstName: 'Nina', quantity: 1 },
+  })
+  expect(after.reservations).toBe(before.reservations)
   expect(after.reservationOutcome).toEqual({
-    kind: "conflict",
-    itemCode: "CZ-004",
-  });
-});
+    kind: 'conflict',
+    itemCode: 'CZ-004',
+  })
+})
 ```
 
 Cubra quantidade inválida, indisponibilidade, compra, cancelamento/liberação,
@@ -881,14 +847,14 @@ Expected: FAIL porque `demoReducer` ainda não existe.
 
 ```ts
 export type DemoAction =
-  | { type: "reservation/submitted"; input: ReserveGiftInput }
-  | { type: "reservation/purchased"; token: string }
-  | { type: "reservation/cancelled"; token: string }
-  | { type: "reservation/received"; token: string }
-  | { type: "reservation/outcomeDismissed" }
-  | { type: "admin/unlocked" }
-  | { type: "admin/locked" }
-  | { type: "settings/updated"; settings: EditableSiteSettings };
+  | { type: 'reservation/submitted'; input: ReserveGiftInput }
+  | { type: 'reservation/purchased'; token: string }
+  | { type: 'reservation/cancelled'; token: string }
+  | { type: 'reservation/received'; token: string }
+  | { type: 'reservation/outcomeDismissed' }
+  | { type: 'admin/unlocked' }
+  | { type: 'admin/locked' }
+  | { type: 'settings/updated'; settings: EditableSiteSettings }
 ```
 
 Valide disponibilidade dentro do reducer, gere tokens determinísticos, mude
@@ -911,15 +877,11 @@ Expected: FAIL porque o provider e hooks ainda não existem.
 - [ ] **Step 6: Implementar contexts separados para estado e ações**
 
 ```tsx
-export function useDemoSelector<T>(selector: (state: DemoState) => T): T;
-export function useDemoActions(): DemoActions;
+export function useDemoSelector<T>(selector: (state: DemoState) => T): T
+export function useDemoActions(): DemoActions
 
 export function DemoStateProvider({ children }: PropsWithChildren) {
-  const [state, dispatch] = useReducer(
-    demoReducer,
-    undefined,
-    createInitialDemoState,
-  );
+  const [state, dispatch] = useReducer(demoReducer, undefined, createInitialDemoState)
   // Memoize ações que apenas encapsulam dispatch e forneça contexts separados.
 }
 ```
@@ -929,13 +891,13 @@ export function DemoStateProvider({ children }: PropsWithChildren) {
 
 ```tsx
 export interface RenderWithAppOptions {
-  route?: string;
-  routePath?: string;
+  route?: string
+  routePath?: string
 }
 
 export function renderWithApp(
   ui: ReactElement,
-  { route = "/", routePath = "*" }: RenderWithAppOptions = {},
+  { route = '/', routePath = '*' }: RenderWithAppOptions = {},
 ) {
   return render(
     <MemoryRouter initialEntries={[route]}>
@@ -945,7 +907,7 @@ export function renderWithApp(
         </Routes>
       </DemoStateProvider>
     </MemoryRouter>,
-  );
+  )
 }
 ```
 
@@ -997,39 +959,39 @@ git commit -m "feat: criar estado demonstrativo em memória"
 
 ```ts
 export interface ToastMessage {
-  id: string;
-  title: string;
-  description?: string;
+  id: string
+  title: string
+  description?: string
 }
 
 export interface DialogProps {
-  open: boolean;
-  title: string;
-  description?: string;
-  onClose(): void;
-  initialFocusRef?: RefObject<HTMLElement | null>;
-  children: ReactNode;
+  open: boolean
+  title: string
+  description?: string
+  onClose(): void
+  initialFocusRef?: RefObject<HTMLElement | null>
+  children: ReactNode
 }
 ```
 
 - [ ] **Step 1: Escrever testes do diálogo e do toast**
 
 ```tsx
-it("fecha com Escape e devolve o foco ao acionador", async () => {
-  const user = userEvent.setup();
-  render(<DialogHarness />);
-  const trigger = screen.getByRole("button", { name: /abrir/i });
-  await user.click(trigger);
-  expect(screen.getByRole("dialog", { name: /detalhes/i })).toHaveFocus();
-  await user.keyboard("{Escape}");
-  expect(trigger).toHaveFocus();
-});
+it('fecha com Escape e devolve o foco ao acionador', async () => {
+  const user = userEvent.setup()
+  render(<DialogHarness />)
+  const trigger = screen.getByRole('button', { name: /abrir/i })
+  await user.click(trigger)
+  expect(screen.getByRole('dialog', { name: /detalhes/i })).toHaveFocus()
+  await user.keyboard('{Escape}')
+  expect(trigger).toHaveFocus()
+})
 
-it("anuncia uma confirmação sem substituir o conteúdo persistente", async () => {
-  render(<ToastHarness />);
-  await userEvent.click(screen.getByRole("button", { name: /confirmar/i }));
-  expect(screen.getByRole("status")).toHaveTextContent(/ação demonstrada/i);
-});
+it('anuncia uma confirmação sem substituir o conteúdo persistente', async () => {
+  render(<ToastHarness />)
+  await userEvent.click(screen.getByRole('button', { name: /confirmar/i }))
+  expect(screen.getByRole('status')).toHaveTextContent(/ação demonstrada/i)
+})
 ```
 
 O teste do diálogo cobre nome acessível, clique no fechamento e foco. Teste o
@@ -1052,19 +1014,19 @@ Implemente `Dialog` sobre `<dialog>`:
 
 ```tsx
 useEffect(() => {
-  const dialog = dialogRef.current;
-  if (!dialog) return;
-  const previousFocus = document.activeElement as HTMLElement | null;
+  const dialog = dialogRef.current
+  if (!dialog) return
+  const previousFocus = document.activeElement as HTMLElement | null
 
   if (open && !dialog.open) {
-    dialog.showModal();
-    const target = initialFocusRef?.current ?? dialog;
-    target.focus();
+    dialog.showModal()
+    const target = initialFocusRef?.current ?? dialog
+    target.focus()
   }
-  if (!open && dialog.open) dialog.close();
+  if (!open && dialog.open) dialog.close()
 
-  return () => previousFocus?.focus();
-}, [open]);
+  return () => previousFocus?.focus()
+}, [open])
 ```
 
 Trate `cancel` para Escape, feche ao clicar no backdrop e mantenha um botão de
@@ -1076,7 +1038,7 @@ fechar com texto acessível. Adicione em `src/test/setup.ts` polyfills mínimos 
 Em `src/styles/index.css`, defina:
 
 ```css
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @theme {
   --color-sand-50: #fbf8f1;
@@ -1142,38 +1104,33 @@ git commit -m "feat(ui): criar sistema visual acessível"
 
 ```ts
 export interface AppLocationState {
-  backgroundLocation?: Location;
+  backgroundLocation?: Location
 }
 
 export interface CatalogViewState {
-  query: string;
-  categorySlug: string | null;
-  availableOnly: boolean;
+  query: string
+  categorySlug: string | null
+  availableOnly: boolean
 }
 ```
 
 - [ ] **Step 1: Escrever testes do carregamento e catálogo antes da página**
 
 ```tsx
-it("combina busca, categoria e disponibilidade", async () => {
-  renderWithApp(<CatalogPage />);
-  await userEvent.type(
-    screen.getByRole("searchbox", { name: /buscar um presente/i }),
-    "toalhas",
-  );
-  await userEvent.click(screen.getByRole("button", { name: "Banheiro" }));
-  await userEvent.click(
-    screen.getByRole("checkbox", { name: /somente disponíveis/i }),
-  );
-  expect(screen.getByRole("status")).toHaveTextContent(/nenhum presente/i);
-});
+it('combina busca, categoria e disponibilidade', async () => {
+  renderWithApp(<CatalogPage />)
+  await userEvent.type(screen.getByRole('searchbox', { name: /buscar um presente/i }), 'toalhas')
+  await userEvent.click(screen.getByRole('button', { name: 'Banheiro' }))
+  await userEvent.click(screen.getByRole('checkbox', { name: /somente disponíveis/i }))
+  expect(screen.getByRole('status')).toHaveTextContent(/nenhum presente/i)
+})
 
-it("expõe o estado selecionado da categoria", async () => {
-  renderWithApp(<CatalogPage />);
-  const cozinha = screen.getByRole("button", { name: "Cozinha" });
-  await userEvent.click(cozinha);
-  expect(cozinha).toHaveAttribute("aria-pressed", "true");
-});
+it('expõe o estado selecionado da categoria', async () => {
+  renderWithApp(<CatalogPage />)
+  const cozinha = screen.getByRole('button', { name: 'Cozinha' })
+  await userEvent.click(cozinha)
+  expect(cozinha).toHaveAttribute('aria-pressed', 'true')
+})
 ```
 
 Teste também limpar busca, “Todas”, categoria `decoracao` sem disponíveis,
@@ -1222,7 +1179,7 @@ export function App() {
         </ToastProvider>
       </DemoStateProvider>
     </HashRouter>
-  );
+  )
 }
 ```
 
@@ -1269,50 +1226,42 @@ git commit -m "feat(catalogo): implementar catálogo interativo"
 
 ```ts
 export interface ReservationFormValues {
-  firstName: string;
-  contact: string;
-  quantity: number;
+  firstName: string
+  contact: string
+  quantity: number
 }
 
-export type ReservationFormErrors = Partial<
-  Record<"firstName" | "contact" | "quantity", string>
->;
+export type ReservationFormErrors = Partial<Record<'firstName' | 'contact' | 'quantity', string>>
 
 export function validateReservationForm(
   values: ReservationFormValues,
   availableQuantity: number,
-): ReservationFormErrors;
+): ReservationFormErrors
 ```
 
 - [ ] **Step 1: Escrever testes da validação e do fluxo antes da UI**
 
 ```ts
-it("rejeita nome curto e quantidade maior que a disponível", () => {
-  expect(
-    validateReservationForm({ firstName: "A", contact: "", quantity: 2 }, 1),
-  ).toEqual({
-    firstName: "Informe pelo menos 2 caracteres.",
-    quantity: "Escolha entre 1 e 1 unidade.",
-  });
-});
+it('rejeita nome curto e quantidade maior que a disponível', () => {
+  expect(validateReservationForm({ firstName: 'A', contact: '', quantity: 2 }, 1)).toEqual({
+    firstName: 'Informe pelo menos 2 caracteres.',
+    quantity: 'Escolha entre 1 e 1 unidade.',
+  })
+})
 ```
 
 ```tsx
-it("mantém os campos e mostra recuperação após conflito", async () => {
+it('mantém os campos e mostra recuperação após conflito', async () => {
   renderWithApp(<GiftDetailsPage />, {
-    route: "/item/CZ-004",
-    routePath: "/item/:code",
-  });
-  await userEvent.click(
-    screen.getByRole("button", { name: /quero dar este presente/i }),
-  );
-  await userEvent.type(screen.getByLabelText(/primeiro nome/i), "Nina");
-  await userEvent.click(screen.getByRole("button", { name: /confirmar/i }));
-  expect(screen.getByRole("alert")).toHaveTextContent(
-    /acabou de ser reservado/i,
-  );
-  expect(screen.getByLabelText(/primeiro nome/i)).toHaveValue("Nina");
-});
+    route: '/item/CZ-004',
+    routePath: '/item/:code',
+  })
+  await userEvent.click(screen.getByRole('button', { name: /quero dar este presente/i }))
+  await userEvent.type(screen.getByLabelText(/primeiro nome/i), 'Nina')
+  await userEvent.click(screen.getByRole('button', { name: /confirmar/i }))
+  expect(screen.getByRole('alert')).toHaveTextContent(/acabou de ser reservado/i)
+  expect(screen.getByLabelText(/primeiro nome/i)).toHaveValue('Nina')
+})
 ```
 
 Cubra item inválido, indisponível, contato opcional, foco no primeiro erro,
@@ -1336,8 +1285,8 @@ usa `ErrorState` com “Presente não encontrado” e link de retorno.
 - [ ] **Step 4: Implementar painel por rota de fundo**
 
 ```tsx
-const location = useLocation() as Location<AppLocationState>;
-const backgroundLocation = location.state?.backgroundLocation;
+const location = useLocation() as Location<AppLocationState>
+const backgroundLocation = location.state?.backgroundLocation
 
 return (
   <>
@@ -1348,7 +1297,7 @@ return (
       </Routes>
     ) : null}
   </>
-);
+)
 ```
 
 O diálogo fecha com `navigate(-1)`. Acesso direto usa a página completa. Ambos
@@ -1406,30 +1355,23 @@ git commit -m "feat(reservas): demonstrar reserva de presentes"
 - [ ] **Step 1: Escrever testes dos estados e confirmações**
 
 ```tsx
-it("marca a reserva válida como comprada", async () => {
+it('marca a reserva válida como comprada', async () => {
   renderWithApp(<ManageReservationPage />, {
-    route: "/minha-reserva/reserva-demo-valida",
-    routePath: "/minha-reserva/:token",
-  });
-  await userEvent.click(screen.getByRole("button", { name: /já comprei/i }));
-  expect(
-    screen.getByRole("status", { name: /estado da reserva/i }),
-  ).toHaveTextContent(/comprado/i);
-});
+    route: '/minha-reserva/reserva-demo-valida',
+    routePath: '/minha-reserva/:token',
+  })
+  await userEvent.click(screen.getByRole('button', { name: /já comprei/i }))
+  expect(screen.getByRole('status', { name: /estado da reserva/i })).toHaveTextContent(/comprado/i)
+})
 
-it("oferece retorno para token inexistente", () => {
+it('oferece retorno para token inexistente', () => {
   renderWithApp(<ManageReservationPage />, {
-    route: "/minha-reserva/reserva-inexistente",
-    routePath: "/minha-reserva/:token",
-  });
-  expect(
-    screen.getByRole("heading", { name: /reserva não encontrada/i }),
-  ).toBeVisible();
-  expect(screen.getByRole("link", { name: /voltar à lista/i })).toHaveAttribute(
-    "href",
-    "/",
-  );
-});
+    route: '/minha-reserva/reserva-inexistente',
+    routePath: '/minha-reserva/:token',
+  })
+  expect(screen.getByRole('heading', { name: /reserva não encontrada/i })).toBeVisible()
+  expect(screen.getByRole('link', { name: /voltar à lista/i })).toHaveAttribute('href', '/')
+})
 ```
 
 Cubra cancelamento confirmado, desistência do diálogo, estados comprado,
@@ -1483,35 +1425,35 @@ git commit -m "feat(reservas): permitir gerenciar reserva demonstrativa"
 
 ```ts
 export interface IllustrativeQrProps {
-  label: string;
-  size?: "small" | "large";
+  label: string
+  size?: 'small' | 'large'
 }
 ```
 
 - [ ] **Step 1: Escrever testes das páginas secundárias**
 
 ```tsx
-it("não transforma sugestão fictícia em link externo", async () => {
+it('não transforma sugestão fictícia em link externo', async () => {
   renderWithApp(<CollectionPage />, {
-    route: "/colecao/sugestoes-cozinha",
-    routePath: "/colecao/:slug",
-  });
-  const action = screen.getByRole("button", {
+    route: '/colecao/sugestoes-cozinha',
+    routePath: '/colecao/:slug',
+  })
+  const action = screen.getByRole('button', {
     name: /ver sugestão demonstrativa/i,
-  });
-  expect(action).not.toHaveAttribute("href");
-  await userEvent.click(action);
-  expect(screen.getByRole("status")).toHaveTextContent(/nenhum site externo/i);
-});
+  })
+  expect(action).not.toHaveAttribute('href')
+  await userEvent.click(action)
+  expect(screen.getByRole('status')).toHaveTextContent(/nenhum site externo/i)
+})
 
-it("simula cópia sem chamar a Clipboard API", async () => {
-  const writeText = vi.fn();
-  vi.stubGlobal("navigator", { clipboard: { writeText } });
-  renderWithApp(<PixPage />, { route: "/pix" });
-  await userEvent.click(screen.getByRole("button", { name: /simular cópia/i }));
-  expect(writeText).not.toHaveBeenCalled();
-  expect(screen.getByText(/nenhum dado foi copiado/i)).toBeVisible();
-});
+it('simula cópia sem chamar a Clipboard API', async () => {
+  const writeText = vi.fn()
+  vi.stubGlobal('navigator', { clipboard: { writeText } })
+  renderWithApp(<PixPage />, { route: '/pix' })
+  await userEvent.click(screen.getByRole('button', { name: /simular cópia/i }))
+  expect(writeText).not.toHaveBeenCalled()
+  expect(screen.getByText(/nenhum dado foi copiado/i)).toBeVisible()
+})
 ```
 
 Cubra slug inexistente, aviso anterior às ações, alternativa textual do QR e
@@ -1571,23 +1513,17 @@ git commit -m "feat: adicionar coleções e contribuição Pix"
 - [ ] **Step 1: Escrever o teste da prévia antes da página**
 
 ```tsx
-it("apresenta lista sem oferecer download real", async () => {
-  renderWithApp(<PdfPreviewPage />, { route: "/pdf" });
-  expect(
-    screen.getByRole("heading", { name: /prévia para impressão/i }),
-  ).toBeVisible();
-  expect(
-    screen.getByRole("region", { name: /folha a4 demonstrativa/i }),
-  ).toHaveTextContent(/chaleira/i);
-  expect(
-    screen.queryByRole("link", { name: /download/i }),
-  ).not.toBeInTheDocument();
+it('apresenta lista sem oferecer download real', async () => {
+  renderWithApp(<PdfPreviewPage />, { route: '/pdf' })
+  expect(screen.getByRole('heading', { name: /prévia para impressão/i })).toBeVisible()
+  expect(screen.getByRole('region', { name: /folha a4 demonstrativa/i })).toHaveTextContent(
+    /chaleira/i,
+  )
+  expect(screen.queryByRole('link', { name: /download/i })).not.toBeInTheDocument()
 
-  await userEvent.click(
-    screen.getByRole("button", { name: /simular download/i }),
-  );
-  expect(screen.getByText(/nenhum arquivo foi gerado/i)).toBeVisible();
-});
+  await userEvent.click(screen.getByRole('button', { name: /simular download/i }))
+  expect(screen.getByText(/nenhum arquivo foi gerado/i)).toBeVisible()
+})
 ```
 
 Espione `URL.createObjectURL` e confirme que não foi chamado. Teste título,
@@ -1681,38 +1617,32 @@ git commit -m "feat(pdf): criar prévia visual da lista"
 
 ```ts
 export interface AdminSummaryData {
-  availableItems: number;
-  reservedItems: number;
-  receivedItems: number;
-  activeReservations: number;
+  availableItems: number
+  reservedItems: number
+  receivedItems: number
+  activeReservations: number
 }
 
-export function selectAdminSummary(state: DemoState): AdminSummaryData;
+export function selectAdminSummary(state: DemoState): AdminSummaryData
 ```
 
 - [ ] **Step 1: Escrever testes do resumo e da entrada demonstrativa**
 
 ```tsx
-it("explica que o acesso não possui autenticação real", () => {
-  renderWithApp(<AdminPage />, { route: "/admin" });
-  expect(
-    screen.getByRole("heading", { name: /painel demonstrativo/i }),
-  ).toBeVisible();
-  expect(screen.getByText(/não existe autenticação real/i)).toBeVisible();
-  expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
-});
+it('explica que o acesso não possui autenticação real', () => {
+  renderWithApp(<AdminPage />, { route: '/admin' })
+  expect(screen.getByRole('heading', { name: /painel demonstrativo/i })).toBeVisible()
+  expect(screen.getByText(/não existe autenticação real/i)).toBeVisible()
+  expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
+})
 
-it("entra e sai da demonstração sem credenciais", async () => {
-  renderWithApp(<AdminPage />, { route: "/admin" });
-  await userEvent.click(
-    screen.getByRole("button", { name: /entrar na demonstração/i }),
-  );
-  expect(screen.getByRole("heading", { name: /visão geral/i })).toHaveFocus();
-  await userEvent.click(
-    screen.getByRole("button", { name: /sair da demonstração/i }),
-  );
-  expect(screen.getByText(/não existe autenticação real/i)).toBeVisible();
-});
+it('entra e sai da demonstração sem credenciais', async () => {
+  renderWithApp(<AdminPage />, { route: '/admin' })
+  await userEvent.click(screen.getByRole('button', { name: /entrar na demonstração/i }))
+  expect(screen.getByRole('heading', { name: /visão geral/i })).toHaveFocus()
+  await userEvent.click(screen.getByRole('button', { name: /sair da demonstração/i }))
+  expect(screen.getByText(/não existe autenticação real/i)).toBeVisible()
+})
 ```
 
 Teste `selectAdminSummary` antes da implementação, inclusive após cancelamento
@@ -1773,43 +1703,26 @@ git commit -m "feat(admin): criar acesso e resumo demonstrativos"
 - [ ] **Step 1: Escrever testes das operações antes dos painéis**
 
 ```tsx
-it("libera uma reserva após confirmação", async () => {
-  renderWithApp(<AdminPage />, { route: "/admin" });
-  await userEvent.click(
-    screen.getByRole("button", { name: /entrar na demonstração/i }),
-  );
-  await userEvent.click(screen.getByRole("button", { name: /reservas/i }));
-  await userEvent.click(
-    screen.getByRole("button", { name: /liberar reserva de cesto de roupas/i }),
-  );
-  await userEvent.click(
-    screen.getByRole("button", { name: /confirmar liberação/i }),
-  );
-  expect(screen.getByText(/reserva liberada/i)).toBeVisible();
-  expect(
-    screen.getByText(/cesto de roupas/i).closest("article"),
-  ).toHaveTextContent(/cancelada/i);
-});
+it('libera uma reserva após confirmação', async () => {
+  renderWithApp(<AdminPage />, { route: '/admin' })
+  await userEvent.click(screen.getByRole('button', { name: /entrar na demonstração/i }))
+  await userEvent.click(screen.getByRole('button', { name: /reservas/i }))
+  await userEvent.click(screen.getByRole('button', { name: /liberar reserva de cesto de roupas/i }))
+  await userEvent.click(screen.getByRole('button', { name: /confirmar liberação/i }))
+  expect(screen.getByText(/reserva liberada/i)).toBeVisible()
+  expect(screen.getByText(/cesto de roupas/i).closest('article')).toHaveTextContent(/cancelada/i)
+})
 
-it("atualiza apenas configurações públicas editáveis", async () => {
-  renderWithApp(<AdminPage />, { route: "/admin" });
-  await userEvent.click(
-    screen.getByRole("button", { name: /entrar na demonstração/i }),
-  );
-  await userEvent.click(screen.getByRole("button", { name: /configurações/i }));
-  await userEvent.clear(screen.getByLabelText(/título do site/i));
-  await userEvent.type(
-    screen.getByLabelText(/título do site/i),
-    "Nosso novo lar",
-  );
-  await userEvent.click(
-    screen.getByRole("button", { name: /salvar alterações/i }),
-  );
-  expect(
-    screen.getByText(/alterações mantidas somente nesta sessão/i),
-  ).toBeVisible();
-  expect(screen.getByText(/banco fictício/i)).toBeVisible();
-});
+it('atualiza apenas configurações públicas editáveis', async () => {
+  renderWithApp(<AdminPage />, { route: '/admin' })
+  await userEvent.click(screen.getByRole('button', { name: /entrar na demonstração/i }))
+  await userEvent.click(screen.getByRole('button', { name: /configurações/i }))
+  await userEvent.clear(screen.getByLabelText(/título do site/i))
+  await userEvent.type(screen.getByLabelText(/título do site/i), 'Nosso novo lar')
+  await userEvent.click(screen.getByRole('button', { name: /salvar alterações/i }))
+  expect(screen.getByText(/alterações mantidas somente nesta sessão/i)).toBeVisible()
+  expect(screen.getByText(/banco fictício/i)).toBeVisible()
+})
 ```
 
 Cubra ações condicionais por status, recebimento, compra, cancelamento do
@@ -1886,60 +1799,60 @@ git commit -m "feat(admin): adicionar operações e configurações"
 
 ```ts
 export const demoScenarios = {
-  availableItem: "CZ-001",
-  conflictItem: "CZ-004",
-  unavailableItem: "LV-001",
-  validToken: "reserva-demo-valida",
-  invalidToken: "reserva-inexistente",
-  validCollection: "sugestoes-cozinha",
-} as const;
+  availableItem: 'CZ-001',
+  conflictItem: 'CZ-004',
+  unavailableItem: 'LV-001',
+  validToken: 'reserva-demo-valida',
+  invalidToken: 'reserva-inexistente',
+  validCollection: 'sugestoes-cozinha',
+} as const
 ```
 
 - [ ] **Step 1: Configurar projetos mobile e servidor de preview**
 
 ```ts
-import { defineConfig, devices } from "@playwright/test";
+import { defineConfig, devices } from '@playwright/test'
 
 export default defineConfig({
-  testDir: "./e2e",
+  testDir: './e2e',
   fullyParallel: true,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 1 : 0,
-  reporter: [["list"], ["html", { open: "never" }]],
+  reporter: [['list'], ['html', { open: 'never' }]],
   use: {
-    baseURL: "http://127.0.0.1:4173/lista-casa-nova/",
-    locale: "pt-BR",
-    reducedMotion: "reduce",
-    trace: "on-first-retry",
-    screenshot: "only-on-failure",
-    video: "retain-on-failure",
+    baseURL: 'http://127.0.0.1:4173/lista-casa-nova/',
+    locale: 'pt-BR',
+    reducedMotion: 'reduce',
+    trace: 'on-first-retry',
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
   },
   projects: [
     {
-      name: "mobile-chromium",
+      name: 'mobile-chromium',
       grepInvert: /@desktop/,
-      use: { ...devices["Pixel 7"], viewport: { width: 360, height: 800 } },
+      use: { ...devices['Pixel 7'], viewport: { width: 360, height: 800 } },
     },
     {
-      name: "mobile-webkit",
+      name: 'mobile-webkit',
       grepInvert: /@desktop/,
-      use: { ...devices["iPhone 13"], viewport: { width: 390, height: 844 } },
+      use: { ...devices['iPhone 13'], viewport: { width: 390, height: 844 } },
     },
     {
-      name: "desktop-chromium",
+      name: 'desktop-chromium',
       grep: /@desktop/,
       use: {
-        ...devices["Desktop Chrome"],
+        ...devices['Desktop Chrome'],
         viewport: { width: 1280, height: 900 },
       },
     },
   ],
   webServer: {
-    command: "npm run preview -- --host 127.0.0.1 --port 4173",
-    url: "http://127.0.0.1:4173/lista-casa-nova/",
+    command: 'npm run preview -- --host 127.0.0.1 --port 4173',
+    url: 'http://127.0.0.1:4173/lista-casa-nova/',
     reuseExistingServer: !process.env.CI,
   },
-});
+})
 ```
 
 Ignore `coverage/`, `playwright-report/` e `test-results/`.
@@ -1947,23 +1860,17 @@ Ignore `coverage/`, `playwright-report/` e `test-results/`.
 - [ ] **Step 2: Escrever primeiro o teste do catálogo e confirmar RED**
 
 ```ts
-test("filtra o catálogo em 360 px sem overflow", async ({ page }) => {
-  await page.goto("./#/");
-  await expect(
-    page.getByRole("heading", { name: /lista da nossa casa nova/i }),
-  ).toBeVisible();
-  await page
-    .getByRole("searchbox", { name: /buscar um presente/i })
-    .fill("chaleira");
-  await expect(page.getByRole("heading", { name: "Chaleira" })).toBeVisible();
+test('filtra o catálogo em 360 px sem overflow', async ({ page }) => {
+  await page.goto('./#/')
+  await expect(page.getByRole('heading', { name: /lista da nossa casa nova/i })).toBeVisible()
+  await page.getByRole('searchbox', { name: /buscar um presente/i }).fill('chaleira')
+  await expect(page.getByRole('heading', { name: 'Chaleira' })).toBeVisible()
   expect(
     await page.evaluate(
-      () =>
-        document.documentElement.scrollWidth <=
-        document.documentElement.clientWidth,
+      () => document.documentElement.scrollWidth <= document.documentElement.clientWidth,
     ),
-  ).toBe(true);
-});
+  ).toBe(true)
+})
 ```
 
 Run: `npm run test:e2e -- --project=mobile-chromium e2e/catalog.mobile.spec.ts`
@@ -2012,7 +1919,7 @@ expect(
     local: localStorage.length,
     session: sessionStorage.length,
   })),
-).toEqual({ local: 0, session: 0 });
+).toEqual({ local: 0, session: 0 })
 ```
 
 - [ ] **Step 7: Executar toda a suíte E2E**
