@@ -1,43 +1,49 @@
+import { Notice } from '@/components/ui/Notice'
 import type { ReservationOutcome as ReservationOutcomeState } from '@/domain/types'
-import { CheckCircle2 } from 'lucide-react'
+import type { RefObject } from 'react'
 import { Link } from 'react-router'
 
+type SuccessfulReservationOutcome = Extract<ReservationOutcomeState, { kind: 'success' }>
+
 export interface ReservationOutcomeProps {
-  outcome: ReservationOutcomeState
+  outcome: SuccessfulReservationOutcome
+  giftName: string
+  headingLevel: 'h1' | 'h2'
+  headingRef: RefObject<HTMLHeadingElement | null>
 }
 
-export function ReservationOutcome({ outcome }: ReservationOutcomeProps) {
-  if (outcome.kind === 'success') {
-    return (
-      <section className="reservation-outcome reservation-outcome--success" aria-live="polite">
-        <CheckCircle2 aria-hidden="true" />
-        <div>
-          <h2>Pronto, este presente está reservado para você!</h2>
-          <p>Obrigado por celebrar com a gente.</p>
-          <div className="reservation-outcome__links">
-            <Link to={`/minha-reserva/${outcome.token}`}>Gerenciar esta reserva</Link>
-            <Link to="/">Voltar à lista</Link>
-          </div>
-        </div>
-      </section>
-    )
-  }
-
-  if (outcome.kind === 'conflict') {
-    return (
-      <section className="reservation-outcome reservation-outcome--error" role="alert">
-        <h2>Este presente acabou de ser reservado.</h2>
-        <p>Se quiser, escolha outro presente da lista.</p>
-        <Link to="/">Escolher outro presente</Link>
-      </section>
-    )
-  }
-
+export function ReservationOutcome({
+  giftName,
+  headingLevel,
+  headingRef,
+  outcome,
+}: ReservationOutcomeProps) {
+  const Heading = headingLevel
   return (
-    <section className="reservation-outcome reservation-outcome--error" role="alert">
-      <h2>Este presente não está mais disponível.</h2>
-      <p>Escolha outro presente da lista para continuar.</p>
-      <Link to="/">Escolher outro presente</Link>
+    <section className="reservation-outcome reservation-outcome--success" aria-live="polite">
+      <span className="reservation-outcome__heart" aria-hidden="true">
+        💛
+      </span>
+      <p className="reservation-outcome__eyebrow">Reserva confirmada</p>
+      <Heading ref={headingRef} tabIndex={-1}>
+        Este presente ficou com você
+      </Heading>
+      <p>{giftName} está reservado em seu nome. Obrigado por fazer parte da nossa casa nova.</p>
+      <Notice tone="success">
+        <strong>3 · Combine a entrega</strong>
+        <p>Agora é só combinar com a gente quando e como entregar o presente.</p>
+      </Notice>
+      <div className="reservation-outcome__links">
+        <Link className="ui-button ui-button--primary" to={`/minha-reserva/${outcome.token}`}>
+          Ver minha reserva
+        </Link>
+        <Link className="ui-button ui-button--secondary" to="/">
+          Voltar para a lista
+        </Link>
+      </div>
+      <p className="reservation-outcome__demo">
+        Nesta demonstração, recarregar a página restaura o estado inicial.
+      </p>
     </section>
   )
 }

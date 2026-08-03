@@ -311,7 +311,6 @@ a {
   border-radius: 1.5rem;
   padding: 0;
   background: transparent;
-  box-shadow: var(--shadow-card);
 }
 
 .ui-dialog::backdrop {
@@ -321,6 +320,7 @@ a {
 .ui-dialog__surface {
   background: white;
   padding: 1.5rem;
+  box-shadow: var(--shadow-overlay);
 }
 
 .ui-dialog__header {
@@ -422,8 +422,7 @@ a {
 }
 
 .gift-details-content {
-  display: grid;
-  gap: 1.5rem;
+  min-width: 0;
 }
 
 .gift-details-dialog {
@@ -434,58 +433,57 @@ a {
   margin-top: 1.5rem;
 }
 
-.gift-details {
+.gift-details,
+.reservation-outcome {
   display: grid;
-  gap: 1.25rem;
+  max-width: 38rem;
+  gap: var(--space-4);
+  margin-inline: auto;
+  border: 0;
+  padding-block: var(--space-4);
 }
 
 .gift-details__overview {
-  display: grid;
+  display: flex;
   align-items: center;
-  gap: 1.25rem;
+  gap: var(--space-4);
 }
 
-.gift-details__icon {
-  display: grid;
-  min-height: 12rem;
-  place-items: center;
-  border: 1px solid rgb(63 59 55 / 0.08);
-  border-radius: 1.5rem;
-  background: linear-gradient(135deg, white, var(--color-sand-50));
-  color: var(--color-graphite-900);
-}
-
+.gift-details__step,
 .gift-details__category {
-  margin: 0 0 0.4rem;
+  margin: 0;
   color: var(--color-terracotta-600);
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   font-weight: 750;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.025em;
   text-transform: uppercase;
 }
 
+.gift-details__category {
+  margin-bottom: var(--space-1);
+}
+
 .gift-details h1,
-.gift-details h2 {
-  margin: 0 0 0.75rem;
-  color: var(--color-graphite-900);
-  font-size: clamp(2.25rem, 9vw, 4.35rem);
-  letter-spacing: -0.06em;
-  line-height: 0.98;
+.gift-details h2,
+.reservation-outcome h1,
+.reservation-outcome h2 {
+  margin: 0;
+  font-family: var(--font-affective);
+  font-size: clamp(1.875rem, 8vw, 2.125rem);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
 }
 
 .gift-details__preference {
-  border: 1px solid rgb(63 59 55 / 0.11);
-  border-radius: 1.25rem;
-  background: white;
-  padding: 1.25rem;
-  box-shadow: var(--shadow-card);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-surface);
+  background: rgb(255 255 255 / 0.72);
+  padding: var(--space-4);
 }
 
 .gift-details__preference h3,
 .gift-details__preference p,
 .gift-details__description,
-.gift-details__equivalent,
-.gift-details__notice,
 .gift-details__unavailable {
   margin: 0;
 }
@@ -495,16 +493,14 @@ a {
 }
 
 .gift-details__preference p,
-.gift-details__description,
-.gift-details__equivalent {
+.gift-details__description {
   margin-top: 0.5rem;
   color: var(--color-graphite-700);
-  font-size: 1.08rem;
+  font-size: 1rem;
 }
 
 .gift-details__description {
-  font-size: clamp(1.15rem, 4.5vw, 1.4rem);
-  line-height: 1.65;
+  line-height: 1.6;
 }
 
 .gift-details__suggestions {
@@ -521,7 +517,6 @@ a {
   text-underline-offset: 0.18em;
 }
 
-.gift-details__notice,
 .gift-details__unavailable {
   border-left: 4px solid var(--color-olive-500);
   background: rgb(111 123 82 / 0.1);
@@ -612,55 +607,42 @@ a {
   gap: 0.75rem;
 }
 
-.reservation-outcome h2 {
-  margin: 0;
-  color: var(--color-graphite-900);
-  font-size: clamp(1.55rem, 6vw, 2rem);
-  letter-spacing: -0.045em;
-  line-height: 1.1;
-}
-
-.reservation-outcome {
-  display: grid;
-  gap: 1rem;
-  border-top: 1px solid rgb(63 59 55 / 0.14);
-  padding-top: 1.5rem;
-}
-
 .reservation-outcome--success {
-  grid-template-columns: auto minmax(0, 1fr);
-  color: var(--color-olive-700);
+  grid-template-columns: minmax(0, 1fr);
+  color: inherit;
 }
 
-.reservation-outcome--success > svg {
-  width: 3rem;
-  height: 3rem;
-  padding: 0.65rem;
-  border-radius: 50%;
-  background: rgb(111 123 82 / 0.14);
+.reservation-outcome__heart {
+  font-size: 2.5rem;
+  line-height: 1;
 }
 
-.reservation-outcome p {
-  margin: 0.35rem 0 0;
+.reservation-outcome__eyebrow,
+.reservation-outcome > p {
+  margin: 0;
+}
+
+.reservation-outcome__eyebrow {
+  color: var(--color-terracotta-600);
+  font-size: 0.8rem;
+  font-weight: 750;
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
+}
+
+.reservation-outcome > p {
   color: var(--color-graphite-700);
+  font-size: 1rem;
 }
 
 .reservation-outcome__links {
   display: grid;
-  gap: 0.55rem;
-  margin-top: 1rem;
+  gap: var(--space-2);
+  margin: 0;
 }
 
-.reservation-outcome a {
-  color: var(--color-terracotta-600);
-  font-weight: 700;
-  text-underline-offset: 0.2em;
-}
-
-.reservation-outcome--error {
-  border-left: 4px solid var(--color-terracotta-500);
-  background: rgb(183 101 73 / 0.09);
-  padding: 1rem;
+.reservation-outcome__links .ui-button {
+  text-decoration: none;
 }
 
 .confirm-dialog__actions,
@@ -940,14 +922,6 @@ a {
 }
 
 @media (min-width: 640px) {
-  .gift-details__overview {
-    grid-template-columns: minmax(13rem, 0.8fr) minmax(0, 1.2fr);
-  }
-
-  .gift-details__icon {
-    min-height: 15rem;
-  }
-
   .reservation-form {
     padding: 2rem;
   }
@@ -1718,27 +1692,6 @@ a {
 .gift-card__open {
   min-width: 48px;
   padding-inline: var(--space-1);
-}
-
-.gift-details {
-  display: grid;
-  max-width: 42rem;
-  gap: 1rem;
-  margin-inline: auto;
-  padding: 2rem 0;
-}
-
-.gift-details h1 {
-  margin: 0;
-  font-size: clamp(2rem, 8vw, 3.5rem);
-  letter-spacing: -0.055em;
-  line-height: 1;
-}
-
-.gift-details p:not(.gift-details__category) {
-  margin: 0;
-  color: var(--color-graphite-700);
-  font-size: 1.125rem;
 }
 
 @media (min-width: 640px) {
