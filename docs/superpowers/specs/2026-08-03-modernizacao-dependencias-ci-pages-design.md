@@ -86,8 +86,9 @@ passarão de `react-router-dom` para `react-router`.
 A aplicação continuará usando `HashRouter`; não haverá mudança de URLs, base do
 Vite ou comportamento de links profundos no GitHub Pages. React 19.2.8 e Node
 24 já satisfazem os requisitos da versão 8. A migração foi exercitada em cópia
-descartável do repositório com instalação limpa, lint, tipos, 107 testes
-unitários/de componentes, build e 69 testes E2E aprovados.
+descartável do repositório com os aliases finais, instalação limpa, auditoria,
+lint, tipos, 107 testes unitários/de componentes, build e 69 testes E2E
+aprovados.
 
 ### TypeScript 7 com ponte de compatibilidade
 
@@ -97,16 +98,26 @@ O projeto adotará os aliases recomendados para o período de transição:
 {
   "devDependencies": {
     "@typescript/native": "npm:typescript@7.0.2",
-    "typescript": "npm:@typescript/typescript6@6.0.3"
+    "typescript": "npm:@typescript/typescript6@6.0.2"
   }
 }
 ```
 
+A combinação segue a
+[orientação oficial do TypeScript 7](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/).
+
 O binário `tsc` usado por `typecheck` e `build` virá do compilador nativo 7.0.2.
-O pacote instalado no nome `typescript` continuará expondo a API 6.0.3 de que
-o `typescript-eslint` precisa. Essa ponte é intencional, deve permanecer
+O pacote de compatibilidade `@typescript/typescript6@6.0.2`, instalado no nome
+`typescript`, continuará expondo a API da linha 6 de que o
+`typescript-eslint` precisa. Ele fornece somente o executável `tsc6`, evitando
+colisão com o `tsc` nativo. Essa ponte é intencional, deve permanecer
 documentada e poderá ser removida quando o ecossistema usado pelo projeto
 suportar a API da linha 7.
+
+O manifesto do pacote de compatibilidade informa versão 6.0.2. A propriedade
+`typescript.version` exportada por seu conteúdo informa 6.0.3; essa diferença é
+esperada e será verificada explicitamente para evitar interpretar o resultado
+como instalação incorreta.
 
 O `package-lock.json` será regenerado uma única vez a partir do manifesto final
 e validado com `npm ci`. Não serão editadas entradas do lockfile manualmente.
@@ -116,7 +127,8 @@ e validado com `npm ci`. Não serão editadas entradas do lockfile manualmente.
 O runtime suportado permanecerá na linha LTS 24:
 
 - `.nvmrc` continuará declarando `24`;
-- `engines.node` será alinhado para `24.x`;
+- `engines.node` será alinhado para `>=24.15.0 <25`, piso exigido pelo
+  `jsdom@30.0.1` dentro da linha LTS escolhida;
 - CI e Pages lerão a versão de `.nvmrc`;
 - `@types/node` permanecerá em 24.13.3, a versão mais recente da linha 24 na
   data da auditoria.
@@ -168,9 +180,11 @@ Push em main ───────────┘                       │
 - pushes em `main`;
 - `workflow_dispatch` para diagnóstico manual.
 
-O workflow terá somente `contents: read` e concorrência por PR ou referência,
-com cancelamento de execuções obsoletas. Os jobs terão nomes estáveis, limites
-de tempo explícitos e passos nomeados.
+O workflow terá somente `contents: read` e concorrência por tipo de evento e
+por PR ou referência, com cancelamento de execuções obsoletas. Incluir o tipo
+de evento impede que um diagnóstico manual cancele a CI de um push elegível ao
+Pages. Os jobs terão nomes estáveis, limites de tempo explícitos e passos
+nomeados.
 
 #### Job `quality`
 
@@ -230,7 +244,8 @@ Para eventos `workflow_run`, o job de implantação só será elegível quando:
 
 - o workflow de origem tiver sido disparado por `push`;
 - a branch de origem for `main`;
-- a conclusão for `success`.
+- a conclusão for `success`;
+- o `head_sha` aprovado for igual ao `github.sha` do workflow de Pages.
 
 No disparo manual, o job também exigirá `refs/heads/main`; selecionar outra
 referência não concederá um caminho alternativo para o ambiente de produção.
@@ -239,6 +254,13 @@ Logo, uma CI de Pull Request nunca cria sequer um job de deploy visível no
 próprio workflow de validação, e uma falha em `quality` ou `e2e` impede a
 publicação. O evento `workflow_run` será tratado como entrada não confiável:
 nenhum artefato ou script vindo de uma execução de PR será consumido.
+
+Em eventos `workflow_run`,
+[`GITHUB_SHA` representa o último commit da branch padrão](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#workflow_run),
+e [`actions/deploy-pages` usa esse valor como versão do build](https://github.com/actions/deploy-pages/blob/cd2ce8fcbc39b97be8ca5fce6e763baed58fa128/src/internal/context.js).
+A igualdade exigida entre `head_sha` e `github.sha` impede que uma execução
+antiga ou repetida publique bytes de um commit e registre outro. Uma CI
+obsoleta será cancelada ou ficará inelegível ao deploy.
 
 O deploy fará checkout do `head_sha` aprovado pela CI, instalará pelo lockfile
 e reconstruirá `dist` em runner limpo. A reconstrução evita promover um
