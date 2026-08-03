@@ -12,8 +12,8 @@ import { ReservationSummary } from './ReservationSummary'
 export function ManageReservationPage() {
   const { token = '' } = useParams()
   const reservation = useDemoSelector((state) => selectReservationByToken(state, token))
-  const gift = useDemoSelector((state) =>
-    reservation ? selectGiftByCode(state, reservation.itemCode)?.gift : undefined,
+  const entry = useDemoSelector((state) =>
+    reservation ? selectGiftByCode(state, reservation.itemCode) : undefined,
   )
   const { cancelReservation, markReservationPurchased } = useDemoActions()
   const { showToast } = useToast()
@@ -28,7 +28,7 @@ export function ManageReservationPage() {
     }
   }, [reservation])
 
-  if (!reservation || !gift) {
+  if (!reservation || !entry) {
     return (
       <AppShell>
         <ErrorState
@@ -56,7 +56,12 @@ export function ManageReservationPage() {
   return (
     <AppShell>
       <div className="manage-reservation">
-        <ReservationSummary ref={stateTitleRef} reservation={reservation} gift={gift} />
+        <ReservationSummary
+          ref={stateTitleRef}
+          reservation={reservation}
+          gift={entry.gift}
+          categoryIcon={entry.category.icon}
+        />
         {isReserved ? (
           <div className="manage-reservation__actions" aria-label="Ações da reserva">
             <Button fullWidth onClick={markAsPurchased}>
@@ -74,7 +79,7 @@ export function ManageReservationPage() {
       <ConfirmDialog
         open={cancelConfirmationOpen}
         title="Cancelar reserva"
-        description={`Você quer cancelar a reserva de ${gift.name}?`}
+        description={`Você quer cancelar a reserva de ${entry.gift.name}?`}
         confirmLabel="Cancelar reserva"
         onConfirm={confirmCancellation}
         onClose={() => setCancelConfirmationOpen(false)}

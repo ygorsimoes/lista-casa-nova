@@ -16,6 +16,11 @@ describe('ManageReservationPage', () => {
     const user = userEvent.setup()
     renderReservation('reserva-demo-valida')
 
+    expect(screen.getByText('Combine a entrega')).toBeVisible()
+    expect(screen.getByText(/quando estiver com o presente, combine com a gente/i)).toBeVisible()
+    expect(screen.getByRole('button', { name: 'Já comprei' })).toBeVisible()
+    expect(screen.getByRole('button', { name: 'Cancelar minha reserva' })).toBeVisible()
+
     await user.click(screen.getByRole('button', { name: /já comprei/i }))
 
     const status = screen.getByRole('status', { name: /estado da reserva/i })
@@ -24,6 +29,17 @@ describe('ManageReservationPage', () => {
     expect(screen.queryByRole('button', { name: /já comprei/i })).not.toBeInTheDocument()
     expect(screen.getByText(/reserva marcada como comprada/i)).toBeVisible()
     expect(status).toHaveTextContent(/comprado/i)
+  })
+
+  it('mostra o presente reservado com contexto afetivo e estado textual', () => {
+    renderReservation('reserva-demo-valida')
+
+    expect(screen.getByText('Minha reserva')).toBeVisible()
+    expect(screen.getByRole('heading', { name: 'Tudo certo com seu presente' })).toBeVisible()
+    expect(screen.getByText('Cesto de roupas')).toBeVisible()
+    expect(screen.getByRole('status', { name: 'Estado da reserva' })).toHaveTextContent(
+      'Reserva ativa',
+    )
   })
 
   it('cancela uma reserva apenas após confirmar e move o foco para o novo estado', async () => {

@@ -1,5 +1,7 @@
 import { Badge } from '@/components/ui/Badge'
-import type { DemoReservation, GiftItem, ReservationStatus } from '@/domain/types'
+import { Notice } from '@/components/ui/Notice'
+import type { Category, DemoReservation, GiftItem, ReservationStatus } from '@/domain/types'
+import { GiftVisual } from '@/features/catalog/GiftVisual'
 import { CheckCircle2, PackageCheck, Undo2 } from 'lucide-react'
 import { forwardRef } from 'react'
 
@@ -40,10 +42,11 @@ const statusPresentation: Record<ReservationStatus, StatusPresentation> = {
 export interface ReservationSummaryProps {
   reservation: DemoReservation
   gift: GiftItem
+  categoryIcon: Category['icon']
 }
 
 export const ReservationSummary = forwardRef<HTMLHeadingElement, ReservationSummaryProps>(
-  function ReservationSummary({ gift, reservation }, ref) {
+  function ReservationSummary({ categoryIcon, gift, reservation }, ref) {
     const presentation = statusPresentation[reservation.status]
     const StatusIcon = presentation.Icon
 
@@ -51,13 +54,19 @@ export const ReservationSummary = forwardRef<HTMLHeadingElement, ReservationSumm
       <section className="reservation-summary" aria-labelledby="reservation-summary-title">
         <p className="reservation-summary__eyebrow">Minha reserva</p>
         <h1 id="reservation-summary-title" tabIndex={-1}>
-          {gift.name}
+          Tudo certo com seu presente
         </h1>
-        <p className="reservation-summary__quantity">
-          {reservation.quantity === 1
-            ? '1 unidade reservada'
-            : `${reservation.quantity} unidades reservadas`}
-        </p>
+        <div className="reservation-summary__gift">
+          <GiftVisual itemCode={gift.code} categoryIcon={categoryIcon} size="summary" />
+          <div>
+            <strong>{gift.name}</strong>
+            <p>
+              {reservation.quantity === 1
+                ? '1 unidade reservada em seu nome.'
+                : `${reservation.quantity} unidades reservadas em seu nome.`}
+            </p>
+          </div>
+        </div>
         <div className="reservation-summary__state" role="status" aria-label="Estado da reserva">
           <StatusIcon aria-hidden="true" />
           <div>
@@ -69,9 +78,10 @@ export const ReservationSummary = forwardRef<HTMLHeadingElement, ReservationSumm
           </div>
         </div>
         {reservation.status === 'reserved' ? (
-          <p className="reservation-summary__hint">
-            Quando comprar o presente, volte aqui para marcar a reserva como concluída.
-          </p>
+          <Notice tone="success" className="reservation-summary__next">
+            <strong>Combine a entrega</strong>
+            <p>Quando estiver com o presente, combine com a gente a melhor forma de entregar.</p>
+          </Notice>
         ) : null}
       </section>
     )

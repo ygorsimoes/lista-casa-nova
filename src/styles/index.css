@@ -654,18 +654,18 @@ a {
 .manage-reservation {
   display: grid;
   max-width: 42rem;
-  gap: 1.5rem;
+  gap: var(--space-4);
   margin-inline: auto;
 }
 
 .reservation-summary {
   display: grid;
-  gap: 0.75rem;
+  gap: var(--space-4);
 }
 
 .reservation-summary__eyebrow,
-.reservation-summary__quantity,
-.reservation-summary__hint,
+.reservation-summary__gift p,
+.reservation-summary__next p,
 .reservation-summary__state p {
   margin: 0;
 }
@@ -678,30 +678,36 @@ a {
   text-transform: uppercase;
 }
 
-.reservation-summary > h1 {
+.reservation-summary h1 {
   margin: 0;
+  font-family: var(--font-affective);
+  font-size: clamp(1.875rem, 8vw, 2.125rem);
+  letter-spacing: -0.02em;
   color: var(--color-graphite-900);
-  font-size: clamp(2.25rem, 9vw, 4rem);
-  letter-spacing: -0.06em;
   line-height: 1;
 }
 
-.reservation-summary__quantity,
-.reservation-summary__hint,
+.reservation-summary__gift p,
+.reservation-summary__next p,
 .reservation-summary__state p {
   color: var(--color-graphite-700);
 }
 
+.reservation-summary__gift,
 .reservation-summary__state {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-surface);
+  background: rgb(255 255 255 / 0.72);
+  padding: var(--space-4);
+  box-shadow: none;
+}
+
+.reservation-summary__gift > div {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: 1rem;
-  align-items: start;
-  border: 1px solid rgb(63 59 55 / 0.11);
-  border-radius: 1.25rem;
-  background: white;
-  padding: 1.25rem;
-  box-shadow: var(--shadow-card);
+  gap: var(--space-1);
 }
 
 .reservation-summary__state > svg {
@@ -723,11 +729,8 @@ a {
   margin-bottom: 0.65rem;
 }
 
-.reservation-summary__hint {
-  border-left: 4px solid var(--color-olive-500);
-  background: rgb(111 123 82 / 0.1);
-  padding: 0.8rem 1rem;
-  color: var(--color-olive-700);
+.reservation-summary__next {
+  padding: var(--space-4);
 }
 
 .manage-reservation__back {
