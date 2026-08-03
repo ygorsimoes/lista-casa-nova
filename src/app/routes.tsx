@@ -11,6 +11,7 @@ import { lazy, Suspense } from 'react'
 import { Route, Routes, useLocation } from 'react-router-dom'
 
 const PdfPreviewPage = lazy(() => import('@/features/pdf/PdfPreviewPage'))
+const AdminPage = lazy(() => import('@/features/admin/AdminPage'))
 
 export interface AppLocationState {
   backgroundLocation?: Location
@@ -40,6 +41,14 @@ export function AppRoutes() {
           element={
             <Suspense fallback={<p role="status">Carregando prévia</p>}>
               <PdfPreviewPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <Suspense fallback={<p role="status">Carregando painel</p>}>
+              <AdminPage />
             </Suspense>
           }
         />

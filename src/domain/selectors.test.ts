@@ -1,14 +1,52 @@
 import { createInitialDemoState } from '@/data/initial-state'
 import {
   selectAvailability,
+  selectAdminSummary,
   selectCatalogEntries,
   selectCollectionBySlug,
   selectGiftByCode,
   selectReservationByToken,
 } from '@/domain/selectors'
+import { demoReducer } from '@/domain/demo-reducer'
 import { describe, expect, it } from 'vitest'
 
 describe('seletores do catálogo', () => {
+  it('deriva o resumo administrativo a partir de disponibilidades e reservas', () => {
+    const state = createInitialDemoState()
+
+    expect(selectAdminSummary(state)).toEqual({
+      availableItems: 8,
+      reservedItems: 1,
+      receivedItems: 2,
+      activeReservations: 5,
+    })
+  })
+
+  it('atualiza o resumo após cancelar ou receber uma reserva, sem totais gravados', () => {
+    const state = createInitialDemoState()
+    const cancelled = demoReducer(state, {
+      type: 'reservation/cancelled',
+      token: 'reserva-demo-valida',
+    })
+    const received = demoReducer(state, {
+      type: 'reservation/received',
+      token: 'reserva-demo-valida',
+    })
+
+    expect(selectAdminSummary(cancelled)).toEqual({
+      availableItems: 9,
+      reservedItems: 0,
+      receivedItems: 2,
+      activeReservations: 4,
+    })
+    expect(selectAdminSummary(received)).toEqual({
+      availableItems: 8,
+      reservedItems: 0,
+      receivedItems: 3,
+      activeReservations: 5,
+    })
+  })
+
   it('ignora acentos e caixa ao buscar preferências', () => {
     const result = selectCatalogEntries(createInitialDemoState(), {
       query: 'neutros',

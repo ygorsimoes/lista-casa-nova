@@ -34,6 +34,12 @@ describe('AppRoutes', () => {
     expect(await screen.findByRole('heading', { name: /prévia para impressão/i })).toBeVisible()
   })
 
+  it('carrega o painel demonstrativo pela rota sob demanda', async () => {
+    renderWithApp(<AppRoutes />, { route: '/admin' })
+
+    expect(await screen.findByRole('heading', { name: /painel demonstrativo/i })).toBeVisible()
+  })
+
   it('abre detalhes sobre o catálogo e devolve o foco ao cartão ao fechar', async () => {
     const user = userEvent.setup()
     renderWithApp(<AppRoutes />)

@@ -10,6 +10,13 @@ import type {
   ShoppingCollection,
 } from '@/domain/types'
 
+export interface AdminSummaryData {
+  availableItems: number
+  reservedItems: number
+  receivedItems: number
+  activeReservations: number
+}
+
 const consumingStatuses = new Set<ReservationStatus>(['reserved', 'purchased', 'received'])
 
 export function normalizeSearch(value: string) {
@@ -118,4 +125,33 @@ export function selectCollectionBySlug(
   slug: string,
 ): ShoppingCollection | undefined {
   return state.collections.find((collection) => collection.slug === slug)
+}
+
+export function selectAdminSummary(state: DemoState): AdminSummaryData {
+  const entries = selectCatalogEntries(state, {
+    query: '',
+    categorySlug: null,
+    availableOnly: false,
+  })
+
+  const summary = {
+    availableItems: 0,
+    reservedItems: 0,
+    receivedItems: 0,
+    activeReservations: 0,
+  }
+
+  for (const { availability } of entries) {
+    if (availability.remainingQuantity > 0) summary.availableItems += 1
+    if (availability.remainingQuantity === 0 && availability.receivedQuantity === 0) {
+      summary.reservedItems += 1
+    }
+    if (availability.receivedQuantity > 0) summary.receivedItems += 1
+  }
+
+  for (const reservation of state.reservations) {
+    if (reservation.status !== 'cancelled') summary.activeReservations += 1
+  }
+
+  return summary
 }
