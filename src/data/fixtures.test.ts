@@ -47,7 +47,7 @@ describe('fixtures do catálogo', () => {
 
     expect(state.settings).toMatchObject({
       title: 'Lista da nossa casa nova',
-      message: 'Escolha um presente para fazer parte deste novo começo.',
+      message: 'Escolha com carinho algo que você já imaginou para o nosso lar.',
       footer: 'Obrigado por celebrar este momento com a gente.',
       pix: { recipient: 'Marina e Rafael — demonstração', institution: 'Banco Fictício' },
     })

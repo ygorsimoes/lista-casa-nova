@@ -81,14 +81,14 @@ describe('CatalogPage', () => {
     )
   })
 
-  it('oferece CTAs do hero com alvos próprios para toque', () => {
+  it('mantém ações de apoio fora do hero', () => {
     renderWithApp(<CatalogPage />)
 
-    expect(screen.getByRole('link', { name: /contribuir com qualquer valor/i })).toHaveClass(
-      'catalog-hero__link',
-    )
-    expect(screen.getByRole('link', { name: /ver lista para impressão/i })).toHaveClass(
-      'catalog-hero__link',
-    )
+    expect(
+      screen.queryByRole('link', { name: /contribuir com qualquer valor/i }),
+    ).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('link', { name: /ver lista para impressão/i }),
+    ).not.toBeInTheDocument()
   })
 })

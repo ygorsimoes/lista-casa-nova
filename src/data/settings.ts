@@ -2,7 +2,7 @@ import type { SiteSettings } from '@/domain/types'
 
 export const settings: SiteSettings = {
   title: 'Lista da nossa casa nova',
-  message: 'Escolha um presente para fazer parte deste novo começo.',
+  message: 'Escolha com carinho algo que você já imaginou para o nosso lar.',
   howItWorks: 'Escolha um item, faça uma reserva demonstrativa ou veja a opção de contribuição.',
   footer: 'Obrigado por celebrar este momento com a gente.',
   pix: {
