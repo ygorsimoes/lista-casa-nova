@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useLocation } from 'react-router-dom'
 
 const pageTitles: Record<string, string> = {
@@ -10,6 +10,7 @@ const pageTitles: Record<string, string> = {
 
 export function RouteEffects() {
   const location = useLocation()
+  const previousRouteWasDialog = useRef(false)
 
   useEffect(() => {
     const title = pageTitles[location.pathname] ?? 'Lista da nossa casa nova'
@@ -18,9 +19,16 @@ export function RouteEffects() {
     const backgroundLocation = (
       location.state as { backgroundLocation?: unknown } | null | undefined
     )?.backgroundLocation
-    if (backgroundLocation) return
+    if (backgroundLocation) {
+      previousRouteWasDialog.current = true
+      return
+    }
 
     window.scrollTo(0, 0)
+    if (previousRouteWasDialog.current) {
+      previousRouteWasDialog.current = false
+      return
+    }
     document.querySelector<HTMLElement>('h1[tabindex="-1"]')?.focus()
   }, [location.key, location.pathname, location.state])
 

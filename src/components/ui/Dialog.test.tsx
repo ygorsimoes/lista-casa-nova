@@ -103,4 +103,17 @@ describe('Dialog', () => {
     await user.tab({ shift: true })
     expect(lastAction).toHaveFocus()
   })
+
+  it('leva o primeiro Tab do próprio diálogo ao botão de fechar', async () => {
+    const user = userEvent.setup()
+    render(<DialogHarness />)
+
+    await user.click(screen.getByRole('button', { name: /abrir detalhes/i }))
+    const dialog = screen.getByRole('dialog', { name: /detalhes do presente/i })
+    expect(dialog).toHaveFocus()
+
+    fireEvent.keyDown(dialog, { key: 'Tab' })
+
+    expect(screen.getByRole('button', { name: /fechar/i })).toHaveFocus()
+  })
 })

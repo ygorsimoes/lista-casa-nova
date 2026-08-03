@@ -83,6 +83,12 @@ export function Dialog({
 
     if (!firstFocusable || !lastFocusable) return
 
+    if (document.activeElement === dialog) {
+      event.preventDefault()
+      firstFocusable.focus()
+      return
+    }
+
     if (event.shiftKey && document.activeElement === firstFocusable) {
       event.preventDefault()
       lastFocusable.focus()

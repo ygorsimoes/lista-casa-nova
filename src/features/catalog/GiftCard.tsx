@@ -45,6 +45,7 @@ export function GiftCard({ code }: GiftCardProps) {
         </div>
         <div className="gift-card__action">
           <Button
+            id={`gift-card-action-${entry.gift.code}`}
             variant={canReserve ? 'primary' : 'secondary'}
             onClick={() =>
               navigate(`/item/${entry.gift.code}`, {

@@ -52,10 +52,7 @@ export function PrintableGiftList({ entries, settings }: PrintableGiftListProps)
               <td data-label="Presente">{entry.gift.name}</td>
               <td data-label="Disponibilidade">{availabilityLabel(entry)}</td>
               <td data-label="Nome/assinatura">
-                <span
-                  className="printable-sheet__signature"
-                  aria-label="Espaço para nome ou assinatura"
-                />
+                <span className="printable-sheet__signature" />
               </td>
             </tr>
           ))}

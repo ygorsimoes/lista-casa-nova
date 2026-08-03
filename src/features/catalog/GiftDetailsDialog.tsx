@@ -11,12 +11,19 @@ export function GiftDetailsDialog() {
 
   if (!entry) return null
 
+  function closeAndRestoreCardFocus() {
+    navigate(-1)
+    requestAnimationFrame(() => {
+      document.getElementById(`gift-card-action-${code}`)?.focus()
+    })
+  }
+
   return (
     <Dialog
       open
       className="gift-details-dialog"
       title="Detalhes do presente"
-      onClose={() => navigate(-1)}
+      onClose={closeAndRestoreCardFocus}
     >
       <GiftDetailsContent entry={entry} headingLevel="h2" />
     </Dialog>
