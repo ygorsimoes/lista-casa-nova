@@ -28,6 +28,7 @@ describe('AdminPage', () => {
     await user.click(screen.getByRole('button', { name: /sair da demonstração/i }))
 
     expect(screen.getByText(/não existe autenticação real/i)).toBeVisible()
+    expect(screen.getByRole('heading', { name: /painel demonstrativo/i })).toHaveFocus()
   })
 
   it('inicia cada nova montagem bloqueada', () => {

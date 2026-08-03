@@ -1,16 +1,24 @@
 import { Button } from '@/components/ui/Button'
 import { Info } from 'lucide-react'
+import { useEffect, useRef } from 'react'
 
 interface AdminLoginProps {
   onEnter(): void
+  focusTitle?: boolean
 }
 
-export function AdminLogin({ onEnter }: AdminLoginProps) {
+export function AdminLogin({ focusTitle = false, onEnter }: AdminLoginProps) {
+  const headingRef = useRef<HTMLHeadingElement>(null)
+
+  useEffect(() => {
+    if (focusTitle) headingRef.current?.focus()
+  }, [focusTitle])
+
   return (
     <section className="admin-login" aria-labelledby="admin-login-title">
       <div className="admin-login__panel ui-card">
         <Info aria-hidden="true" size={32} strokeWidth={1.8} />
-        <h1 id="admin-login-title" tabIndex={-1}>
+        <h1 id="admin-login-title" ref={headingRef} tabIndex={-1}>
           Painel demonstrativo
         </h1>
         <p>
