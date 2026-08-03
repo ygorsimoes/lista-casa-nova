@@ -11,6 +11,9 @@ Protótipo visual, navegável e mobile-first de uma lista de presentes para casa
 
 - Node.js 24 ou mais recente.
 - npm, com o `package-lock.json` versionado como fonte das dependências.
+- TypeScript 6.0.3, mantido nessa versão porque `typescript-eslint@8.65.0`
+  declara compatibilidade com TypeScript abaixo de 6.1.0; a versão 7.0.2 não é
+  compatível com essa combinação.
 
 ## Uso local
 

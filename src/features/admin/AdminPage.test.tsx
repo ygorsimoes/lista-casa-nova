@@ -19,10 +19,11 @@ describe('AdminPage', () => {
 
     await user.click(screen.getByRole('button', { name: /entrar na demonstração/i }))
 
-    expect(screen.getByRole('heading', { name: /visão geral/i })).toHaveFocus()
+    expect(screen.getByRole('heading', { name: /painel da lista/i })).toHaveFocus()
     expect(screen.getByText('8', { selector: '.admin-summary__value' })).toBeVisible()
-    expect(screen.getByRole('button', { name: /presentes/i })).toBeVisible()
-    expect(screen.getByRole('button', { name: /reservas/i })).toBeVisible()
+    expect(screen.getByRole('button', { name: /^presentes$/i })).toBeVisible()
+    expect(screen.getByRole('button', { name: /^reservas$/i })).toBeVisible()
+    expect(screen.getByRole('link', { name: /voltar para a lista/i })).toBeVisible()
     expect(screen.getByRole('button', { name: /sair da demonstração/i })).toBeVisible()
 
     await user.click(screen.getByRole('button', { name: /sair da demonstração/i }))
@@ -37,18 +38,17 @@ describe('AdminPage', () => {
     expect(screen.getByRole('button', { name: /entrar na demonstração/i })).toBeVisible()
   })
 
-  it('alterna entre as seções operacionais do painel', async () => {
+  it('mostra resumo e seções operacionais simultaneamente no shell administrativo', async () => {
     const user = userEvent.setup()
     renderWithApp(<AdminPage />, { route: '/admin' })
 
     await user.click(screen.getByRole('button', { name: /entrar na demonstração/i }))
-    await user.click(screen.getByRole('button', { name: /^presentes$/i }))
 
     expect(screen.getByRole('heading', { name: /presentes da lista/i })).toBeVisible()
-    expect(screen.getByText(/código.*categoria.*desejado.*restante/i)).toBeVisible()
-
-    await user.click(screen.getByRole('button', { name: /^configurações$/i }))
-
+    expect(screen.getByRole('heading', { name: /^reservas$/i })).toBeVisible()
     expect(screen.getByRole('heading', { name: /configurações da lista/i })).toBeVisible()
+    expect(screen.getByText(/código.*categoria.*desejado.*restante/i)).toBeVisible()
+    expect(document.querySelector('.site-header')).not.toBeInTheDocument()
+    expect(document.querySelector('.admin-shell')).toBeInTheDocument()
   })
 })

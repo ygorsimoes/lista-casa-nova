@@ -19,11 +19,20 @@ for (const { heading, path } of deepLinks) {
   })
 }
 
-test('rota desconhecida retorna ao catálogo', async ({ page }) => {
-  await page.goto('./#/rota-inexistente')
+for (const { heading, path } of [
+  { path: 'item/CODIGO-INEXISTENTE', heading: 'Presente não encontrado' },
+  { path: 'minha-reserva/reserva-inexistente', heading: 'Reserva não encontrada' },
+  { path: 'colecao/colecao-inexistente', heading: 'Coleção não encontrada' },
+  { path: 'rota-inexistente', heading: 'Página não encontrada' },
+] as const) {
+  test(`estado inválido #/${path} oferece h1 focalizado e retorno`, async ({ page }) => {
+    await page.goto(`./#/${path}`)
 
-  await expect(page.getByRole('heading', { name: 'Página não encontrada' })).toBeVisible()
-  await page.getByRole('link', { name: 'Voltar ao catálogo' }).click()
-  await expect(page).toHaveURL(/#\/$/)
-  await expect(page.getByRole('heading', { name: 'Lista da nossa casa nova' })).toBeVisible()
-})
+    const title = page.getByRole('heading', { level: 1, name: heading })
+    await expect(title).toBeVisible()
+    await expect(title).toBeFocused()
+    await page.getByRole('link', { name: /voltar (ao catálogo|à lista)/i }).click()
+    await expect(page).toHaveURL(/#\/$/)
+    await expect(page.getByRole('heading', { name: 'Lista da nossa casa nova' })).toBeVisible()
+  })
+}

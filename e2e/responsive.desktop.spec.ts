@@ -34,6 +34,10 @@ test('@desktop apresenta quatro cards administrativos na mesma linha', async ({ 
 
   const cards = page.locator('.admin-summary__card')
   await expect(cards).toHaveCount(4)
+  await expect(page.getByRole('navigation', { name: 'Administração' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Presentes da lista' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Reservas', exact: true })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Configurações da lista' })).toBeVisible()
   const rowTops = await cards.evaluateAll((elements) =>
     elements.map((element) => Math.round(element.getBoundingClientRect().top)),
   )

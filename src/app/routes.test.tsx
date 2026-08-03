@@ -5,11 +5,21 @@ import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 
 describe('AppRoutes', () => {
-  it('mostra uma mensagem amigável para rotas desconhecidas', () => {
-    renderWithApp(<AppRoutes />, { route: '/onde-foi-parar' })
+  it.each([
+    ['/item/CODIGO-INEXISTENTE', 'Presente não encontrado'],
+    ['/minha-reserva/reserva-inexistente', 'Reserva não encontrada'],
+    ['/colecao/colecao-inexistente', 'Coleção não encontrada'],
+    ['/onde-foi-parar', 'Página não encontrada'],
+  ])('oferece um h1 focalizado para o estado inválido em %s', (route, title) => {
+    renderWithApp(<AppRoutes />, { route })
 
-    expect(screen.getByRole('heading', { name: /página não encontrada/i })).toBeVisible()
-    expect(screen.getByRole('link', { name: /voltar ao catálogo/i })).toHaveAttribute('href', '/')
+    const heading = screen.getByRole('heading', { level: 1, name: title })
+    expect(heading).toBeVisible()
+    expect(heading).toHaveFocus()
+    expect(screen.getByRole('link', { name: /voltar (ao catálogo|à lista)/i })).toHaveAttribute(
+      'href',
+      '/',
+    )
   })
 
   it('abre uma página de detalhes pelo código do presente', () => {

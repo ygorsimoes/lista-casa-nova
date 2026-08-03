@@ -11,9 +11,9 @@ export function ErrorState({ action, description, title }: ErrorStateProps) {
 
   return (
     <section className="ui-state ui-state--error" role="alert" aria-labelledby={titleId}>
-      <h2 id={titleId} className="ui-state__title">
+      <h1 id={titleId} className="ui-state__title" tabIndex={-1}>
         {title}
-      </h2>
+      </h1>
       <p className="ui-state__description">{description}</p>
       {action ? <div className="ui-state__action">{action}</div> : null}
     </section>

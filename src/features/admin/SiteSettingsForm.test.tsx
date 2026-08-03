@@ -8,7 +8,6 @@ async function openSettings() {
   const user = userEvent.setup()
   renderWithApp(<AdminPage />, { route: '/admin' })
   await user.click(screen.getByRole('button', { name: /entrar na demonstração/i }))
-  await user.click(screen.getByRole('button', { name: /^configurações$/i }))
   return user
 }
 
@@ -23,9 +22,7 @@ describe('SiteSettingsForm', () => {
 
     expect(screen.getByText(/alterações mantidas somente nesta sessão/i)).toBeVisible()
     expect(screen.getByText(/banco fictício/i)).toBeVisible()
-    expect(
-      screen.getByRole('link', { name: /voltar para a lista de presentes/i }),
-    ).toHaveTextContent('Nosso novo lar')
+    expect(screen.getByDisplayValue('Nosso novo lar')).toBeVisible()
   })
 
   it('não envia campos obrigatórios vazios e foca o primeiro erro', async () => {

@@ -1,6 +1,6 @@
 import AdminPage from '@/features/admin/AdminPage'
 import { renderWithApp } from '@/test/renderApp'
-import { screen } from '@testing-library/react'
+import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 
@@ -8,7 +8,6 @@ async function openReservations() {
   const user = userEvent.setup()
   renderWithApp(<AdminPage />, { route: '/admin' })
   await user.click(screen.getByRole('button', { name: /entrar na demonstração/i }))
-  await user.click(screen.getByRole('button', { name: /^reservas$/i }))
   return user
 }
 
@@ -38,16 +37,20 @@ describe('AdminReservations', () => {
     await user.click(release)
     await user.click(screen.getByRole('button', { name: /manter reserva/i }))
 
-    expect(screen.getByText(/cesto de roupas/i).closest('article')).toHaveTextContent(/reservada/i)
+    const reservations = within(screen.getByRole('region', { name: /^reservas$/i }))
+    expect(reservations.getByText(/cesto de roupas/i).closest('article')).toHaveTextContent(
+      /reservada/i,
+    )
     expect(release).toHaveFocus()
   })
 
   it('oferece somente as transições permitidas para cada status', async () => {
     const user = await openReservations()
 
-    const reserved = screen.getByText(/potes herméticos/i).closest('article')
-    const purchased = screen.getByText(/jogo de cama queen/i).closest('article')
-    const received = screen.getByText(/jogo de toalhas/i).closest('article')
+    const reservations = within(screen.getByRole('region', { name: /^reservas$/i }))
+    const reserved = reservations.getByText(/potes herméticos/i).closest('article')
+    const purchased = reservations.getByText(/jogo de cama queen/i).closest('article')
+    const received = reservations.getByText(/jogo de toalhas/i).closest('article')
 
     expect(reserved).toHaveTextContent(/marcar como comprada/i)
     expect(reserved).toHaveTextContent(/marcar como recebida/i)
@@ -75,7 +78,6 @@ describe('AdminReservations', () => {
 
     await user.click(screen.getByRole('button', { name: /liberar reserva de cesto de roupas/i }))
     await user.click(screen.getByRole('button', { name: /confirmar liberação/i }))
-    await user.click(screen.getByRole('button', { name: /^presentes$/i }))
 
     expect(screen.getByText(/lv-001/i).closest('article')).toHaveTextContent(/1 restante/i)
     expect(screen.getByText(/lv-001/i).closest('article')).toHaveTextContent(/disponível/i)

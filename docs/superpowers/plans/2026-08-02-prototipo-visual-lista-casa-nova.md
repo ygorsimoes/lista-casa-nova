@@ -6,7 +6,11 @@
 
 **Architecture:** Uma SPA React com `HashRouter` lê fixtures TypeScript e mantém alterações somente em um `DemoStateProvider` baseado em `useReducer`. Disponibilidade, cartões e resumos administrativos são derivados das reservas, evitando um segundo status mutável nos itens; rotas de PDF e administração são carregadas sob demanda.
 
-**Tech Stack:** Node.js 24, npm, React 19.2.8, TypeScript 7.0.2, Vite 8.2.0, Tailwind CSS 4.3.3, React Router 7.18.2, Lucide React, Vitest 4.1.10, Testing Library e Playwright 1.62.1.
+**Tech Stack:** Node.js 24, npm, React 19.2.8, TypeScript 6.0.3, Vite 8.2.0, Tailwind CSS 4.3.3, React Router 7.18.2, Lucide React, Vitest 4.1.10, Testing Library e Playwright 1.62.1.
+
+O TypeScript permanece fixado em `6.0.3`, versão compatível com a faixa de peer
+dependency `<6.1.0` declarada por `typescript-eslint@8.65.0`. O TypeScript
+`7.0.2` não é executável com essa combinação de versões.
 
 ## Global Constraints
 
@@ -184,7 +188,7 @@ Use este manifesto com versões fixas verificadas em 2026-08-02:
     "jsdom": "30.0.1",
     "prettier": "3.9.6",
     "tailwindcss": "4.3.3",
-    "typescript": "7.0.2",
+    "typescript": "6.0.3",
     "typescript-eslint": "8.65.0",
     "vite": "8.2.0",
     "vitest": "4.1.10"

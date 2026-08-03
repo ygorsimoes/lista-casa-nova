@@ -1,5 +1,7 @@
 import { useDemoActions, useDemoSelector } from '@/app/DemoStateProvider'
 import { AppShell } from '@/components/layout/AppShell'
+import { RouteEffects } from '@/components/layout/RouteEffects'
+import { ToastProvider } from '@/components/ui/Toast'
 import { useState } from 'react'
 import { AdminDashboard } from './AdminDashboard'
 import { AdminLogin } from './AdminLogin'
@@ -19,13 +21,18 @@ export default function AdminPage() {
     lockAdmin()
   }
 
+  if (adminUnlocked) {
+    return (
+      <ToastProvider>
+        <RouteEffects />
+        <AdminDashboard onExit={exitDemo} />
+      </ToastProvider>
+    )
+  }
+
   return (
     <AppShell>
-      {adminUnlocked ? (
-        <AdminDashboard onExit={exitDemo} />
-      ) : (
-        <AdminLogin focusTitle={shouldFocusLoginTitle} onEnter={enterDemo} />
-      )}
+      <AdminLogin focusTitle={shouldFocusLoginTitle} onEnter={enterDemo} />
     </AppShell>
   )
 }
