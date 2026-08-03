@@ -50,7 +50,9 @@ export const ReservationSummary = forwardRef<HTMLHeadingElement, ReservationSumm
     return (
       <section className="reservation-summary" aria-labelledby="reservation-summary-title">
         <p className="reservation-summary__eyebrow">Minha reserva</p>
-        <h1 id="reservation-summary-title">{gift.name}</h1>
+        <h1 id="reservation-summary-title" tabIndex={-1}>
+          {gift.name}
+        </h1>
         <p className="reservation-summary__quantity">
           {reservation.quantity === 1
             ? '1 unidade reservada'

@@ -1,5 +1,5 @@
-import { expect, test } from '@playwright/test'
 import { expectEmptyBrowserStorage, observeForbiddenRequests } from './support/assertions.js'
+import { expect, test } from './support/test.js'
 import { demoScenarios } from './support/demo-scenarios.js'
 
 test('marca a reserva válida como comprada e reseta após reload', async ({ page }) => {

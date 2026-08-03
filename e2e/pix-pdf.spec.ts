@@ -1,9 +1,9 @@
-import { expect, test } from '@playwright/test'
 import {
   expectEmptyBrowserStorage,
   expectNoHorizontalOverflow,
   observeForbiddenRequests,
 } from './support/assertions.js'
+import { expect, test } from './support/test.js'
 import { demoScenarios } from './support/demo-scenarios.js'
 
 test('coleção válida mantém sugestões dentro do protótipo', async ({ page }) => {

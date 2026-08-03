@@ -23,7 +23,7 @@ export default defineConfig({
     {
       name: 'mobile-webkit',
       grepInvert: /@desktop/,
-      use: { ...devices['iPhone 13'], viewport: { width: 360, height: 800 } },
+      use: { ...devices['iPhone 13'], viewport: { width: 390, height: 844 } },
     },
     {
       name: 'desktop-chromium',

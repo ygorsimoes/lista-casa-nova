@@ -1,10 +1,10 @@
-import { expect, test } from '@playwright/test'
 import {
   expectEmptyBrowserStorage,
   expectNoHorizontalOverflow,
   observeForbiddenRequests,
 } from './support/assertions.js'
 import { demoScenarios } from './support/demo-scenarios.js'
+import { expect, test } from './support/test.js'
 
 test('reserva pelo painel, gera token e restaura o item ao recarregar', async ({ page }) => {
   const expectNoForbiddenRequests = observeForbiddenRequests(page)
@@ -36,6 +36,19 @@ test('reserva pelo painel, gera token e restaura o item ao recarregar', async ({
   await expectNoHorizontalOverflow(page)
 })
 
+test('leva o foco ao título ao gerenciar a reserva criada no diálogo', async ({ page }) => {
+  await page.goto('./#/')
+
+  await page.getByRole('button', { name: 'Quero dar este presente: Chaleira' }).click()
+  const dialog = page.getByRole('dialog', { name: 'Detalhes do presente' })
+  await dialog.getByRole('button', { name: 'Quero dar este presente', exact: true }).click()
+  await dialog.getByLabel('Primeiro nome', { exact: true }).fill('Nina')
+  await dialog.getByRole('button', { name: 'Confirmar reserva' }).click()
+  await dialog.getByRole('link', { name: 'Gerenciar esta reserva' }).click()
+
+  await expect(page.getByRole('heading', { name: 'Chaleira', level: 1 })).toBeFocused()
+})
+
 test('mantém os dados do formulário ao simular conflito', async ({ page }) => {
   const expectNoForbiddenRequests = observeForbiddenRequests(page)
   await page.goto(`./#/item/${demoScenarios.conflictItem}`)
@@ -57,4 +70,16 @@ test('explica item indisponível sem oferecer formulário', async ({ page }) => 
   await expect(
     page.getByRole('button', { name: 'Quero dar este presente', exact: true }),
   ).toHaveCount(0)
+})
+
+test('apresenta estado amigável para código de item inexistente', async ({ page }) => {
+  await page.goto('./#/item/CODIGO-INEXISTENTE')
+
+  const errorState = page.getByRole('alert')
+  await expect(errorState.getByRole('heading', { name: 'Presente não encontrado' })).toBeVisible()
+  await expect(errorState).toContainText(
+    'Este presente não faz parte da lista. Você pode voltar ao catálogo para escolher outro.',
+  )
+  await errorState.getByRole('link', { name: 'Voltar ao catálogo' }).click()
+  await expect(page.getByRole('heading', { name: 'Lista da nossa casa nova' })).toBeFocused()
 })

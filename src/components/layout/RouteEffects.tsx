@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigationType } from 'react-router-dom'
 
 const pageTitles: Record<string, string> = {
   '/': 'Lista da nossa casa nova',
@@ -10,6 +10,7 @@ const pageTitles: Record<string, string> = {
 
 export function RouteEffects() {
   const location = useLocation()
+  const navigationType = useNavigationType()
   const previousRouteWasDialog = useRef(false)
 
   useEffect(() => {
@@ -25,12 +26,14 @@ export function RouteEffects() {
     }
 
     window.scrollTo(0, 0)
-    if (previousRouteWasDialog.current) {
-      previousRouteWasDialog.current = false
+    const returnedFromDialogToCatalog =
+      previousRouteWasDialog.current && navigationType === 'POP' && location.pathname === '/'
+    previousRouteWasDialog.current = false
+    if (returnedFromDialogToCatalog) {
       return
     }
     document.querySelector<HTMLElement>('h1[tabindex="-1"]')?.focus()
-  }, [location.key, location.pathname, location.state])
+  }, [location.key, location.pathname, location.state, navigationType])
 
   return null
 }

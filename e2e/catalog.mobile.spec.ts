@@ -1,17 +1,17 @@
-import { expect, test } from '@playwright/test'
 import {
   expectMinimumFieldFontSize,
   expectMinimumTouchTarget,
   expectNoHorizontalOverflow,
   expectNoSeriousAccessibilityViolations,
 } from './support/assertions.js'
+import { expect, test } from './support/test.js'
 
 test.beforeEach(async ({ page }) => {
   await page.goto('./#/')
   await expect(page.getByRole('heading', { name: 'Lista da nossa casa nova' })).toBeVisible()
 })
 
-test('filtra o catálogo com acento e caixa em 360 px sem overflow', async ({ page }) => {
+test('filtra o catálogo com acento e caixa na largura móvel sem overflow', async ({ page }) => {
   await page.getByRole('searchbox', { name: 'Buscar um presente' }).fill('CHÁLEIRA')
 
   await expect(page.getByRole('heading', { name: 'Chaleira' })).toBeVisible()

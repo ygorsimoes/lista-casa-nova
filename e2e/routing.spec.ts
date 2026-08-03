@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+import { expect, test } from './support/test.js'
 
 const deepLinks = [
   { path: '', heading: 'Lista da nossa casa nova' },

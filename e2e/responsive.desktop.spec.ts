@@ -1,5 +1,5 @@
-import { expect, test } from '@playwright/test'
 import { expectNoHorizontalOverflow } from './support/assertions.js'
+import { expect, test } from './support/test.js'
 
 test('@desktop organiza catálogo em múltiplas colunas dentro do contêiner', async ({ page }) => {
   await page.goto('./#/')

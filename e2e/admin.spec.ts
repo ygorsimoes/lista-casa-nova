@@ -1,9 +1,10 @@
-import { expect, test, type Page } from '@playwright/test'
+import type { Page } from '@playwright/test'
 import {
   expectEmptyBrowserStorage,
   expectNoHorizontalOverflow,
   observeForbiddenRequests,
 } from './support/assertions.js'
+import { expect, test } from './support/test.js'
 
 function summaryCard(page: Page, label: string) {
   return page.getByText(label, { exact: true }).locator('..')

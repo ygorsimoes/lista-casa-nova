@@ -1,5 +1,5 @@
-import { expect, test } from '@playwright/test'
 import { expectNoSeriousAccessibilityViolations } from './support/assertions.js'
+import { expect, test } from './support/test.js'
 
 test('opera filtros com Enter e Espaço', async ({ page }) => {
   await page.goto('./#/')
