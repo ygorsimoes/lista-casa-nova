@@ -1600,6 +1600,27 @@ a {
   color: var(--color-graphite-700);
 }
 
+@media (max-width: 639px) {
+  .catalog-filters {
+    gap: var(--space-2);
+    margin-top: var(--space-2);
+  }
+
+  .category-list {
+    flex-wrap: nowrap;
+    gap: var(--space-2);
+    overflow-x: auto;
+  }
+
+  .category-list__button {
+    flex: 0 0 auto;
+  }
+
+  .catalog-results {
+    margin: var(--space-2) 0;
+  }
+}
+
 .gift-grid {
   display: grid;
   gap: 1rem;

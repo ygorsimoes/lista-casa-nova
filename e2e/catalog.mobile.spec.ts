@@ -33,7 +33,7 @@ test('combina categoria, disponibilidade e estado vazio', async ({ page }) => {
 
 test('mantém controles principais confortáveis para toque e leitura', async ({ page }) => {
   const search = page.getByRole('searchbox', { name: 'Buscar um presente' })
-  const brand = page.getByRole('link', { name: 'Voltar para a lista de presentes' })
+  const brand = page.getByRole('banner').getByRole('link', { name: 'Nossa lista' })
   await expectMinimumFieldFontSize(search)
   await expectMinimumTouchTarget(search)
   await expectMinimumTouchTarget(brand)
@@ -67,6 +67,27 @@ test('centraliza o ícone de busca no campo em 360 px', async ({ page }) => {
   const inputCenter = inputBox.y + inputBox.height / 2
   const iconCenter = iconBox.y + iconBox.height / 2
   expect(Math.abs(inputCenter - iconCenter)).toBeLessThanOrEqual(1)
+})
+
+test('mantém o primeiro presente completo na dobra inicial em 360 × 800', async ({
+  page,
+}, testInfo) => {
+  test.skip(testInfo.project.name !== 'mobile-chromium', 'A medição cobre a viewport de 360 × 800.')
+
+  const viewportHeight = await page.evaluate(() => window.innerHeight)
+  const firstGift = page.locator('.gift-card').first()
+  const firstGiftBox = await firstGift.boundingBox()
+
+  expect(viewportHeight).toBe(800)
+  expect(firstGiftBox, 'o primeiro presente deve ter uma caixa mensurável').not.toBeNull()
+
+  if (!firstGiftBox) {
+    throw new Error('O primeiro presente precisa ter uma caixa mensurável.')
+  }
+
+  expect(await page.evaluate(() => window.scrollY)).toBe(0)
+  expect(firstGiftBox.y).toBeGreaterThanOrEqual(0)
+  expect(firstGiftBox.y + firstGiftBox.height).toBeLessThanOrEqual(viewportHeight)
 })
 
 test('não possui violações sérias ou críticas no catálogo', async ({ page }) => {
