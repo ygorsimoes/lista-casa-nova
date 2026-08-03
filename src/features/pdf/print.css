@@ -24,10 +24,6 @@
   line-height: 0.98;
 }
 
-.pdf-preview h1:focus-visible {
-  outline: 0;
-}
-
 .pdf-preview__intro {
   max-width: 42rem;
   margin: 0;
