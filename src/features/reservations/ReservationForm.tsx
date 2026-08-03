@@ -43,6 +43,7 @@ export function ReservationForm({
 }: ReservationFormProps) {
   const [errors, setErrors] = useState<ReservationFormErrors>({})
   const formRef = useRef<HTMLFormElement>(null)
+  const pendingContactFocusRef = useRef(false)
   const contactId = useId()
   const Heading = headingLevel
 
@@ -55,8 +56,11 @@ export function ReservationForm({
   }, [focusField])
 
   useEffect(() => {
-    if (contactExpanded && errors.contact) focusField('contact')
-  }, [contactExpanded, errors.contact, focusField])
+    if (contactExpanded && pendingContactFocusRef.current) {
+      pendingContactFocusRef.current = false
+      focusField('contact')
+    }
+  }, [contactExpanded, focusField])
 
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -67,6 +71,7 @@ export function ReservationForm({
     )
     if (firstError) {
       if (firstError === 'contact' && !contactExpanded) {
+        pendingContactFocusRef.current = true
         onContactExpandedChange(true)
         return
       }

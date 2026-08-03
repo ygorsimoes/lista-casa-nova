@@ -8,10 +8,10 @@ import { describe, expect, it, vi } from 'vitest'
 import { ReservationForm } from './ReservationForm'
 import { createReservationFormValues, type ReservationFormValues } from './reservation-validation'
 
-function FormHarness({ code = 'CZ-001', onSubmit = vi.fn() }) {
+function FormHarness({ code = 'CZ-001', contactInitiallyExpanded = false, onSubmit = vi.fn() }) {
   const entry = selectGiftByCode(createInitialDemoState(), code)
   const [values, setValues] = useState<ReservationFormValues>(createReservationFormValues)
-  const [contactExpanded, setContactExpanded] = useState(false)
+  const [contactExpanded, setContactExpanded] = useState(contactInitiallyExpanded)
   if (!entry) throw new Error(`Fixture ausente: ${code}`)
 
   return (
@@ -78,5 +78,19 @@ describe('ReservationForm', () => {
 
     expect(screen.getByLabelText('Contato (opcional)')).toHaveFocus()
     expect(screen.getByLabelText('Contato (opcional)')).toHaveAttribute('aria-invalid', 'true')
+  })
+
+  it('mantém o foco no primeiro nome quando nome e contato estão inválidos', async () => {
+    const user = userEvent.setup()
+    renderWithApp(<FormHarness contactInitiallyExpanded />)
+    const firstName = screen.getByLabelText('Seu primeiro nome')
+    const contact = screen.getByLabelText('Contato (opcional)')
+
+    await user.type(contact, 'x'.repeat(101))
+    await user.click(screen.getByRole('button', { name: 'Confirmar reserva' }))
+
+    expect(firstName).toHaveFocus()
+    expect(firstName).toHaveAttribute('aria-invalid', 'true')
+    expect(contact).toHaveAttribute('aria-invalid', 'true')
   })
 })
