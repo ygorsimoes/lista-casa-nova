@@ -9,15 +9,15 @@ Protótipo visual, navegável e mobile-first de uma lista de presentes para casa
 
 ## Requisitos
 
-- Node.js 24 ou mais recente.
+- Node.js `>=24.15.0 <25`. O `.nvmrc` seleciona a versão disponível mais recente da linha LTS 24.
 - npm, com o `package-lock.json` versionado como fonte das dependências.
-- TypeScript 6.0.3, mantido nessa versão porque `typescript-eslint@8.65.0`
-  declara compatibilidade com TypeScript abaixo de 6.1.0; a versão 7.0.2 não é
-  compatível com essa combinação.
+- O binário `tsc` vem do TypeScript nativo 7.0.2. O pacote de compatibilidade `@typescript/typescript6@6.0.2` permanece instalado no nome `typescript` para fornecer a API da linha 6 exigida pelo `typescript-eslint@8.65.0`.
 
 ## Uso local
 
 ```bash
+nvm install
+nvm use
 npm ci
 npm run dev
 ```
@@ -40,7 +40,7 @@ npm run build
 npm run test:e2e
 ```
 
-`npm run test` executa os testes unitários e de componentes com cobertura. `npm run test:e2e` gera o build e executa os 69 casos Playwright em Chromium móvel, WebKit móvel e Chromium desktop. A primeira execução local pode exigir `npx playwright install chromium webkit`.
+`npm run test` executa os testes unitários e de componentes com cobertura. `npm run test:e2e` gera o build e executa os 69 casos Playwright em Chromium móvel, WebKit móvel e Chromium desktop. Depois de `npm ci`, a primeira execução local pode exigir `npx --no-install playwright install chromium webkit`.
 
 ## Rotas
 
@@ -75,6 +75,8 @@ Atualizar a página restaura todos os dados iniciais do protótipo.
 
 ## CI e GitHub Pages
 
-O workflow `CI e GitHub Pages` valida Pull Requests e pushes para `main` com instalação limpa, formatação, lint, tipos, cobertura, build e os testes E2E. Pull Requests nunca publicam. Somente um push aprovado em `main` envia o mesmo diretório `dist` exercitado pelo Playwright e inicia a publicação em [GitHub Pages](https://ygorsimoes.github.io/lista-casa-nova/), sem secrets ou variáveis de backend.
+O workflow `CI` valida Pull Requests para `main`, pushes em `main` e execuções manuais. O job `quality` executa instalação limpa, auditoria de produção, formatação, lint, tipos, cobertura e build; o job `e2e` repete a instalação e o build em runner limpo e executa Playwright. Um caso que só passe no retry é tratado como falha, com relatório e traces anexados ao job.
 
-No repositório, configure **Settings → Pages → Build and deployment → Source** como **GitHub Actions**. O deploy remoto só pode ser confirmado depois que o workflow executar no GitHub.
+Pull Requests não criam job de deploy. Depois que `quality` e `e2e` aprovam um push no commit atual de `main`, o workflow `GitHub Pages` reconstrói esse mesmo SHA pelo lockfile e publica `dist` em [GitHub Pages](https://ygorsimoes.github.io/lista-casa-nova/). O workflow também permite republicar manualmente o commit atual de `main`; outras branches não são elegíveis.
+
+No repositório, **Settings → Pages → Build and deployment → Source** permanece configurado como **GitHub Actions**. A publicação não usa secrets nem variáveis de backend.
