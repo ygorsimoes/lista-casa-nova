@@ -12,31 +12,34 @@ function renderCollection(slug: string) {
 }
 
 describe('CollectionPage', () => {
-  it('apresenta coleção com aviso antes das sugestões demonstrativas', () => {
+  it('preserva a rota como referência secundária sem CTA comercial', () => {
     renderCollection('sugestoes-cozinha')
 
-    const notice = screen.getByText(/todos os endereços desta tela são fictícios/i)
-    const action = screen.getByRole('button', {
-      name: /ver sugestão demonstrativa: chaleira em inox/i,
-    })
-
-    expect(screen.getByRole('heading', { name: /sugestões para a cozinha/i })).toBeVisible()
-    expect(screen.getByText(/^cozinha$/i)).toBeVisible()
-    expect(notice.compareDocumentPosition(action) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
-    expect(action).not.toHaveAttribute('href')
+    expect(screen.getByRole('heading', { name: 'Sugestões para a cozinha' })).toBeVisible()
+    const notice = screen.getByText(/endereços desta tela são fictícios/i)
+    const actions = screen.getAllByRole('button', { name: /ver referência/i })
+    expect(actions.length).toBeGreaterThan(0)
+    for (const action of actions) {
+      expect(action).not.toHaveAttribute('href')
+      expect(action).toHaveClass('ui-button--ghost')
+      expect(action).not.toHaveClass('ui-button--primary')
+    }
+    expect(
+      notice.compareDocumentPosition(actions[0]) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy()
   })
 
-  it('mantém a sugestão fictícia na página e confirma a ação visualmente', async () => {
+  it('mantém a referência fictícia na página e confirma a ação visualmente', async () => {
     const user = userEvent.setup()
     renderCollection('sugestoes-cozinha')
 
-    await user.click(
-      screen.getByRole('button', { name: /ver sugestão demonstrativa: chaleira em inox/i }),
-    )
+    await user.click(screen.getByRole('button', { name: /ver referência: chaleira em inox/i }))
 
-    expect(screen.getByText(/sugestão demonstrativa selecionada/i)).toHaveTextContent(
-      /nenhum site externo/i,
-    )
+    const feedback = screen
+      .getByText(/referência selecionada: chaleira em inox/i)
+      .closest('[role="status"]')
+    expect(feedback).toHaveAttribute('role', 'status')
+    expect(feedback).toHaveTextContent(/nenhum site externo/i)
   })
 
   it('explica a coleção inexistente e oferece retorno ao catálogo', () => {

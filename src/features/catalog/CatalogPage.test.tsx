@@ -5,6 +5,12 @@ import { describe, expect, it } from 'vitest'
 import { CatalogPage } from './CatalogPage'
 
 describe('CatalogPage', () => {
+  it('não promove coleções como destino do catálogo', () => {
+    renderWithApp(<CatalogPage />)
+
+    expect(document.querySelector('a[href^="/colecao/"]')).not.toBeInTheDocument()
+  })
+
   it('combina busca, categoria e disponibilidade', async () => {
     const user = userEvent.setup()
     renderWithApp(<CatalogPage />)

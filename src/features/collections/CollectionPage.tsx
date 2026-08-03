@@ -1,7 +1,9 @@
 import { useDemoSelector } from '@/app/DemoStateProvider'
 import { AppShell } from '@/components/layout/AppShell'
 import { Button } from '@/components/ui/Button'
+import { Card } from '@/components/ui/Card'
 import { ErrorState } from '@/components/ui/ErrorState'
+import { Notice } from '@/components/ui/Notice'
 import { useToast } from '@/components/ui/Toast'
 import { selectCollectionBySlug } from '@/domain/selectors'
 import { useState } from 'react'
@@ -47,34 +49,35 @@ export function CollectionPage() {
           {collection.title}
         </h1>
         <p className="collection-page__description">{collection.description}</p>
-        <p className="collection-page__notice">
+        <Notice tone="demo">
           Todos os endereços desta tela são fictícios. Nenhum site externo será aberto.
-        </p>
-        <div className="collection-page__gifts" aria-label="Sugestões demonstrativas">
+        </Notice>
+        <div className="collection-page__gifts" aria-label="Referências demonstrativas">
           {gifts.map((gift) => (
-            <article key={gift.code} className="collection-page__gift">
-              <div>
-                <h2>{gift.name}</h2>
-                <p>{gift.description}</p>
-              </div>
-              {gift.suggestions.map((suggestion) => (
-                <Button
-                  key={suggestion.id}
-                  variant="secondary"
-                  fullWidth
-                  onClick={() => selectSuggestion(suggestion.label)}
-                >
-                  Ver sugestão demonstrativa: {suggestion.label}
-                </Button>
-              ))}
-            </article>
+            <Card key={gift.code} variant="flat" className="collection-page__gift">
+              <article>
+                <div>
+                  <h2>{gift.name}</h2>
+                  <p>{gift.description}</p>
+                </div>
+                {gift.suggestions.map((suggestion) => (
+                  <Button
+                    key={suggestion.id}
+                    variant="ghost"
+                    fullWidth
+                    onClick={() => selectSuggestion(suggestion.label)}
+                  >
+                    Ver referência: {suggestion.label}
+                  </Button>
+                ))}
+              </article>
+            </Card>
           ))}
         </div>
         {selectedSuggestion ? (
-          <p className="collection-page__feedback" role="status">
-            Sugestão demonstrativa selecionada: {selectedSuggestion}. Nenhum site externo foi
-            aberto.
-          </p>
+          <Notice tone="demo" role="status">
+            Referência selecionada: {selectedSuggestion}. Nenhum site externo foi aberto.
+          </Notice>
         ) : null}
       </section>
     </AppShell>
