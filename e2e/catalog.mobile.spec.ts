@@ -47,19 +47,26 @@ test('mantém controles principais confortáveis para toque e leitura', async ({
 })
 
 test('centraliza o ícone de busca no campo em 360 px', async ({ page }) => {
-  const alignment = await page.evaluate(() => {
-    const input = document.querySelector<HTMLInputElement>('.catalog-search .ui-input')
-    const icon = document.querySelector<SVGElement>('.catalog-search__icon')
-    const inputBox = input?.getBoundingClientRect()
-    const iconBox = icon?.getBoundingClientRect()
+  const input = page.getByRole('searchbox', { name: 'Buscar um presente' })
+  const icon = page.locator('.catalog-search__icon')
 
-    return {
-      inputCenter: inputBox ? inputBox.top + inputBox.height / 2 : 0,
-      iconCenter: iconBox ? iconBox.top + iconBox.height / 2 : 0,
-    }
-  })
+  await expect(input).toHaveCount(1)
+  await expect(icon).toHaveCount(1)
+  await expect(input).toBeVisible()
+  await expect(icon).toBeVisible()
 
-  expect(Math.abs(alignment.inputCenter - alignment.iconCenter)).toBeLessThanOrEqual(1)
+  const inputBox = await input.boundingBox()
+  const iconBox = await icon.boundingBox()
+  expect(inputBox).not.toBeNull()
+  expect(iconBox).not.toBeNull()
+
+  if (!inputBox || !iconBox) {
+    throw new Error('O campo e o ícone de busca precisam ter caixas mensuráveis.')
+  }
+
+  const inputCenter = inputBox.y + inputBox.height / 2
+  const iconCenter = iconBox.y + iconBox.height / 2
+  expect(Math.abs(inputCenter - iconCenter)).toBeLessThanOrEqual(1)
 })
 
 test('não possui violações sérias ou críticas no catálogo', async ({ page }) => {

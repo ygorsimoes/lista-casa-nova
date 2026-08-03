@@ -40,7 +40,7 @@ npm run build
 npm run test:e2e
 ```
 
-`npm run test` executa os testes unitários e de componentes com cobertura. `npm run test:e2e` gera o build e executa os 61 casos Playwright em Chromium e WebKit. A primeira execução local pode exigir `npx playwright install chromium webkit`.
+`npm run test` executa os testes unitários e de componentes com cobertura. `npm run test:e2e` gera o build e executa os 69 casos Playwright em Chromium móvel, WebKit móvel e Chromium desktop. A primeira execução local pode exigir `npx playwright install chromium webkit`.
 
 ## Rotas
 
