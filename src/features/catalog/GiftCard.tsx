@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { selectGiftByCode } from '@/domain/selectors'
 import { Bath, BedDouble, CookingPot, Lamp, WashingMachine } from 'lucide-react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router'
 import { getGiftAvailabilityPresentation } from './gift-presentation'
 
 const categoryIcons = {

@@ -5,7 +5,7 @@ import { ErrorState } from '@/components/ui/ErrorState'
 import { useToast } from '@/components/ui/Toast'
 import { selectCollectionBySlug } from '@/domain/selectors'
 import { useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router'
 
 export function CollectionPage() {
   const { slug = '' } = useParams()

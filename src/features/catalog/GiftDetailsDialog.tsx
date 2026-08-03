@@ -1,7 +1,7 @@
 import { useDemoSelector } from '@/app/DemoStateProvider'
 import { Dialog } from '@/components/ui/Dialog'
 import { selectGiftByCode } from '@/domain/selectors'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router'
 import { GiftDetailsContent } from './GiftDetailsContent'
 
 export function GiftDetailsDialog() {

@@ -1,6 +1,6 @@
 import type { ReservationOutcome as ReservationOutcomeState } from '@/domain/types'
 import { CheckCircle2 } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 
 export interface ReservationOutcomeProps {
   outcome: ReservationOutcomeState

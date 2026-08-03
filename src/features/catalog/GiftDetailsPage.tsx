@@ -3,7 +3,7 @@ import { AppShell } from '@/components/layout/AppShell'
 import { Button } from '@/components/ui/Button'
 import { ErrorState } from '@/components/ui/ErrorState'
 import { selectGiftByCode } from '@/domain/selectors'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router'
 import { GiftDetailsContent } from './GiftDetailsContent'
 
 export function GiftDetailsPage() {

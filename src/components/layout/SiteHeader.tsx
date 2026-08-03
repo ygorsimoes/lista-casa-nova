@@ -1,6 +1,6 @@
 import { useDemoSelector } from '@/app/DemoStateProvider'
 import { Heart } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 
 export function SiteHeader() {
   const title = useDemoSelector((state) => state.settings.title)
