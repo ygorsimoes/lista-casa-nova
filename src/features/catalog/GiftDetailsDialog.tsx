@@ -12,7 +12,12 @@ export function GiftDetailsDialog() {
   if (!entry) return null
 
   return (
-    <Dialog open title="Detalhes do presente" onClose={() => navigate(-1)}>
+    <Dialog
+      open
+      className="gift-details-dialog"
+      title="Detalhes do presente"
+      onClose={() => navigate(-1)}
+    >
       <GiftDetailsContent entry={entry} headingLevel="h2" />
     </Dialog>
   )

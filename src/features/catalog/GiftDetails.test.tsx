@@ -5,6 +5,16 @@ import { describe, expect, it } from 'vitest'
 import { GiftDetailsPage } from './GiftDetailsPage'
 
 describe('GiftDetailsPage', () => {
+  it('mostra uma saída amigável para um presente inexistente', () => {
+    renderWithApp(<GiftDetailsPage />, {
+      route: '/item/inexistente',
+      routePath: '/item/:code',
+    })
+
+    expect(screen.getByRole('alert')).toHaveTextContent(/presente não encontrado/i)
+    expect(screen.getByRole('link', { name: /voltar ao catálogo/i })).toHaveAttribute('href', '/')
+  })
+
   it('mostra preferências, equivalência e uma sugestão sem abrir site externo', async () => {
     const user = userEvent.setup()
     renderWithApp(<GiftDetailsPage />, {

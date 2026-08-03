@@ -348,6 +348,10 @@ a {
   gap: 1.5rem;
 }
 
+.gift-details-dialog {
+  width: min(100% - 2rem, 48rem);
+}
+
 .gift-details-page__back {
   margin-top: 1.5rem;
 }
@@ -561,6 +565,31 @@ a {
 
   .reservation-form {
     padding: 2rem;
+  }
+}
+
+@media (max-width: 639px) {
+  .gift-details-dialog {
+    position: fixed;
+    inset: auto 0 0;
+    width: 100%;
+    max-height: min(88dvh, 48rem);
+    margin: 0;
+    border-radius: 1.75rem 1.75rem 0 0;
+    overscroll-behavior: contain;
+  }
+
+  .gift-details-dialog .ui-dialog__surface {
+    padding: 1.25rem 1rem calc(1.5rem + env(safe-area-inset-bottom));
+  }
+
+  .gift-details-dialog .ui-dialog__header {
+    position: sticky;
+    z-index: 1;
+    top: -1.25rem;
+    margin: -1.25rem -1rem 0;
+    padding: 1.25rem 1rem 0.75rem;
+    background: white;
   }
 }
 

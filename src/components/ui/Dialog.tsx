@@ -16,11 +16,13 @@ export interface DialogProps {
   description?: string
   onClose(): void
   initialFocusRef?: RefObject<HTMLElement | null>
+  className?: string
   children: ReactNode
 }
 
 export function Dialog({
   children,
+  className,
   description,
   initialFocusRef,
   onClose,
@@ -96,7 +98,7 @@ export function Dialog({
     <dialog
       ref={dialogRef}
       hidden={!open}
-      className="ui-dialog"
+      className={cn('ui-dialog', className)}
       tabIndex={-1}
       aria-labelledby={titleId}
       aria-describedby={description ? descriptionId : undefined}
