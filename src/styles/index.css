@@ -343,6 +343,227 @@ a {
   margin-top: 1rem;
 }
 
+.gift-details-content {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.gift-details-page__back {
+  margin-top: 1.5rem;
+}
+
+.gift-details {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.gift-details__overview {
+  display: grid;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.gift-details__icon {
+  display: grid;
+  min-height: 12rem;
+  place-items: center;
+  border: 1px solid rgb(63 59 55 / 0.08);
+  border-radius: 1.5rem;
+  background: linear-gradient(135deg, white, var(--color-sand-50));
+  color: var(--color-graphite-900);
+}
+
+.gift-details__category {
+  margin: 0 0 0.4rem;
+  color: var(--color-terracotta-600);
+  font-size: 0.9rem;
+  font-weight: 750;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.gift-details h1,
+.gift-details h2 {
+  margin: 0 0 0.75rem;
+  color: var(--color-graphite-900);
+  font-size: clamp(2.25rem, 9vw, 4.35rem);
+  letter-spacing: -0.06em;
+  line-height: 0.98;
+}
+
+.gift-details__preference {
+  border: 1px solid rgb(63 59 55 / 0.11);
+  border-radius: 1.25rem;
+  background: white;
+  padding: 1.25rem;
+  box-shadow: var(--shadow-card);
+}
+
+.gift-details__preference h3,
+.gift-details__preference p,
+.gift-details__description,
+.gift-details__equivalent,
+.gift-details__notice,
+.gift-details__unavailable {
+  margin: 0;
+}
+
+.gift-details__preference h3 {
+  font-size: 1.125rem;
+}
+
+.gift-details__preference p,
+.gift-details__description,
+.gift-details__equivalent {
+  margin-top: 0.5rem;
+  color: var(--color-graphite-700);
+  font-size: 1.08rem;
+}
+
+.gift-details__description {
+  font-size: clamp(1.15rem, 4.5vw, 1.4rem);
+  line-height: 1.65;
+}
+
+.gift-details__suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.gift-details__suggestions .ui-button {
+  min-height: 44px;
+  padding-inline: 0;
+  text-align: left;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.gift-details__notice,
+.gift-details__unavailable {
+  border-left: 4px solid var(--color-olive-500);
+  background: rgb(111 123 82 / 0.1);
+  padding: 0.8rem 1rem;
+  color: var(--color-olive-700);
+}
+
+.gift-details__unavailable {
+  border-color: var(--color-terracotta-500);
+  background: rgb(183 101 73 / 0.09);
+  color: var(--color-terracotta-600);
+}
+
+.gift-details__reserve {
+  margin-top: 0.25rem;
+  min-height: 56px;
+  font-size: 1.125rem;
+}
+
+.reservation-form {
+  display: grid;
+  gap: 1rem;
+  border: 1px solid rgb(63 59 55 / 0.1);
+  border-radius: 1.75rem;
+  background: white;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-card);
+}
+
+.reservation-form__handle {
+  width: 3rem;
+  height: 0.35rem;
+  margin-inline: auto;
+  border-radius: 999px;
+  background: rgb(63 59 55 / 0.2);
+}
+
+.reservation-form h2,
+.reservation-outcome h2 {
+  margin: 0;
+  color: var(--color-graphite-900);
+  font-size: clamp(1.55rem, 6vw, 2rem);
+  letter-spacing: -0.045em;
+  line-height: 1.1;
+}
+
+.reservation-form > p {
+  margin: 0;
+  color: var(--color-graphite-700);
+}
+
+.reservation-form form {
+  display: grid;
+  gap: 1rem;
+}
+
+.reservation-form__privacy {
+  margin: 0;
+  color: var(--color-graphite-700);
+  font-size: 0.9rem;
+}
+
+.reservation-form__actions {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.reservation-outcome {
+  display: grid;
+  gap: 1rem;
+  border-top: 1px solid rgb(63 59 55 / 0.14);
+  padding-top: 1.5rem;
+}
+
+.reservation-outcome--success {
+  grid-template-columns: auto minmax(0, 1fr);
+  color: var(--color-olive-700);
+}
+
+.reservation-outcome--success > svg {
+  width: 3rem;
+  height: 3rem;
+  padding: 0.65rem;
+  border-radius: 50%;
+  background: rgb(111 123 82 / 0.14);
+}
+
+.reservation-outcome p {
+  margin: 0.35rem 0 0;
+  color: var(--color-graphite-700);
+}
+
+.reservation-outcome__links {
+  display: grid;
+  gap: 0.55rem;
+  margin-top: 1rem;
+}
+
+.reservation-outcome a {
+  color: var(--color-terracotta-600);
+  font-weight: 700;
+  text-underline-offset: 0.2em;
+}
+
+.reservation-outcome--error {
+  border-left: 4px solid var(--color-terracotta-500);
+  background: rgb(183 101 73 / 0.09);
+  padding: 1rem;
+}
+
+@media (min-width: 640px) {
+  .gift-details__overview {
+    grid-template-columns: minmax(13rem, 0.8fr) minmax(0, 1.2fr);
+  }
+
+  .gift-details__icon {
+    min-height: 15rem;
+  }
+
+  .reservation-form {
+    padding: 2rem;
+  }
+}
+
 .app-shell {
   min-height: 100dvh;
 }
