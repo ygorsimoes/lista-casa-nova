@@ -7,6 +7,7 @@ import { Bath, BedDouble, CookingPot, Lamp, WashingMachine } from 'lucide-react'
 import { useState } from 'react'
 import { ReservationForm } from '../reservations/ReservationForm'
 import { ReservationOutcome } from '../reservations/ReservationOutcome'
+import { createReservationFormValues } from '../reservations/reservation-validation'
 import { getGiftAvailabilityPresentation } from './gift-presentation'
 
 export interface GiftDetailsContentProps {
@@ -25,10 +26,12 @@ const categoryIcons = {
 export function GiftDetailsContent({ entry, headingLevel = 'h1' }: GiftDetailsContentProps) {
   const Heading = headingLevel
   const CategoryIcon = categoryIcons[entry.category.icon]
-  const { dismissReservationOutcome } = useDemoActions()
+  const { dismissReservationOutcome, reserveGift } = useDemoActions()
   const { showToast } = useToast()
   const outcome = useDemoSelector((state) => state.reservationOutcome)
   const [formOpen, setFormOpen] = useState(false)
+  const [draft, setDraft] = useState(createReservationFormValues)
+  const [contactExpanded, setContactExpanded] = useState(false)
   const [suggestionNotice, setSuggestionNotice] = useState(false)
   const availabilityPresentation = getGiftAvailabilityPresentation(entry.availability)
   const matchingOutcome = outcome?.itemCode === entry.gift.code ? outcome : null
@@ -98,9 +101,14 @@ export function GiftDetailsContent({ entry, headingLevel = 'h1' }: GiftDetailsCo
 
       {formOpen && matchingOutcome?.kind !== 'success' ? (
         <ReservationForm
-          itemCode={entry.gift.code}
-          availableQuantity={entry.availability.remainingQuantity}
-          onClose={closeForm}
+          entry={entry}
+          headingLevel={headingLevel}
+          values={draft}
+          contactExpanded={contactExpanded}
+          onValuesChange={setDraft}
+          onContactExpandedChange={setContactExpanded}
+          onSubmit={reserveGift}
+          onBack={closeForm}
         />
       ) : null}
       {matchingOutcome ? <ReservationOutcome outcome={matchingOutcome} /> : null}

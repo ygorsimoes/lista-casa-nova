@@ -543,29 +543,38 @@ a {
 
 .reservation-form {
   display: grid;
-  gap: 1rem;
-  border: 1px solid rgb(63 59 55 / 0.1);
-  border-radius: 1.75rem;
-  background: white;
-  padding: 1.5rem;
-  box-shadow: var(--shadow-card);
-}
-
-.reservation-form__handle {
-  width: 3rem;
-  height: 0.35rem;
+  gap: var(--space-4);
+  max-width: 38rem;
   margin-inline: auto;
-  border-radius: 999px;
-  background: rgb(63 59 55 / 0.2);
+  border: 0;
+  background: transparent;
+  padding: 0;
+  box-shadow: none;
 }
 
-.reservation-form h2,
-.reservation-outcome h2 {
+.reservation-form h1,
+.reservation-form h2 {
   margin: 0;
-  color: var(--color-graphite-900);
-  font-size: clamp(1.55rem, 6vw, 2rem);
-  letter-spacing: -0.045em;
-  line-height: 1.1;
+  font-family: var(--font-affective);
+  font-size: clamp(1.875rem, 8vw, 2.125rem);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+.reservation-form__back,
+.reservation-form__disclosure {
+  display: inline-flex;
+  width: fit-content;
+  min-width: 44px;
+  min-height: 44px;
+  align-items: center;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  color: var(--color-terracotta-600);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
 }
 
 .reservation-form > p {
@@ -573,9 +582,23 @@ a {
   color: var(--color-graphite-700);
 }
 
+.reservation-form__summary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-surface);
+  padding: var(--space-3);
+}
+
+.reservation-form__summary > span,
+.reservation-form__summary > span > span {
+  display: grid;
+}
+
 .reservation-form form {
   display: grid;
-  gap: 1rem;
+  gap: var(--space-4);
 }
 
 .reservation-form__privacy {
@@ -587,6 +610,14 @@ a {
 .reservation-form__actions {
   display: grid;
   gap: 0.75rem;
+}
+
+.reservation-outcome h2 {
+  margin: 0;
+  color: var(--color-graphite-900);
+  font-size: clamp(1.55rem, 6vw, 2rem);
+  letter-spacing: -0.045em;
+  line-height: 1.1;
 }
 
 .reservation-outcome {
