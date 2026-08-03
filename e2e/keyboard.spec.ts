@@ -3,6 +3,13 @@ import { expect, test } from './support/test.js'
 
 test('opera filtros com Enter e Espaço', async ({ page }) => {
   await page.goto('./#/')
+  await expect(
+    page.getByRole('heading', {
+      name: 'Lista da nossa casa nova',
+      exact: true,
+    }),
+  ).toBeFocused()
+
   const kitchen = page.getByRole('button', { name: 'Cozinha', exact: true })
   await kitchen.focus()
   await page.keyboard.press('Enter')

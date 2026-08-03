@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/Button'
 import { useToast } from '@/components/ui/Toast'
 import { CheckCircle2, Info } from 'lucide-react'
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 import { IllustrativeQr } from './IllustrativeQr'
 
 export function PixPage() {

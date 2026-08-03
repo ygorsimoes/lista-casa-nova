@@ -5,7 +5,7 @@ import { useToast } from '@/components/ui/Toast'
 import { selectCatalogEntries } from '@/domain/selectors'
 import { CheckCircle2, Download } from 'lucide-react'
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 import { PrintableGiftList } from './PrintableGiftList'
 import './print.css'
 

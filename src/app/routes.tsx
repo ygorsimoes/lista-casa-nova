@@ -6,9 +6,9 @@ import { CollectionPage } from '@/features/collections/CollectionPage'
 import { NotFoundPage } from '@/features/not-found/NotFoundPage'
 import { PixPage } from '@/features/pix/PixPage'
 import { ManageReservationPage } from '@/features/reservations/ManageReservationPage'
-import type { Location } from 'react-router-dom'
+import type { Location } from 'react-router'
 import { lazy, Suspense } from 'react'
-import { Route, Routes, useLocation } from 'react-router-dom'
+import { Route, Routes, useLocation } from 'react-router'
 
 const PdfPreviewPage = lazy(() => import('@/features/pdf/PdfPreviewPage'))
 const AdminPage = lazy(() => import('@/features/admin/AdminPage'))

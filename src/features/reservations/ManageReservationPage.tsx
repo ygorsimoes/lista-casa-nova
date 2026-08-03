@@ -6,7 +6,7 @@ import { ErrorState } from '@/components/ui/ErrorState'
 import { useToast } from '@/components/ui/Toast'
 import { selectGiftByCode, selectReservationByToken } from '@/domain/selectors'
 import { useEffect, useRef, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router'
 import { ReservationSummary } from './ReservationSummary'
 
 export function ManageReservationPage() {

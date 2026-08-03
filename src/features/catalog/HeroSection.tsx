@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 import { Gift, HeartHandshake, Truck } from 'lucide-react'
 
 interface HeroSectionProps {

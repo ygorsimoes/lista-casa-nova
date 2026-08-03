@@ -2,7 +2,7 @@ import { DemoStateProvider } from '@/app/DemoStateProvider'
 import { ToastProvider } from '@/components/ui/Toast'
 import { render } from '@testing-library/react'
 import type { ReactElement } from 'react'
-import { MemoryRouter, Route, Routes } from 'react-router-dom'
+import { MemoryRouter, Route, Routes } from 'react-router'
 
 export interface RenderWithAppOptions {
   route?: string
