@@ -31,6 +31,29 @@ export function PixPage() {
         </p>
 
         <div className="pix-page__details">
+          <label className="pix-page__payload">
+            Chave Pix
+            <code>{pix.copyAndPaste}</code>
+          </label>
+          <aside className="pix-page__notice" aria-label="Aviso importante">
+            <Info aria-hidden="true" size={28} />
+            <div>
+              <h2>Importante</h2>
+              <p>
+                Este é um protótipo visual: nenhuma transferência será processada e nenhum dado será
+                copiado.
+              </p>
+            </div>
+          </aside>
+          <Button fullWidth onClick={simulateCopy}>
+            Simular cópia
+          </Button>
+          {copySimulated ? (
+            <p className="pix-page__feedback" role="status">
+              <CheckCircle2 aria-hidden="true" size={22} />
+              Cópia simulada: nenhum dado foi copiado.
+            </p>
+          ) : null}
           <dl>
             <div>
               <dt>Destinatário</dt>
@@ -41,33 +64,12 @@ export function PixPage() {
               <dd>{pix.institution}</dd>
             </div>
           </dl>
-          <label className="pix-page__payload">
-            Pix Copia e Cola demonstrativo
-            <code>{pix.copyAndPaste}</code>
-          </label>
-          <Button fullWidth onClick={simulateCopy}>
-            Simular cópia
-          </Button>
-          {copySimulated ? (
-            <p className="pix-page__feedback" role="status">
-              <CheckCircle2 aria-hidden="true" size={22} />
-              Cópia simulada: nenhum dado foi copiado.
-            </p>
-          ) : null}
         </div>
 
         <div className="pix-page__qr-card">
           <IllustrativeQr label="QR Code ilustrativo" />
           <p>Este padrão é apenas visual e não pode receber pagamentos.</p>
         </div>
-
-        <aside className="pix-page__notice" aria-label="Aviso importante">
-          <Info aria-hidden="true" size={28} />
-          <div>
-            <h2>Importante</h2>
-            <p>Este é um protótipo visual. Nenhuma transferência será processada.</p>
-          </div>
-        </aside>
       </section>
     </AppShell>
   )
