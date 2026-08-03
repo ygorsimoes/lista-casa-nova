@@ -22,7 +22,7 @@ test('opera filtros com Enter e Espaço', async ({ page }) => {
 
 test('prende foco no diálogo, fecha com Escape e devolve ao cartão', async ({ page }) => {
   await page.goto('./#/')
-  const trigger = page.getByRole('button', { name: 'Quero dar este presente: Chaleira' })
+  const trigger = page.getByRole('button', { name: 'Ver Chaleira' })
   await trigger.focus()
   await page.keyboard.press('Enter')
 

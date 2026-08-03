@@ -1,19 +1,12 @@
 import { useDemoSelector } from '@/app/DemoStateProvider'
-import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { selectGiftByCode } from '@/domain/selectors'
-import { Bath, BedDouble, CookingPot, Lamp, WashingMachine } from 'lucide-react'
+import { cn } from '@/lib/cn'
+import { ChevronRight } from 'lucide-react'
 import { useLocation, useNavigate } from 'react-router'
+import { GiftVisual } from './GiftVisual'
 import { getGiftAvailabilityPresentation } from './gift-presentation'
-
-const categoryIcons = {
-  'cooking-pot': CookingPot,
-  'bed-double': BedDouble,
-  bath: Bath,
-  'washing-machine': WashingMachine,
-  lamp: Lamp,
-}
 
 export interface GiftCardProps {
   code: string
@@ -26,37 +19,33 @@ export function GiftCard({ code }: GiftCardProps) {
 
   if (!entry) return null
 
-  const Icon = categoryIcons[entry.category.icon]
   const canReserve = entry.availability.canReserve
-  const actionLabel = canReserve ? 'Quero dar este presente' : 'Ver detalhes'
   const availabilityPresentation = getGiftAvailabilityPresentation(entry.availability)
 
   return (
-    <Card className="gift-card">
+    <Card variant="flat" className={cn('gift-card', !canReserve && 'gift-card--chosen')}>
       <article>
-        <div className="gift-card__icon" aria-hidden="true">
-          <Icon size={48} strokeWidth={1.55} />
-        </div>
+        <GiftVisual itemCode={entry.gift.code} categoryIcon={entry.category.icon} />
         <div className="gift-card__content">
           <p className="gift-card__category">{entry.category.name}</p>
-          <h2>{entry.gift.name}</h2>
-          <Badge tone={availabilityPresentation.tone}>{availabilityPresentation.label}</Badge>
-          <p className="gift-card__preference">{entry.gift.preferences[0]}</p>
+          <h3>{entry.gift.name}</h3>
+          <p className="gift-card__preference">{entry.gift.preferences.slice(0, 2).join(' · ')}</p>
+          <p className="gift-card__status">{availabilityPresentation.label}</p>
         </div>
-        <div className="gift-card__action">
-          <Button
-            id={`gift-card-action-${entry.gift.code}`}
-            variant={canReserve ? 'primary' : 'secondary'}
-            onClick={() =>
-              navigate(`/item/${entry.gift.code}`, {
-                state: { backgroundLocation: location },
-              })
-            }
-            aria-label={`${actionLabel}: ${entry.gift.name}`}
-          >
-            {actionLabel}
-          </Button>
-        </div>
+        <Button
+          id={`gift-card-action-${entry.gift.code}`}
+          className="gift-card__open"
+          variant="ghost"
+          onClick={() =>
+            navigate(`/item/${entry.gift.code}`, {
+              state: { backgroundLocation: location },
+            })
+          }
+          aria-label={`Ver ${entry.gift.name}`}
+        >
+          Ver
+          <ChevronRight aria-hidden="true" size={18} />
+        </Button>
       </article>
     </Card>
   )

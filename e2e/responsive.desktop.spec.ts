@@ -1,7 +1,7 @@
 import { expectNoHorizontalOverflow } from './support/assertions.js'
 import { expect, test } from './support/test.js'
 
-test('@desktop organiza catálogo em múltiplas colunas dentro do contêiner', async ({ page }) => {
+test('@desktop mantém catálogo em uma coluna dentro do contêiner', async ({ page }) => {
   await page.goto('./#/')
 
   const cards = page.locator('.gift-card')
@@ -22,7 +22,7 @@ test('@desktop organiza catálogo em múltiplas colunas dentro do contêiner', a
     }
   })
 
-  expect(layout.firstRowColumns).toBeGreaterThan(1)
+  expect(layout.firstRowColumns).toBe(1)
   expect(layout.mainLeft).toBeGreaterThan(0)
   expect(layout.viewportWidth - layout.mainRight).toBeGreaterThan(0)
   await expectNoHorizontalOverflow(page)

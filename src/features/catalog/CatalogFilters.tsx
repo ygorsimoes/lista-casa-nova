@@ -30,7 +30,7 @@ export function CatalogFilters({
         <Input
           type="search"
           label="Buscar um presente"
-          placeholder="Buscar um presente..."
+          placeholder="Buscar: panelas, toalhas, quarto..."
           value={query}
           onChange={(event) => onQueryChange(event.target.value)}
         />
@@ -50,11 +50,14 @@ export function CatalogFilters({
         selectedSlug={categorySlug}
         onSelect={onCategoryChange}
       />
-      <Checkbox
-        label="Mostrar somente disponíveis"
-        checked={availableOnly}
-        onChange={(event) => onAvailableOnlyChange(event.target.checked)}
-      />
+      <div className="catalog-filters__list-heading">
+        <h2 id="catalog-list-title">Escolha um presente</h2>
+        <Checkbox
+          label="Só disponíveis"
+          checked={availableOnly}
+          onChange={(event) => onAvailableOnlyChange(event.target.checked)}
+        />
+      </div>
     </section>
   )
 }

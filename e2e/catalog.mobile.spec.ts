@@ -15,16 +15,16 @@ test('filtra o catálogo com acento e caixa na largura móvel sem overflow', asy
   await page.getByRole('searchbox', { name: 'Buscar um presente' }).fill('CHÁLEIRA')
 
   await expect(page.getByRole('heading', { name: 'Chaleira' })).toBeVisible()
-  await expect(page.getByRole('status').filter({ hasText: '1 presente encontrado' })).toBeVisible()
+  await expect(page.getByRole('status').filter({ hasText: '1 ideia para escolher' })).toBeVisible()
   await expectNoHorizontalOverflow(page)
 })
 
 test('combina categoria, disponibilidade e estado vazio', async ({ page }) => {
   await page.getByRole('searchbox', { name: 'Buscar um presente' }).fill('toalhas')
   await page.getByRole('button', { name: 'Banheiro', exact: true }).click()
-  await page.getByRole('checkbox', { name: 'Mostrar somente disponíveis' }).check()
+  await page.getByRole('checkbox', { name: 'Só disponíveis' }).check()
 
-  await expect(page.getByRole('heading', { name: 'Nenhum presente encontrado' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Nenhuma ideia encontrada' })).toBeVisible()
   await expect(page.getByRole('button', { name: 'Banheiro', exact: true })).toHaveAttribute(
     'aria-pressed',
     'true',
@@ -40,9 +40,7 @@ test('mantém controles principais confortáveis para toque e leitura', async ({
   const brandBox = await brand.boundingBox()
   expect(brandBox?.width).toBeGreaterThanOrEqual(43.5)
   await expectMinimumTouchTarget(page.getByRole('button', { name: 'Todas', exact: true }))
-  await expectMinimumTouchTarget(
-    page.getByRole('button', { name: 'Quero dar este presente: Chaleira' }),
-  )
+  await expectMinimumTouchTarget(page.getByRole('button', { name: 'Ver Chaleira' }))
   await expectNoHorizontalOverflow(page)
 })
 

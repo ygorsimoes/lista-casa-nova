@@ -53,7 +53,7 @@ describe('AppRoutes', () => {
   it('abre detalhes sobre o catálogo e devolve o foco ao cartão ao fechar', async () => {
     const user = userEvent.setup()
     renderWithApp(<AppRoutes />)
-    const trigger = screen.getByRole('button', { name: /quero dar este presente: chaleira/i })
+    const trigger = screen.getByRole('button', { name: 'Ver Chaleira' })
 
     await user.click(trigger)
 

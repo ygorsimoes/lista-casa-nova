@@ -11,9 +11,9 @@ describe('CatalogPage', () => {
 
     await user.type(screen.getByRole('searchbox', { name: /buscar um presente/i }), 'toalhas')
     await user.click(screen.getByRole('button', { name: 'Banheiro' }))
-    await user.click(screen.getByRole('checkbox', { name: /somente disponíveis/i }))
+    await user.click(screen.getByRole('checkbox', { name: 'Só disponíveis' }))
 
-    expect(screen.getByRole('status')).toHaveTextContent(/nenhum presente/i)
+    expect(screen.getByRole('status')).toHaveTextContent('Nenhuma ideia encontrada')
   })
 
   it('expõe o estado selecionado da categoria', async () => {
@@ -54,16 +54,16 @@ describe('CatalogPage', () => {
     renderWithApp(<CatalogPage />)
 
     await user.click(screen.getByRole('button', { name: 'Decoração' }))
-    await user.click(screen.getByRole('checkbox', { name: /somente disponíveis/i }))
+    await user.click(screen.getByRole('checkbox', { name: 'Só disponíveis' }))
 
-    expect(screen.getByRole('status')).toHaveTextContent(/nenhum presente/i)
+    expect(screen.getByRole('status')).toHaveTextContent('Nenhuma ideia encontrada')
   })
 
   it('mantém os cartões na ordem das fixtures', () => {
     renderWithApp(<CatalogPage />)
 
-    const names = within(screen.getByLabelText('Presentes encontrados'))
-      .getAllByRole('heading', { level: 2 })
+    const names = within(screen.getByLabelText('Escolha um presente'))
+      .getAllByRole('heading', { level: 3 })
       .map((heading) => heading.textContent)
     expect(names.slice(0, 4)).toEqual([
       'Chaleira',
@@ -90,5 +90,27 @@ describe('CatalogPage', () => {
     expect(
       screen.queryByRole('link', { name: /ver lista para impressão/i }),
     ).not.toBeInTheDocument()
+  })
+
+  it('usa linguagem de ideias para zero, uma e várias entradas', async () => {
+    const user = userEvent.setup()
+    renderWithApp(<CatalogPage />)
+    const search = screen.getByRole('searchbox', { name: 'Buscar um presente' })
+
+    expect(screen.getByRole('status')).toHaveTextContent('11 ideias para escolher')
+    await user.type(search, 'chaleira')
+    expect(screen.getByRole('status')).toHaveTextContent('1 ideia para escolher')
+    await user.clear(search)
+    await user.type(search, 'resultado impossível')
+    expect(screen.getByRole('status')).toHaveTextContent('Nenhuma ideia encontrada')
+  })
+
+  it('limpa todos os filtros a partir do estado vazio', async () => {
+    const user = userEvent.setup()
+    renderWithApp(<CatalogPage />)
+    await user.type(screen.getByRole('searchbox', { name: 'Buscar um presente' }), 'inexistente')
+    await user.click(screen.getByRole('button', { name: 'Limpar busca e filtros' }))
+
+    expect(screen.getByRole('status')).toHaveTextContent('11 ideias para escolher')
   })
 })

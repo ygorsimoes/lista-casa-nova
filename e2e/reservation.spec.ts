@@ -10,7 +10,7 @@ test('reserva pelo painel, gera token e restaura o item ao recarregar', async ({
   const expectNoForbiddenRequests = observeForbiddenRequests(page)
   await page.goto('./#/')
 
-  const trigger = page.getByRole('button', { name: 'Quero dar este presente: Chaleira' })
+  const trigger = page.getByRole('button', { name: 'Ver Chaleira' })
   await trigger.click()
   const dialog = page.getByRole('dialog', { name: 'Detalhes do presente' })
   await expect(dialog).toBeVisible()
@@ -39,7 +39,7 @@ test('reserva pelo painel, gera token e restaura o item ao recarregar', async ({
 test('leva o foco ao título ao gerenciar a reserva criada no diálogo', async ({ page }) => {
   await page.goto('./#/')
 
-  await page.getByRole('button', { name: 'Quero dar este presente: Chaleira' }).click()
+  await page.getByRole('button', { name: 'Ver Chaleira' }).click()
   const dialog = page.getByRole('dialog', { name: 'Detalhes do presente' })
   await dialog.getByRole('button', { name: 'Quero dar este presente', exact: true }).click()
   await dialog.getByLabel('Primeiro nome', { exact: true }).fill('Nina')
