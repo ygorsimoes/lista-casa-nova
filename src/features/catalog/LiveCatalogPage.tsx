@@ -5,7 +5,7 @@ import { Dialog } from '@/components/ui/Dialog'
 import { Input } from '@/components/ui/Input'
 import type { Gift, ReserveResult } from '@/domain/gifts'
 import { HeroSection } from './HeroSection'
-import { useState, type FormEvent } from 'react'
+import { useMemo, useState, type FormEvent } from 'react'
 
 export function ReservationDialog({ gift, onClose }: { gift: Gift | null; onClose(): void }) {
   const { reserve } = useGiftList()
@@ -64,6 +64,13 @@ export function ReservationDialog({ gift, onClose }: { gift: Gift | null; onClos
 export function LiveCatalogPage() {
   const { error, gifts, loading, reservedGiftIds, refresh } = useGiftList()
   const [selectedGift, setSelectedGift] = useState<Gift | null>(null)
+  const [showAllGifts, setShowAllGifts] = useState(false)
+  const availableGifts = useMemo(() => gifts.filter((gift) => !reservedGiftIds.has(gift.id)), [gifts, reservedGiftIds])
+  const orderedGifts = useMemo(
+    () => [...availableGifts, ...gifts.filter((gift) => reservedGiftIds.has(gift.id))],
+    [availableGifts, gifts, reservedGiftIds],
+  )
+  const visibleGifts = showAllGifts ? orderedGifts : availableGifts
 
   return (
     <>
@@ -71,10 +78,20 @@ export function LiveCatalogPage() {
         title="Lista da Casa Nova"
         message="Escolha um presente, reserve com seu nome e compre onde preferir."
       />
-      <section aria-labelledby="catalog-list-title">
+      <section aria-labelledby="catalog-list-title" aria-label="Presentes para escolher">
         <div className="catalog-filters__list-heading live-catalog__heading">
-          <h2 id="catalog-list-title">Presentes para escolher</h2>
-          <p>{gifts.length} itens</p>
+          <div>
+            <h2 id="catalog-list-title">Presentes para escolher</h2>
+            <p>{availableGifts.length} disponíveis para escolher</p>
+          </div>
+          <div className="live-catalog__filters" aria-label="Exibição dos presentes">
+            <Button variant={showAllGifts ? 'ghost' : 'secondary'} aria-pressed={!showAllGifts} onClick={() => setShowAllGifts(false)}>
+              Disponíveis ({availableGifts.length})
+            </Button>
+            <Button variant={showAllGifts ? 'secondary' : 'ghost'} aria-pressed={showAllGifts} onClick={() => setShowAllGifts(true)}>
+              Todos ({gifts.length})
+            </Button>
+          </div>
         </div>
         {loading ? <p role="status">Carregando a lista…</p> : null}
         {error ? (
@@ -85,10 +102,10 @@ export function LiveCatalogPage() {
         ) : null}
         {!loading && !error ? (
           <div className="gift-grid">
-            {gifts.map((gift) => {
+            {visibleGifts.map((gift) => {
               const reserved = reservedGiftIds.has(gift.id)
               return (
-                <Card key={gift.id} variant="flat" className={`gift-card${reserved ? ' gift-card--chosen' : ''}`}>
+                <Card key={gift.id} variant="flat" className={`gift-card${reserved ? ' gift-card--chosen' : ' gift-card--available'}`}>
                   <article>
                     {gift.imageUrl ? <img className="gift-visual" src={gift.imageUrl} alt="" /> : <span className="gift-visual" aria-hidden="true">🎁</span>}
                     <div className="gift-card__content">
@@ -104,6 +121,7 @@ export function LiveCatalogPage() {
                 </Card>
               )
             })}
+            {!visibleGifts.length ? <p className="live-catalog__empty">Todos os presentes desta lista já foram reservados. Obrigado pelo carinho!</p> : null}
           </div>
         ) : null}
       </section>
