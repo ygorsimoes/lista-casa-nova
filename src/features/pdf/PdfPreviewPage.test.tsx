@@ -26,9 +26,14 @@ describe('PdfPreviewPage', () => {
       /chaleira/i,
     )
     expect(screen.getByText(/escolha um item e escreva seu nome/i)).toBeVisible()
+    expect(screen.getByRole('status', { name: 'Resumo da prévia' })).toHaveTextContent(
+      '11 ideias na prévia',
+    )
+    expect(screen.getByRole('table', { name: 'Presentes da lista' })).toBeVisible()
     expect(screen.getByRole('columnheader', { name: /nome\/assinatura/i })).toBeVisible()
     expect(screen.getAllByText(/disponível/i)).not.toHaveLength(0)
-    expect(screen.getByText(/^indisponível$/i)).toBeVisible()
+    expect(screen.getAllByText('Já foi escolhido').length).toBeGreaterThan(0)
+    expect(screen.queryByText('Indisponível')).not.toBeInTheDocument()
     expect(screen.getByRole('img', { name: /qr code ilustrativo, não utilizável/i })).toBeVisible()
     expect(screen.queryByRole('link', { name: /download/i })).not.toBeInTheDocument()
   })
@@ -61,6 +66,10 @@ describe('PdfPreviewPage', () => {
       'aria-pressed',
       'true',
     )
+    expect(screen.getByRole('status', { name: 'Resumo da prévia' })).toHaveTextContent(
+      '8 ideias na prévia',
+    )
+    expect(screen.queryByText('Já foi escolhido')).not.toBeInTheDocument()
     expect(screen.getByText('Chaleira')).toBeVisible()
     expect(screen.queryByText('Cesto de roupas')).not.toBeInTheDocument()
   })

@@ -1,12 +1,13 @@
 import { useDemoSelector } from '@/app/DemoStateProvider'
 import { AppShell } from '@/components/layout/AppShell'
 import { Button } from '@/components/ui/Button'
+import { Notice } from '@/components/ui/Notice'
 import { useToast } from '@/components/ui/Toast'
 import { selectCatalogEntries } from '@/domain/selectors'
 import { CheckCircle2, Download } from 'lucide-react'
 import { useState } from 'react'
 import { Link } from 'react-router'
-import { PrintableGiftList } from './PrintableGiftList'
+import { ScaledPrintablePreview } from './ScaledPrintablePreview'
 import './print.css'
 
 type PreviewFilter = 'all' | 'available'
@@ -69,16 +70,25 @@ export default function PdfPreviewPage() {
           </Button>
         </div>
 
-        <PrintableGiftList entries={entries} settings={settings} />
+        <p className="pdf-preview__summary" role="status" aria-label="Resumo da prévia">
+          {entries.length === 1 ? '1 ideia na prévia.' : `${entries.length} ideias na prévia.`}{' '}
+          <Link to="/">Consulte a lista principal para ler e reservar.</Link>
+        </p>
 
-        <aside className="pdf-preview__notice" aria-label="Limite da prévia">
-          <CheckCircle2 aria-hidden="true" size={26} />
+        <ScaledPrintablePreview entries={entries} settings={settings} />
+
+        <Notice
+          className="pdf-preview__notice"
+          tone="demo"
+          icon={<CheckCircle2 size={26} />}
+          aria-label="Limite da prévia"
+        >
           <p>Prévia visual: nenhum PDF será gerado e nenhum arquivo será baixado.</p>
-        </aside>
+        </Notice>
         {downloadSimulated ? (
-          <p className="pdf-preview__feedback" role="status">
+          <Notice className="pdf-preview__feedback" tone="success" role="status">
             Download simulado: nenhum arquivo foi gerado.
-          </p>
+          </Notice>
         ) : null}
       </section>
     </AppShell>

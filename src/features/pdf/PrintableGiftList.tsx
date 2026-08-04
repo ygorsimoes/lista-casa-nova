@@ -1,20 +1,10 @@
 import { IllustrativeQr } from '@/features/pix/IllustrativeQr'
 import type { CatalogEntry, SiteSettings } from '@/domain/types'
+import { getGiftAvailabilityPresentation } from '@/features/catalog/gift-presentation'
 
 export interface PrintableGiftListProps {
   entries: readonly CatalogEntry[]
   settings: SiteSettings
-}
-
-function availabilityLabel(entry: CatalogEntry) {
-  const { availability } = entry
-
-  if (availability.visualState === 'available') return 'Disponível'
-  if (availability.visualState === 'partially-reserved') {
-    return `${availability.remainingQuantity} de ${availability.desiredQuantity} disponível(is)`
-  }
-  if (availability.visualState === 'received') return 'Presente recebido'
-  return 'Indisponível'
 }
 
 export function PrintableGiftList({ entries, settings }: PrintableGiftListProps) {
@@ -50,7 +40,9 @@ export function PrintableGiftList({ entries, settings }: PrintableGiftListProps)
                 {entry.gift.code}
               </th>
               <td data-label="Presente">{entry.gift.name}</td>
-              <td data-label="Disponibilidade">{availabilityLabel(entry)}</td>
+              <td data-label="Disponibilidade">
+                {getGiftAvailabilityPresentation(entry.availability).label}
+              </td>
               <td data-label="Nome/assinatura">
                 <span className="printable-sheet__signature" />
               </td>
