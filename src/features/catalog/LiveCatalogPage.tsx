@@ -82,7 +82,6 @@ export function LiveCatalogPage() {
         <div className="catalog-filters__list-heading live-catalog__heading">
           <div>
             <h2 id="catalog-list-title">Presentes para escolher</h2>
-            <p>{availableGifts.length} disponíveis para escolher</p>
           </div>
           <div className="live-catalog__filters" aria-label="Exibição dos presentes">
             <Button variant={showAllGifts ? 'ghost' : 'secondary'} aria-pressed={!showAllGifts} onClick={() => setShowAllGifts(false)}>

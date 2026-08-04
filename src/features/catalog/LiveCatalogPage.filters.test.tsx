@@ -25,7 +25,7 @@ describe('LiveCatalogPage availability priority', () => {
   it('mostra os presentes disponíveis primeiro e deixa todos acessíveis por um filtro simples', () => {
     render(<LiveCatalogPage />)
 
-    expect(screen.getByText('2 disponíveis para escolher')).toBeInTheDocument()
+    expect(screen.queryByText('2 disponíveis para escolher')).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Disponíveis (2)' })).toHaveAttribute('aria-pressed', 'true')
     expect(screen.queryByRole('heading', { name: 'Chaleira' })).not.toBeInTheDocument()
 
