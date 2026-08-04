@@ -1728,6 +1728,17 @@ a {
   justify-self: start;
   min-width: 7.25rem;
   margin-top: var(--space-1);
+  box-shadow: 0 0.35rem 0.9rem rgb(151 77 57 / 0.18);
+}
+
+.gift-card__open.ui-button--primary:not(:disabled):hover {
+  border-color: var(--color-terracotta-600);
+  box-shadow: 0 0.5rem 1.1rem rgb(151 77 57 / 0.24);
+  transform: translateY(-1px);
+}
+
+.gift-card__open.ui-button--secondary {
+  box-shadow: none;
 }
 
 .gift-card__category {

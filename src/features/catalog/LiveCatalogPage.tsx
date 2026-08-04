@@ -96,7 +96,7 @@ export function LiveCatalogPage() {
                       <p className="gift-card__preference">{gift.preferences.slice(0, 2).join(' · ') || gift.description}</p>
                       <p className="gift-card__status">{reserved ? 'Reservado' : 'Disponível'}</p>
                     </div>
-                    <Button className="gift-card__open" variant={reserved ? 'secondary' : 'ghost'} disabled={reserved} onClick={() => setSelectedGift(gift)}>
+                    <Button className="gift-card__open" variant={reserved ? 'secondary' : 'primary'} disabled={reserved} onClick={() => setSelectedGift(gift)}>
                       {reserved ? 'Reservado' : 'Reservar'}
                     </Button>
                   </article>
