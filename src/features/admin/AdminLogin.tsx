@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/Button'
+import { Card } from '@/components/ui/Card'
 import { Info } from 'lucide-react'
 import { useEffect, useRef } from 'react'
 
@@ -16,7 +17,7 @@ export function AdminLogin({ focusTitle = false, onEnter }: AdminLoginProps) {
 
   return (
     <section className="admin-login" aria-labelledby="admin-login-title">
-      <div className="admin-login__panel ui-card">
+      <Card className="admin-login__panel" variant="flat">
         <Info aria-hidden="true" size={32} strokeWidth={1.8} />
         <h1 id="admin-login-title" ref={headingRef} tabIndex={-1}>
           Painel demonstrativo
@@ -32,7 +33,7 @@ export function AdminLogin({ focusTitle = false, onEnter }: AdminLoginProps) {
         <Button fullWidth onClick={onEnter}>
           Entrar na demonstração
         </Button>
-      </div>
+      </Card>
     </section>
   )
 }
