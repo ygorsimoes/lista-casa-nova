@@ -1451,7 +1451,7 @@ a {
 
 .catalog-hero {
   display: grid;
-  gap: 1.25rem;
+  gap: 1rem;
 }
 
 .catalog-hero__eyebrow {
@@ -1486,31 +1486,31 @@ a {
 
 .how-it-works__steps {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
   margin: 0;
-  border: 1px solid var(--border-soft);
-  border-radius: var(--radius-surface);
-  background: rgb(255 255 255 / 0.72);
-  padding: var(--space-2) var(--space-1);
+  border: 0;
+  background: transparent;
+  padding: 0;
   list-style: none;
 }
 
 .how-it-works__steps li {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
   min-width: 0;
-  justify-items: center;
-  gap: var(--space-1);
-  padding: var(--space-1);
+  gap: var(--space-3);
+  border: 1px solid rgb(151 77 57 / 0.12);
+  border-radius: var(--radius-surface);
+  background: rgb(255 255 255 / 0.56);
+  padding: 0.875rem;
   font-size: 0.875rem;
   font-weight: 700;
   line-height: 1.2;
-  text-align: center;
 }
 
 .how-it-works__steps li + li {
-  border-top: 0;
-  border-left: 1px solid var(--border-soft);
+  border-left: 1px solid rgb(151 77 57 / 0.12);
 }
 
 .how-it-works__steps li > span:last-child {
@@ -1519,25 +1519,17 @@ a {
 }
 
 .how-it-works__icon {
-  position: relative;
   display: grid;
-  min-width: 2rem;
-  min-height: 2rem;
+  width: 2.75rem;
+  height: 2.75rem;
   place-items: center;
+  border-radius: 0.875rem;
+  background: rgb(169 79 52 / 0.1);
   color: var(--color-terracotta-500);
 }
 
 .how-it-works__number {
-  position: absolute;
-  top: -0.2rem;
-  right: -0.15rem;
-  display: grid;
-  width: 1rem;
-  height: 1rem;
-  place-items: center;
-  border-radius: 999px;
-  background: var(--color-sand-100);
-  font-size: 0.6875rem;
+  display: none;
 }
 
 .catalog-filters {
@@ -1777,6 +1769,16 @@ a {
 }
 
 @media (min-width: 640px) {
+  .how-it-works__steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .how-it-works__steps li {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    text-align: center;
+  }
+
   .admin-summary {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
