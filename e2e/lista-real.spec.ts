@@ -16,6 +16,6 @@ test('mantém Pix e lista imprimível disponíveis sem nomes de convidados', asy
 
   await page.goto('/#/pdf')
   await expect(page.getByRole('heading', { name: 'Lista para impressão' })).toBeVisible()
-  await expect(page.getByText(/nomes de reservas não aparecem aqui/i)).toBeVisible()
+  await expect(page.getByText(/nomes de reservas não aparecem/i)).toBeVisible()
   await expect(page.locator('body')).not.toContainText('Teste de desenvolvimento')
 })

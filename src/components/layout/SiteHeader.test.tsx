@@ -4,10 +4,13 @@ import { describe, expect, it } from 'vitest'
 import { SiteHeader } from './SiteHeader'
 
 describe('SiteHeader', () => {
-  it('mantém identidade curta e contribuição secundária', () => {
+  it('mantém a contribuição por Pix em destaque', () => {
     renderWithApp(<SiteHeader />)
 
     expect(screen.getByRole('link', { name: 'Nossa lista' })).toHaveAttribute('href', '/')
-    expect(screen.getByRole('link', { name: 'Contribuir' })).toHaveAttribute('href', '/pix')
+    expect(screen.getByRole('link', { name: 'Contribuir por Pix' })).toHaveAttribute('href', '/pix')
+    expect(screen.getByRole('link', { name: 'Contribuir por Pix' })).toHaveClass(
+      'site-header__contribute',
+    )
   })
 })
