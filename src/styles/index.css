@@ -69,7 +69,9 @@ a {
   color: inherit;
 }
 
-:focus-visible {
+:focus-visible,
+.ui-input:focus,
+h1[tabindex='-1']:focus {
   outline: 3px solid var(--color-terracotta-500);
   outline-offset: 3px;
 }
@@ -1191,12 +1193,27 @@ a {
   box-shadow: var(--shadow-card);
 }
 
-.admin-summary__card > svg {
+.admin-summary__label {
+  display: contents;
+}
+
+.admin-summary__label > svg {
+  grid-row: 1 / span 2;
   color: var(--color-terracotta-500);
 }
 
-.admin-summary__card--available > svg,
-.admin-summary__card--received > svg {
+.admin-summary__label > span {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.admin-summary__card > .admin-summary__value {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.admin-summary__card--available .admin-summary__label > svg,
+.admin-summary__card--received .admin-summary__label > svg {
   color: var(--color-olive-700);
 }
 
