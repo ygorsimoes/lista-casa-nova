@@ -102,10 +102,10 @@ export function LiveCatalogPage() {
         ) : null}
         {!loading && !error ? (
           <div className="gift-grid">
-            {visibleGifts.map((gift, index) => {
+            {visibleGifts.map((gift) => {
               const reserved = reservedGiftIds.has(gift.id)
               return (
-                <Card key={gift.id} variant="flat" className={`gift-card${reserved ? ' gift-card--chosen' : ` gift-card--available gift-card--tone-${['peach', 'sage', 'butter'][index % 3]}`}`}>
+                <Card key={gift.id} variant="flat" className={`gift-card${reserved ? ' gift-card--chosen' : ' gift-card--available'}`}>
                   <article>
                     {gift.imageUrl ? <img className="gift-visual gift-visual--image" src={gift.imageUrl} alt="" /> : <span className="gift-visual gift-visual--fallback" aria-hidden="true"><GiftIcon size={20} strokeWidth={1.65} /></span>}
                     <div className="gift-card__content">
