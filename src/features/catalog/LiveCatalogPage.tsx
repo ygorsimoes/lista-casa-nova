@@ -4,7 +4,7 @@ import { Card } from '@/components/ui/Card'
 import { Dialog } from '@/components/ui/Dialog'
 import { Input } from '@/components/ui/Input'
 import type { Gift, ReserveResult } from '@/domain/gifts'
-import { Gift as GiftIcon } from 'lucide-react'
+import { Gift as GiftIcon, Grid2X2, Sparkles } from 'lucide-react'
 import { HeroSection } from './HeroSection'
 import { useMemo, useState, type FormEvent } from 'react'
 
@@ -82,14 +82,14 @@ export function LiveCatalogPage() {
       <section aria-labelledby="catalog-list-title" aria-label="Presentes para escolher">
         <div className="catalog-filters__list-heading live-catalog__heading">
           <div>
-            <h2 id="catalog-list-title">Presentes para escolher</h2>
+            <h2 id="catalog-list-title"><Sparkles aria-hidden="true" size={20} strokeWidth={1.8} />Presentes para escolher</h2>
           </div>
           <div className="live-catalog__filters" aria-label="Exibição dos presentes">
             <Button variant={showAllGifts ? 'ghost' : 'secondary'} aria-pressed={!showAllGifts} onClick={() => setShowAllGifts(false)}>
-              Disponíveis ({availableGifts.length})
+              <GiftIcon aria-hidden="true" size={16} />Disponíveis ({availableGifts.length})
             </Button>
             <Button variant={showAllGifts ? 'secondary' : 'ghost'} aria-pressed={showAllGifts} onClick={() => setShowAllGifts(true)}>
-              Todos ({gifts.length})
+              <Grid2X2 aria-hidden="true" size={16} />Todos ({gifts.length})
             </Button>
           </div>
         </div>
@@ -102,10 +102,10 @@ export function LiveCatalogPage() {
         ) : null}
         {!loading && !error ? (
           <div className="gift-grid">
-            {visibleGifts.map((gift) => {
+            {visibleGifts.map((gift, index) => {
               const reserved = reservedGiftIds.has(gift.id)
               return (
-                <Card key={gift.id} variant="flat" className={`gift-card${reserved ? ' gift-card--chosen' : ' gift-card--available'}`}>
+                <Card key={gift.id} variant="flat" className={`gift-card${reserved ? ' gift-card--chosen' : ` gift-card--available gift-card--tone-${['peach', 'sage', 'butter'][index % 3]}`}`}>
                   <article>
                     {gift.imageUrl ? <img className="gift-visual gift-visual--image" src={gift.imageUrl} alt="" /> : <span className="gift-visual gift-visual--fallback" aria-hidden="true"><GiftIcon size={20} strokeWidth={1.65} /></span>}
                     <div className="gift-card__content">

@@ -29,6 +29,7 @@ describe('LiveCatalogPage availability priority', () => {
     expect(screen.getByRole('button', { name: 'Disponíveis (2)' })).toHaveAttribute('aria-pressed', 'true')
     expect(screen.queryByRole('heading', { name: 'Chaleira' })).not.toBeInTheDocument()
     expect(document.querySelector('img.gift-visual--image')).toHaveAttribute('src', 'https://example.com/cesto.jpg')
+    expect(screen.getByRole('heading', { name: 'Cesto de roupas' }).closest('.gift-card')).toHaveClass('gift-card--tone-peach')
 
     fireEvent.click(screen.getByRole('button', { name: 'Todos (3)' }))
 
