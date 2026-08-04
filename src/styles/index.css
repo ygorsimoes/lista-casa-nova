@@ -1560,6 +1560,20 @@ a {
   gap: 0.85rem;
 }
 
+.catalog-hero__intro {
+  position: relative;
+  isolation: isolate;
+}
+
+.catalog-hero__intro::before {
+  position: absolute;
+  z-index: -1;
+  inset: -1.2rem -1rem -0.75rem;
+  border-radius: 1.5rem;
+  background: radial-gradient(circle at 12% 24%, rgb(236 186 164 / 0.22), transparent 45%);
+  content: '';
+}
+
 .catalog-hero__eyebrow {
   margin: 0 0 var(--space-1);
   color: var(--color-terracotta-600);
@@ -1892,7 +1906,8 @@ a {
   padding: 0.25rem;
   border: 1px solid var(--border-soft);
   border-radius: 999px;
-  background: rgb(255 255 255 / 0.62);
+  background: rgb(246 240 232 / 0.72);
+  box-shadow: 0 0.4rem 1rem rgb(63 59 55 / 0.035);
 }
 
 .live-catalog__filters .ui-button {
@@ -1903,14 +1918,18 @@ a {
 }
 
 .gift-card--available {
-  border-color: rgb(151 77 57 / 0.18);
-  box-shadow: 0 0.6rem 1.5rem rgb(151 77 57 / 0.08);
+  border-color: rgb(151 77 57 / 0.22);
+  background: rgb(255 255 255 / 0.9);
+  box-shadow:
+    inset 0 3px 0 rgb(169 79 52 / 0.72),
+    0 0.7rem 1.7rem rgb(151 77 57 / 0.08);
 }
 
 .gift-card--chosen {
   opacity: 0.72;
-  background: rgb(255 255 255 / 0.44);
-  filter: saturate(0.72);
+  border-color: rgb(91 94 91 / 0.14);
+  background: rgb(241 241 237 / 0.86);
+  filter: saturate(0.58);
 }
 
 .gift-card--chosen:hover {
