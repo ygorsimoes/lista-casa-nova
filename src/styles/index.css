@@ -1771,7 +1771,7 @@ a {
 
 .gift-card article {
   display: grid;
-  grid-template-columns: 2.75rem minmax(0, 1fr);
+  grid-template-columns: 3.25rem minmax(0, 1fr);
   min-height: 0;
   align-items: start;
   gap: var(--space-3);
@@ -1850,6 +1850,22 @@ a {
 
 .gift-card__status {
   margin-top: 0.45rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.015em;
+}
+
+.gift-card .gift-visual {
+  width: 3.25rem;
+  min-height: 3.25rem;
+}
+
+.gift-visual--image {
+  object-fit: cover;
+  background: rgb(255 255 255 / 0.85);
+}
+
+.gift-visual--fallback {
+  color: rgb(151 77 57 / 0.72);
 }
 
 .live-catalog__heading {
@@ -1888,6 +1904,8 @@ a {
 
 .gift-card--chosen {
   opacity: 0.72;
+  background: rgb(255 255 255 / 0.44);
+  filter: saturate(0.72);
 }
 
 .gift-card--chosen:hover {

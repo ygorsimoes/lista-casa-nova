@@ -4,6 +4,7 @@ import { Card } from '@/components/ui/Card'
 import { Dialog } from '@/components/ui/Dialog'
 import { Input } from '@/components/ui/Input'
 import type { Gift, ReserveResult } from '@/domain/gifts'
+import { Gift as GiftIcon } from 'lucide-react'
 import { HeroSection } from './HeroSection'
 import { useMemo, useState, type FormEvent } from 'react'
 
@@ -106,7 +107,7 @@ export function LiveCatalogPage() {
               return (
                 <Card key={gift.id} variant="flat" className={`gift-card${reserved ? ' gift-card--chosen' : ' gift-card--available'}`}>
                   <article>
-                    {gift.imageUrl ? <img className="gift-visual" src={gift.imageUrl} alt="" /> : <span className="gift-visual" aria-hidden="true">🎁</span>}
+                    {gift.imageUrl ? <img className="gift-visual gift-visual--image" src={gift.imageUrl} alt="" /> : <span className="gift-visual gift-visual--fallback" aria-hidden="true"><GiftIcon size={20} strokeWidth={1.65} /></span>}
                     <div className="gift-card__content">
                       {gift.color ? <p className="gift-card__category">{gift.color}</p> : null}
                       <h3>{gift.name}</h3>

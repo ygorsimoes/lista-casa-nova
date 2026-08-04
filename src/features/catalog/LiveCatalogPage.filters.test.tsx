@@ -4,7 +4,7 @@ import type { Gift } from '@/domain/gifts'
 
 const gifts: Gift[] = [
   { id: 'gift-1', name: 'Chaleira', imageUrl: null, color: null, description: null, preferences: [], referenceValue: null, referenceUrl: null, sortOrder: 1 },
-  { id: 'gift-2', name: 'Cesto de roupas', imageUrl: null, color: null, description: null, preferences: [], referenceValue: null, referenceUrl: null, sortOrder: 2 },
+  { id: 'gift-2', name: 'Cesto de roupas', imageUrl: 'https://example.com/cesto.jpg', color: null, description: null, preferences: [], referenceValue: null, referenceUrl: null, sortOrder: 2 },
   { id: 'gift-3', name: 'Varal de chão', imageUrl: null, color: null, description: null, preferences: [], referenceValue: null, referenceUrl: null, sortOrder: 3 },
 ]
 
@@ -28,6 +28,7 @@ describe('LiveCatalogPage availability priority', () => {
     expect(screen.queryByText('2 disponíveis para escolher')).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Disponíveis (2)' })).toHaveAttribute('aria-pressed', 'true')
     expect(screen.queryByRole('heading', { name: 'Chaleira' })).not.toBeInTheDocument()
+    expect(document.querySelector('img.gift-visual--image')).toHaveAttribute('src', 'https://example.com/cesto.jpg')
 
     fireEvent.click(screen.getByRole('button', { name: 'Todos (3)' }))
 
