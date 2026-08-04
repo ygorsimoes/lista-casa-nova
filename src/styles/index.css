@@ -393,6 +393,20 @@ a {
   letter-spacing: -0.025em;
 }
 
+.reservation-dialog .ui-dialog__title::before {
+  display: inline-grid;
+  width: 2.125rem;
+  height: 2.125rem;
+  margin-right: 0.625rem;
+  place-items: center;
+  border-radius: 50%;
+  background: rgb(169 79 52 / 0.1);
+  content: '🎁';
+  font-family: var(--font-operational);
+  font-size: 1rem;
+  vertical-align: 0.125em;
+}
+
 .reservation-dialog .ui-dialog__description {
   max-width: 27rem;
   margin-top: 0.625rem;
@@ -449,6 +463,10 @@ a {
   padding: 1rem;
   color: var(--color-olive-700);
   line-height: 1.55;
+}
+
+.reservation-dialog__success p::before {
+  content: '💛 ';
 }
 
 .ui-toast-region {
