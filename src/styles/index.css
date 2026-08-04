@@ -1993,6 +1993,262 @@ a {
   }
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+.admin-page {
+  display: grid;
+  gap: clamp(1.5rem, 4vw, 2.75rem);
+  width: min(100%, 74rem);
+  margin-inline: auto;
+  padding-block: clamp(1.25rem, 4vw, 3rem);
+}
+
+.admin-page__header,
+.admin-section__heading,
+.admin-gift-row,
+.admin-reservation-row,
+.admin-page__header-actions,
+.admin-catalog-controls,
+.admin-confirmation-actions {
+  display: flex;
+  align-items: center;
+}
+
+.admin-page__header {
+  justify-content: space-between;
+  gap: 1.5rem;
+  border-bottom: 1px solid var(--border-soft);
+  padding-bottom: 1.5rem;
+}
+
+.admin-page__eyebrow,
+.admin-section__kicker {
+  margin: 0 0 0.35rem;
+  color: var(--color-terracotta-600);
+  font-size: 0.78rem;
+  font-weight: 750;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.admin-page h1,
+.admin-section h2,
+.admin-gift-row h3 {
+  margin: 0;
+  color: var(--color-graphite-900);
+}
+
+.admin-page h1 {
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  letter-spacing: -0.04em;
+}
+
+.admin-page__header > div:first-child > p:last-child,
+.admin-gift-row p,
+.admin-reservation-row span,
+.admin-section__count,
+.admin-empty {
+  margin: 0.45rem 0 0;
+  color: var(--color-graphite-700);
+}
+
+.admin-page__header-actions,
+.admin-confirmation-actions {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.6rem;
+}
+
+.admin-page__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--color-terracotta-600);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.admin-overview {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 0;
+}
+
+.admin-overview > div {
+  border: 1px solid var(--border-soft);
+  border-radius: 1rem;
+  background: rgb(255 255 255 / 0.64);
+  padding: 1rem;
+}
+
+.admin-overview dt {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--color-graphite-700);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.admin-overview dt svg { color: var(--color-terracotta-600); }
+
+.admin-overview dd {
+  margin: 0.5rem 0 0;
+  color: var(--color-graphite-900);
+  font-size: clamp(1.05rem, 2vw, 1.28rem);
+  font-weight: 760;
+}
+
+.admin-page__content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+}
+
+.admin-section {
+  min-width: 0;
+  border: 1px solid var(--border-soft);
+  border-radius: 1.25rem;
+  background: rgb(255 255 255 / 0.7);
+  padding: clamp(1.1rem, 3vw, 1.5rem);
+}
+
+.admin-section--form { background: rgb(252 243 237 / 0.76); }
+
+.admin-section__heading {
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.admin-section h2 { font-size: 1.25rem; }
+
+.admin-gift-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.admin-gift-form > :nth-child(4),
+.admin-gift-form > :nth-child(5),
+.admin-gift-form__actions { grid-column: 1 / -1; }
+
+.admin-gift-form__actions { padding-top: 0.25rem; }
+
+.admin-catalog-controls {
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.admin-search {
+  display: flex;
+  flex: 1 1 15rem;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  border: 1px solid rgb(63 59 55 / 0.18);
+  border-radius: 0.75rem;
+  background: white;
+  padding-inline: 0.75rem;
+  color: var(--color-graphite-700);
+}
+
+.admin-search:focus-within { outline: 2px solid rgb(151 77 57 / 0.28); outline-offset: 2px; }
+
+.admin-search input,
+.admin-filter select {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--color-graphite-900);
+  font: inherit;
+}
+
+.admin-filter {
+  display: grid;
+  gap: 0.3rem;
+  color: var(--color-graphite-700);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.admin-filter select {
+  min-height: 2.25rem;
+  border: 1px solid rgb(63 59 55 / 0.18);
+  border-radius: 0.65rem;
+  background: white;
+  padding-inline: 0.55rem;
+}
+
+.admin-gift-list,
+.admin-reservation-list {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.admin-gift-row,
+.admin-reservation-row {
+  justify-content: space-between;
+  gap: 0.9rem;
+  border-top: 1px solid rgb(63 59 55 / 0.11);
+  padding: 0.9rem 0;
+}
+
+.admin-gift-row__identity { display: flex; min-width: 0; align-items: center; gap: 0.75rem; }
+.admin-gift-row__identity > div { min-width: 0; }
+.admin-gift-row h3 { font-size: 1rem; }
+.admin-gift-row p { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 0.875rem; }
+
+.admin-gift-row__mark {
+  display: grid;
+  flex: 0 0 auto;
+  width: 2.4rem;
+  height: 2.4rem;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--accent-muted);
+  color: var(--color-terracotta-600);
+}
+
+.admin-gift-row__actions { display: flex; flex: 0 0 auto; gap: 0.2rem; }
+.admin-gift-row__actions .ui-button { min-height: 38px; padding-inline: 0.55rem; color: var(--color-graphite-700); }
+.admin-gift-row__actions .ui-button:last-child:hover { color: var(--color-terracotta-600); }
+
+.admin-reservation-row { border-top: 0; border-bottom: 1px solid rgb(63 59 55 / 0.11); }
+.admin-reservation-row strong { display: block; color: var(--color-graphite-900); }
+.admin-reservation-row span { display: block; font-size: 0.9rem; }
+
+.admin-empty { padding: 0.75rem 0; font-size: 0.94rem; }
+
+@media (min-width: 880px) {
+  .admin-page__content { grid-template-columns: minmax(0, 1.05fr) minmax(20rem, 0.95fr); align-items: start; }
+  .admin-section--form { grid-row: span 2; }
+}
+
+@media (max-width: 620px) {
+  .admin-page__header,
+  .admin-catalog-controls,
+  .admin-gift-row,
+  .admin-reservation-row { align-items: stretch; flex-direction: column; }
+  .admin-page__header-actions { justify-content: flex-start; }
+  .admin-overview { grid-template-columns: 1fr; }
+  .admin-gift-form { grid-template-columns: 1fr; }
+  .admin-gift-form > :nth-child(4),
+  .admin-gift-form > :nth-child(5),
+  .admin-gift-form__actions { grid-column: auto; }
+  .admin-gift-row__actions { justify-content: flex-start; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
