@@ -1,5 +1,5 @@
 import { AppShell } from '@/components/layout/AppShell'
-import { CatalogPage } from '@/features/catalog/CatalogPage'
+import { LiveCatalogPage } from '@/features/catalog/LiveCatalogPage'
 import { GiftDetailsDialog } from '@/features/catalog/GiftDetailsDialog'
 import { GiftDetailsPage } from '@/features/catalog/GiftDetailsPage'
 import { CollectionPage } from '@/features/collections/CollectionPage'
@@ -28,7 +28,7 @@ export function AppRoutes() {
           path="/"
           element={
             <AppShell>
-              <CatalogPage />
+              <LiveCatalogPage />
             </AppShell>
           }
         />
