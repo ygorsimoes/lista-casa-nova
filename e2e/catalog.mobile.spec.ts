@@ -1,8 +1,8 @@
 import {
   expectMinimumFieldFontSize,
   expectMinimumTouchTarget,
+  expectNoAccessibilityViolations,
   expectNoHorizontalOverflow,
-  expectNoSeriousAccessibilityViolations,
 } from './support/assertions.js'
 import { expect, test } from './support/test.js'
 
@@ -88,6 +88,6 @@ test('mantém o primeiro presente completo na dobra inicial em 360 × 800', asyn
   expect(firstGiftBox.y + firstGiftBox.height).toBeLessThanOrEqual(viewportHeight)
 })
 
-test('não possui violações sérias ou críticas no catálogo', async ({ page }) => {
-  await expectNoSeriousAccessibilityViolations(page)
+test('não possui violações de acessibilidade no catálogo', async ({ page }) => {
+  await expectNoAccessibilityViolations(page)
 })

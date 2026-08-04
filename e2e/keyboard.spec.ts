@@ -1,4 +1,4 @@
-import { expectNoSeriousAccessibilityViolations } from './support/assertions.js'
+import { expectNoAccessibilityViolations } from './support/assertions.js'
 import { expect, test } from './support/test.js'
 
 test('opera filtros com Enter e Espaço', async ({ page }) => {
@@ -37,17 +37,29 @@ test('prende foco no diálogo, fecha com Escape e devolve ao cartão', async ({ 
 
 test('move foco para o h1 após navegação', async ({ page }) => {
   await page.goto('./#/')
-  const pixLink = page.getByRole('link', { name: 'Contribuir com qualquer valor' })
+  const pixLink = page.getByRole('link', { name: 'Contribuir', exact: true })
   await pixLink.focus()
   await page.keyboard.press('Enter')
 
   await expect(page.getByRole('heading', { name: 'Contribuir por Pix' })).toBeFocused()
 })
 
-test('rotas principais não têm violações axe sérias ou críticas', async ({ page }) => {
+test('rotas principais não têm violações axe', async ({ page }) => {
   for (const route of ['', 'item/CZ-001', 'pix', 'pdf', 'admin']) {
     await page.goto(`./#/${route}`)
-    await expect(page.locator('main')).toBeVisible()
-    await expectNoSeriousAccessibilityViolations(page)
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
+    await expectNoAccessibilityViolations(
+      page,
+      route === 'item/CZ-001'
+        ? [
+            {
+              ruleId: 'heading-order',
+              target: 'h3',
+              reason:
+                'Subtítulo editorial legado na página de detalhe; não é parte desta infraestrutura.',
+            },
+          ]
+        : [],
+    )
   }
 })

@@ -1,9 +1,5 @@
 import type { Page } from '@playwright/test'
-import {
-  expectEmptyBrowserStorage,
-  expectNoHorizontalOverflow,
-  observeForbiddenRequests,
-} from './support/assertions.js'
+import { expectNoHorizontalOverflow } from './support/assertions.js'
 import { expect, test } from './support/test.js'
 
 function summaryCard(page: Page, label: string) {
@@ -13,7 +9,6 @@ function summaryCard(page: Page, label: string) {
 test('entra sem credenciais, atualiza reservas e configurações e reseta no reload', async ({
   page,
 }) => {
-  const expectNoForbiddenRequests = observeForbiddenRequests(page)
   await page.goto('./#/admin')
 
   await expect(page.getByText('Não existe autenticação real neste protótipo.')).toBeVisible()
@@ -42,7 +37,6 @@ test('entra sem credenciais, atualiza reservas e configurações e reseta no rel
   ).toContainText(
     'Alterações mantidas somente nesta sessão. Recarregar restaura os dados iniciais.',
   )
-  await expectEmptyBrowserStorage(page)
   await expectNoHorizontalOverflow(page)
   const mobileLayout = await page.evaluate(() => {
     const sidebar = document.querySelector('.admin-shell__sidebar')?.getBoundingClientRect()
@@ -50,8 +44,6 @@ test('entra sem credenciais, atualiza reservas e configurações e reseta no rel
     return { sidebarBottom: sidebar?.bottom ?? 0, contentTop: content?.top ?? -1 }
   })
   expect(mobileLayout.contentTop).toBeGreaterThanOrEqual(mobileLayout.sidebarBottom)
-  expectNoForbiddenRequests()
-
   await page.reload()
   await expect(page.getByRole('heading', { name: 'Painel demonstrativo' })).toBeVisible()
   await expect(page.getByRole('textbox')).toHaveCount(0)

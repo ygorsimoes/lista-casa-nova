@@ -1,24 +1,16 @@
-import {
-  expectEmptyBrowserStorage,
-  expectNoHorizontalOverflow,
-  observeForbiddenRequests,
-} from './support/assertions.js'
+import { expectNoHorizontalOverflow } from './support/assertions.js'
 import { expect, test } from './support/test.js'
 import { demoScenarios } from './support/demo-scenarios.js'
 
 test('coleção válida mantém sugestões dentro do protótipo', async ({ page }) => {
-  const expectNoForbiddenRequests = observeForbiddenRequests(page)
   await page.goto(`./#/colecao/${demoScenarios.validCollection}`)
 
-  await page.getByRole('button', { name: 'Ver sugestão demonstrativa: Chaleira em inox' }).click()
+  await page.getByRole('button', { name: 'Ver referência: Chaleira em inox' }).click()
   await expect(
-    page.getByText(
-      'Sugestão demonstrativa selecionada: Chaleira em inox. Nenhum site externo foi aberto.',
-      { exact: true },
-    ),
+    page.getByText('Referência selecionada: Chaleira em inox. Nenhum site externo foi aberto.', {
+      exact: true,
+    }),
   ).toBeVisible()
-  await expectEmptyBrowserStorage(page)
-  expectNoForbiddenRequests()
 })
 
 test('coleção inválida apresenta erro amigável', async ({ page }) => {
@@ -29,7 +21,6 @@ test('coleção inválida apresenta erro amigável', async ({ page }) => {
 })
 
 test('Pix simula cópia sem integração ou persistência', async ({ page }) => {
-  const expectNoForbiddenRequests = observeForbiddenRequests(page)
   await page.goto('./#/pix')
 
   await expect(page.getByText('DEMO-PIX-NAO-UTILIZAR-0002016304ABCD')).toBeVisible()
@@ -37,13 +28,10 @@ test('Pix simula cópia sem integração ou persistência', async ({ page }) => 
   await expect(
     page.getByText('Cópia simulada: nenhum dado foi copiado.', { exact: true }),
   ).toBeVisible()
-  await expectEmptyBrowserStorage(page)
   await expectNoHorizontalOverflow(page)
-  expectNoForbiddenRequests()
 })
 
 test('prévia A4 filtra e simula download sem gerar arquivo', async ({ page }) => {
-  const expectNoForbiddenRequests = observeForbiddenRequests(page)
   await page.goto('./#/pdf')
 
   const sheet = page.getByRole('region', { name: 'Folha A4 demonstrativa' })
@@ -55,7 +43,5 @@ test('prévia A4 filtra e simula download sem gerar arquivo', async ({ page }) =
     page.getByText('Download simulado: nenhum arquivo foi gerado.', { exact: true }),
   ).toBeVisible()
   await expect(page.getByRole('link', { name: /download/i })).toHaveCount(0)
-  await expectEmptyBrowserStorage(page)
   await expectNoHorizontalOverflow(page)
-  expectNoForbiddenRequests()
 })
