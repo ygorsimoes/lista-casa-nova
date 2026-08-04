@@ -1,76 +1,53 @@
-import { useDemoSelector } from '@/app/DemoStateProvider'
 import { AppShell } from '@/components/layout/AppShell'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
-import { Notice } from '@/components/ui/Notice'
-import { useToast } from '@/components/ui/Toast'
-import { CheckCircle2, Info } from 'lucide-react'
-import { useState } from 'react'
 import { Link } from 'react-router'
-import { IllustrativeQr } from './IllustrativeQr'
+import QRCode from 'qrcode'
+import { useEffect, useState } from 'react'
+import { createPixPayload } from './pix-payload'
+
+const pixCode = import.meta.env.VITE_PIX_COPY_AND_PASTE as string | undefined
+const pixReceiverName = import.meta.env.VITE_PIX_RECEIVER_NAME as string | undefined
+const pixReceiverCity = import.meta.env.VITE_PIX_RECEIVER_CITY as string | undefined
 
 export function PixPage() {
-  const pix = useDemoSelector((state) => state.settings.pix)
-  const { showToast } = useToast()
-  const [copySimulated, setCopySimulated] = useState(false)
+  const [copied, setCopied] = useState(false)
+  const [qrCodeUrl, setQrCodeUrl] = useState<string | null>(null)
+  const payload = pixCode && pixReceiverName && pixReceiverCity ? createPixPayload(pixCode, pixReceiverName, pixReceiverCity) : null
 
-  function simulateCopy() {
-    setCopySimulated(true)
-    showToast({ title: 'Cópia simulada.', description: 'Nenhum dado foi copiado.' })
+  useEffect(() => {
+    if (!payload) return
+    void QRCode.toDataURL(payload, { width: 320, margin: 1 }).then(setQrCodeUrl)
+  }, [payload])
+
+  async function copyPix() {
+    if (!payload) return
+    await navigator.clipboard.writeText(payload)
+    setCopied(true)
   }
 
   return (
     <AppShell>
       <section className="pix-page" aria-labelledby="pix-title">
-        <Link className="pix-page__back" to="/">
-          Nossa lista
-        </Link>
-        <p className="pix-page__eyebrow">
-          Outra forma de presentear <span aria-hidden="true">✨</span>
-        </p>
-        <h1 id="pix-title" tabIndex={-1}>
-          Contribuir por Pix
-        </h1>
-        <p className="pix-page__intro">
-          Se preferir, qualquer valor ajuda nos planos para o nosso novo lar.
-        </p>
-
-        <Card variant="flat" className="pix-page__card">
-          <section aria-label="Dados Pix demonstrativos">
-            <p className="pix-page__label">Chave demonstrativa</p>
-            <strong>Pix Copia e Cola</strong>
-            <code>{pix.copyAndPaste}</code>
-            <div className="pix-page__meta">
-              <dl>
-                <div>
-                  <dt>Destinatário</dt>
-                  <dd>{pix.recipient}</dd>
-                </div>
-                <div>
-                  <dt>Instituição</dt>
-                  <dd>{pix.institution}</dd>
-                </div>
-              </dl>
-              <IllustrativeQr label="QR Code ilustrativo" />
-            </div>
-          </section>
-        </Card>
-        <Notice tone="demo" icon={<Info size={20} />}>
-          Demonstração visual: nenhuma transferência é processada e nada é copiado.
-        </Notice>
-        <Button variant="secondary" fullWidth onClick={simulateCopy}>
-          Simular cópia
-        </Button>
-        {copySimulated ? (
-          <Notice
-            tone="success"
-            role="status"
-            aria-label="Resultado da cópia"
-            icon={<CheckCircle2 size={20} />}
-          >
-            Cópia simulada: nenhum dado foi copiado.
-          </Notice>
-        ) : null}
+        <Link className="pix-page__back" to="/">Nossa lista</Link>
+        <p className="pix-page__eyebrow">Outra forma de presentear <span aria-hidden="true">✨</span></p>
+        <h1 id="pix-title" tabIndex={-1}>Contribuir por Pix</h1>
+        <p className="pix-page__intro">Se preferir, qualquer valor ajuda nos planos para o nosso novo lar.</p>
+        {payload ? (
+          <>
+            <Card variant="flat" className="pix-page__card">
+              <p className="pix-page__label">Pix Copia e Cola</p>
+              <code>{payload}</code>
+              {qrCodeUrl ? <img src={qrCodeUrl} alt="QR Code para contribuição por Pix" /> : <p>Gerando QR Code…</p>}
+            </Card>
+            <Button variant="secondary" fullWidth onClick={() => void copyPix()}>Copiar código Pix</Button>
+            {copied ? <p role="status">Código Pix copiado.</p> : null}
+          </>
+        ) : (
+          <Card variant="flat" className="pix-page__card">
+            <p>Os dados do Pix ainda serão adicionados pelos anfitriões.</p>
+          </Card>
+        )}
       </section>
     </AppShell>
   )

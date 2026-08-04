@@ -1,38 +1,57 @@
-import { useDemoActions, useDemoSelector } from '@/app/DemoStateProvider'
+import { useGiftList } from '@/app/GiftListProvider'
 import { AppShell } from '@/components/layout/AppShell'
-import { RouteEffects } from '@/components/layout/RouteEffects'
-import { ToastProvider } from '@/components/ui/Toast'
-import { useState } from 'react'
-import { AdminDashboard } from './AdminDashboard'
+import { Button } from '@/components/ui/Button'
+import { Input } from '@/components/ui/Input'
+import { getSupabaseClient } from '@/lib/supabase'
+import { useEffect, useState, type FormEvent } from 'react'
+import { fetchAdminReservations } from './admin-api'
 import { AdminLogin } from './AdminLogin'
 
 export default function AdminPage() {
-  const adminUnlocked = useDemoSelector((state) => state.adminUnlocked)
-  const { lockAdmin, unlockAdmin } = useDemoActions()
-  const [shouldFocusLoginTitle, setShouldFocusLoginTitle] = useState(false)
+  const { gifts, refresh } = useGiftList()
+  const [signedIn, setSignedIn] = useState(false)
+  const [name, setName] = useState('')
+  const [reservations, setReservations] = useState<{ giftId: string; guestName: string }[]>([])
 
-  function enterDemo() {
-    setShouldFocusLoginTitle(false)
-    unlockAdmin()
+  async function loadAdminData() {
+    const { data } = await getSupabaseClient().auth.getSession()
+    setSignedIn(Boolean(data.session))
+    if (data.session) setReservations(await fetchAdminReservations())
   }
 
-  function exitDemo() {
-    setShouldFocusLoginTitle(true)
-    lockAdmin()
+  useEffect(() => { void loadAdminData() }, [])
+
+  async function addGift(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    if (!name.trim()) return
+    await getSupabaseClient().from('gifts').insert({ name: name.trim(), preferences: [], sort_order: gifts.length + 1 })
+    setName('')
+    await refresh()
   }
 
-  if (adminUnlocked) {
-    return (
-      <ToastProvider>
-        <RouteEffects />
-        <AdminDashboard onExit={exitDemo} />
-      </ToastProvider>
-    )
+  async function removeGift(id: string) {
+    if (!window.confirm('Remover este presente da lista?')) return
+    await getSupabaseClient().from('gifts').delete().eq('id', id)
+    await refresh()
+    await loadAdminData()
   }
+
+  if (!signedIn) return <AppShell><AdminLogin onEnter={() => void loadAdminData()} /></AppShell>
 
   return (
     <AppShell>
-      <AdminLogin focusTitle={shouldFocusLoginTitle} onEnter={enterDemo} />
+      <section className="admin-page" aria-labelledby="admin-title">
+        <h1 id="admin-title">Administrar lista</h1>
+        <form onSubmit={addGift}>
+          <Input label="Novo presente" value={name} onChange={(event) => setName(event.target.value)} required />
+          <Button type="submit">Adicionar</Button>
+        </form>
+        <h2>Presentes</h2>
+        <ul>{gifts.map((gift) => <li key={gift.id}>{gift.name} <Button variant="danger" onClick={() => void removeGift(gift.id)}>Remover</Button></li>)}</ul>
+        <h2>Reservas</h2>
+        <ul>{reservations.map((reservation) => <li key={reservation.giftId}>{gifts.find((gift) => gift.id === reservation.giftId)?.name ?? 'Presente removido'} — {reservation.guestName}</li>)}</ul>
+        <Button variant="secondary" onClick={() => void getSupabaseClient().auth.signOut().then(loadAdminData)}>Sair</Button>
+      </section>
     </AppShell>
   )
 }
