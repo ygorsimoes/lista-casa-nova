@@ -1,4 +1,4 @@
-import { Gift, HeartHandshake, Truck } from 'lucide-react'
+import { Gift, HeartHandshake, ShoppingBag } from 'lucide-react'
 
 interface HeroSectionProps {
   title: string
@@ -8,7 +8,7 @@ interface HeroSectionProps {
 const steps = [
   { icon: Gift, text: 'Escolha um presente' },
   { icon: HeartHandshake, text: 'Reserve em seu nome' },
-  { icon: Truck, text: 'Combine a entrega' },
+  { icon: ShoppingBag, text: 'Escolha onde comprar' },
 ]
 
 export function HeroSection({ message, title }: HeroSectionProps) {

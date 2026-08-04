@@ -1451,7 +1451,7 @@ a {
 
 .catalog-hero {
   display: grid;
-  gap: var(--space-3);
+  gap: 1.25rem;
 }
 
 .catalog-hero__eyebrow {
@@ -1471,6 +1471,10 @@ a {
   font-weight: 700;
   letter-spacing: -0.025em;
   line-height: 0.98;
+}
+
+.catalog-hero h1:focus-visible {
+  outline: none;
 }
 
 .catalog-hero__message {
@@ -1660,15 +1664,15 @@ a {
 
 .gift-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: var(--space-2);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
+  gap: 1rem;
 }
 
 .gift-card article {
   display: grid;
-  grid-template-columns: 3rem minmax(0, 1fr) auto;
-  min-height: 5rem;
-  align-items: center;
+  grid-template-columns: 2.75rem minmax(0, 1fr);
+  min-height: 0;
+  align-items: start;
   gap: var(--space-3);
   padding: var(--space-3);
 }
@@ -1720,8 +1724,45 @@ a {
 }
 
 .gift-card__open {
-  min-width: 48px;
-  padding-inline: var(--space-1);
+  grid-column: 2;
+  justify-self: start;
+  min-width: 7.25rem;
+  margin-top: var(--space-1);
+}
+
+.gift-card__category {
+  color: rgb(139 91 75 / 0.9);
+  font-size: 0.75rem;
+  letter-spacing: 0.055em;
+}
+
+.gift-card__status {
+  margin-top: 0.45rem;
+}
+
+.live-catalog__heading {
+  margin-top: 2rem;
+}
+
+.live-reservation-form {
+  display: grid;
+  gap: 1rem;
+}
+
+.live-reservation-form__feedback:empty {
+  display: none;
+}
+
+.live-reservation-form__feedback p {
+  margin: 0;
+  padding: 0.75rem 0.875rem;
+  border-radius: 0.875rem;
+  background: rgb(183 101 73 / 0.08);
+  color: var(--color-graphite-800);
+}
+
+.live-reservation-form .reservation-form__actions {
+  margin-top: 0.5rem;
 }
 
 @media (min-width: 640px) {

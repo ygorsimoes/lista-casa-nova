@@ -34,7 +34,7 @@ function ReservationDialog({ gift, onClose }: { gift: Gift | null; onClose(): vo
           <Button fullWidth onClick={onClose}>Voltar para a lista</Button>
         </div>
       ) : (
-        <form onSubmit={submit} noValidate>
+        <form className="live-reservation-form" onSubmit={submit} noValidate>
           <Input
             label="Seu nome"
             name="guestName"
@@ -43,9 +43,11 @@ function ReservationDialog({ gift, onClose }: { gift: Gift | null; onClose(): vo
             onChange={(event) => setName(event.target.value)}
             required
           />
-          {result?.kind === 'already-reserved' ? <p role="alert">Este presente já foi reservado.</p> : null}
-          {result?.kind === 'unavailable' ? <p role="alert">Este presente não está mais disponível.</p> : null}
-          {result?.kind === 'failure' ? <p role="alert">Não foi possível reservar agora. Tente novamente.</p> : null}
+          <div className="live-reservation-form__feedback">
+            {result?.kind === 'already-reserved' ? <p role="alert">Este presente já foi reservado.</p> : null}
+            {result?.kind === 'unavailable' ? <p role="alert">Este presente não está mais disponível.</p> : null}
+            {result?.kind === 'failure' ? <p role="alert">Não foi possível reservar agora. Tente novamente.</p> : null}
+          </div>
           <div className="reservation-form__actions">
             <Button type="submit" fullWidth disabled={submitting || !name.trim()}>
               {submitting ? 'Reservando…' : 'Confirmar reserva'}
@@ -69,7 +71,7 @@ export function LiveCatalogPage() {
         message="Escolha um presente, reserve com seu nome e compre onde preferir."
       />
       <section aria-labelledby="catalog-list-title">
-        <div className="catalog-filters__list-heading">
+        <div className="catalog-filters__list-heading live-catalog__heading">
           <h2 id="catalog-list-title">Presentes para escolher</h2>
           <p>{gifts.length} itens</p>
         </div>
