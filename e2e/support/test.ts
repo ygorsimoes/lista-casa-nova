@@ -1,6 +1,6 @@
 /// <reference lib="dom" />
 
-import { expect, test as base } from '@playwright/test'
+import { expect, test as base, type Page } from '@playwright/test'
 
 type RuntimeIssue = {
   kind: 'console.error' | 'console.warn' | 'pageerror'
@@ -10,6 +10,12 @@ type RuntimeIssue = {
 type PrototypeSideEffect = {
   kind: 'network' | 'storage' | 'websocket'
   detail: string
+}
+
+type PrototypeDownload = {
+  pageUrl: string
+  suggestedFilename: string
+  url: string
 }
 
 declare global {
@@ -24,6 +30,7 @@ declare global {
 export const test = base.extend<{
   runtimeIssueGuard: void
   prototypeBoundaryGuard: void
+  downloadGuard: void
 }>({
   runtimeIssueGuard: [
     async ({ page }, use) => {
@@ -149,6 +156,29 @@ export const test = base.extend<{
       expect(sideEffects, 'rede externa, chamadas funcionais ou armazenamento').toEqual([])
       expect(storageState.cookies, 'cookies do contexto').toEqual([])
       expect(storageState.origins, 'localStorage ou IndexedDB do contexto').toEqual([])
+    },
+    { auto: true },
+  ],
+  downloadGuard: [
+    async ({ context, page }, use) => {
+      const downloads: PrototypeDownload[] = []
+      const observePage = (observedPage: Page) => {
+        observedPage.on('download', (download) => {
+          downloads.push({
+            pageUrl: observedPage.url(),
+            suggestedFilename: download.suggestedFilename(),
+            url: download.url(),
+          })
+        })
+      }
+
+      observePage(page)
+      context.on('page', observePage)
+
+      await use()
+
+      context.off('page', observePage)
+      expect(downloads, 'downloads reais iniciados pelo protótipo').toEqual([])
     },
     { auto: true },
   ],

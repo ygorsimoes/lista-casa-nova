@@ -50,15 +50,10 @@ test('prévia A4 filtra e simula download sem gerar arquivo', async ({ page }) =
   await page.getByRole('button', { name: 'Disponíveis', exact: true }).click()
   await expect(sheet).not.toContainText('Jogo de toalhas')
   await expect(summary).toContainText('8 ideias na prévia.')
-  const downloadStarted = page
-    .waitForEvent('download', { timeout: 500 })
-    .then(() => true)
-    .catch(() => false)
   await page.getByRole('button', { name: 'Simular download' }).click()
   await expect(
     page.getByText('Download simulado: nenhum arquivo foi gerado.', { exact: true }),
   ).toBeVisible()
-  expect(await downloadStarted).toBe(false)
   await expect(page.getByRole('link', { name: /download/i })).toHaveCount(0)
   await expectNoHorizontalOverflow(page)
 })
