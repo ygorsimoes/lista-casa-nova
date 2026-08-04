@@ -10,7 +10,12 @@ vi.mock('@/lib/supabase', () => ({
   getSupabaseClient: () => ({ from }),
 }))
 
-import { createAdminGift, deleteAdminGift, updateAdminGift } from './admin-api'
+import {
+  createAdminGift,
+  deleteAdminGift,
+  deleteAdminReservation,
+  updateAdminGift,
+} from './admin-api'
 
 describe('admin-api', () => {
   it('cria um presente normalizando os campos opcionais', async () => {
@@ -45,10 +50,19 @@ describe('admin-api', () => {
     update.mockReturnValueOnce({ eq: updateEq })
 
     await updateAdminGift('gift-1', {
-      name: 'Tapete', imageUrl: '', color: '', description: '', preferences: '', referenceValue: '149.90', referenceUrl: '', sortOrder: 4,
+      name: 'Tapete',
+      imageUrl: '',
+      color: '',
+      description: '',
+      preferences: '',
+      referenceValue: '149.90',
+      referenceUrl: '',
+      sortOrder: 4,
     })
 
-    expect(update).toHaveBeenCalledWith(expect.objectContaining({ name: 'Tapete', reference_value: 149.9 }))
+    expect(update).toHaveBeenCalledWith(
+      expect.objectContaining({ name: 'Tapete', reference_value: 149.9 }),
+    )
     expect(updateEq).toHaveBeenCalledWith('id', 'gift-1')
   })
 
@@ -60,5 +74,15 @@ describe('admin-api', () => {
 
     expect(from).toHaveBeenCalledWith('gifts')
     expect(deleteEq).toHaveBeenCalledWith('id', 'gift-1')
+  })
+
+  it('libera a reserva do presente indicado', async () => {
+    const deleteEq = vi.fn().mockResolvedValueOnce({ error: null })
+    remove.mockReturnValueOnce({ eq: deleteEq })
+
+    await deleteAdminReservation('gift-2')
+
+    expect(from).toHaveBeenCalledWith('reservations')
+    expect(deleteEq).toHaveBeenCalledWith('gift_id', 'gift-2')
   })
 })

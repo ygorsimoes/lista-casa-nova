@@ -20,10 +20,12 @@
 ### Task 1: Contrato administrativo real
 
 **Files:**
+
 - Modify: `src/features/admin/admin-api.ts`
 - Create: `src/features/admin/admin-api.test.ts`
 
 **Interfaces:**
+
 - Produces `fetchAdminReservations`, `createAdminGift`, `updateAdminGift` e `deleteAdminGift`.
 - Consumes o cliente autenticado retornado por `getSupabaseClient`.
 
@@ -55,10 +57,12 @@ Expected: PASS.
 ### Task 2: Comportamentos da página de administração
 
 **Files:**
+
 - Modify: `src/features/admin/AdminPage.tsx`
 - Create: `src/features/admin/AdminPage.test.tsx`
 
 **Interfaces:**
+
 - Consumes `AdminGiftInput` e as mutações de `admin-api.ts`.
 - Produces interface autenticada com resumo, formulário, busca/filtro, catálogo e reservas.
 
@@ -92,10 +96,12 @@ Expected: PASS.
 ### Task 3: Refinamento responsivo e validação integrada
 
 **Files:**
+
 - Modify: `src/styles/index.css`
 - Modify: `src/features/admin/AdminPage.tsx` somente se a acessibilidade exigir ajustes pequenos.
 
 **Interfaces:**
+
 - Consumes classes semânticas da página administrativa.
 - Produces um painel responsivo, legível e com ações distinguíveis.
 

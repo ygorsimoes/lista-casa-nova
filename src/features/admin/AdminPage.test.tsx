@@ -5,15 +5,38 @@ import { MemoryRouter } from 'react-router'
 
 const mocks = vi.hoisted(() => ({
   refresh: vi.fn(),
-  fetchAdminReservations: vi.fn().mockResolvedValue([
-    { giftId: 'gift-2', guestName: 'Marina', createdAt: '2026-08-04T12:00:00Z' },
-  ]),
+  fetchAdminReservations: vi
+    .fn()
+    .mockResolvedValue([
+      { giftId: 'gift-2', guestName: 'Marina', createdAt: '2026-08-04T12:00:00Z' },
+    ]),
+  deleteAdminReservation: vi.fn().mockResolvedValue(undefined),
   updateAdminGift: vi.fn().mockResolvedValue(undefined),
 }))
 
 const gifts: Gift[] = [
-  { id: 'gift-1', name: 'Chaleira', imageUrl: null, color: 'Inox', description: null, preferences: [], referenceValue: null, referenceUrl: null, sortOrder: 1 },
-  { id: 'gift-2', name: 'Jogo de toalhas', imageUrl: null, color: 'Areia', description: null, preferences: ['algodão'], referenceValue: null, referenceUrl: null, sortOrder: 2 },
+  {
+    id: 'gift-1',
+    name: 'Chaleira',
+    imageUrl: null,
+    color: 'Inox',
+    description: null,
+    preferences: [],
+    referenceValue: null,
+    referenceUrl: null,
+    sortOrder: 1,
+  },
+  {
+    id: 'gift-2',
+    name: 'Jogo de toalhas',
+    imageUrl: null,
+    color: 'Areia',
+    description: null,
+    preferences: ['algodão'],
+    referenceValue: null,
+    referenceUrl: null,
+    sortOrder: 2,
+  },
 ]
 
 vi.mock('@/app/GiftListProvider', () => ({
@@ -22,7 +45,10 @@ vi.mock('@/app/GiftListProvider', () => ({
 
 vi.mock('@/lib/supabase', () => ({
   getSupabaseClient: () => ({
-    auth: { getSession: vi.fn().mockResolvedValue({ data: { session: { user: { id: 'admin' } } } }), signOut: vi.fn().mockResolvedValue({}) },
+    auth: {
+      getSession: vi.fn().mockResolvedValue({ data: { session: { user: { id: 'admin' } } } }),
+      signOut: vi.fn().mockResolvedValue({}),
+    },
   }),
 }))
 
@@ -31,6 +57,7 @@ vi.mock('./admin-api', () => ({
   createAdminGift: vi.fn(),
   updateAdminGift: mocks.updateAdminGift,
   deleteAdminGift: vi.fn(),
+  deleteAdminReservation: mocks.deleteAdminReservation,
 }))
 
 import AdminPage from './AdminPage'
@@ -66,10 +93,15 @@ describe('AdminPage', () => {
 
     expect(screen.getByRole('heading', { name: 'Editar presente' })).toBeInTheDocument()
     expect(screen.getByLabelText('Nome do presente')).toHaveValue('Chaleira')
-    fireEvent.change(screen.getByLabelText('Nome do presente'), { target: { value: 'Chaleira elétrica' } })
+    fireEvent.change(screen.getByLabelText('Nome do presente'), {
+      target: { value: 'Chaleira elétrica' },
+    })
     fireEvent.click(screen.getByRole('button', { name: 'Salvar alterações' }))
 
-    expect(mocks.updateAdminGift).toHaveBeenCalledWith('gift-1', expect.objectContaining({ name: 'Chaleira elétrica' }))
+    expect(mocks.updateAdminGift).toHaveBeenCalledWith(
+      'gift-1',
+      expect.objectContaining({ name: 'Chaleira elétrica' }),
+    )
     expect(await screen.findByRole('status')).toHaveTextContent('Presente atualizado na lista.')
   })
 
@@ -80,5 +112,39 @@ describe('AdminPage', () => {
     const reservations = screen.getByLabelText('Reservas da lista')
     expect(within(reservations).getByText('Jogo de toalhas')).toBeInTheDocument()
     expect(within(reservations).getByText('Reservado por Marina')).toBeInTheDocument()
+  })
+
+  it('mostra a data e libera a reserva após confirmação', async () => {
+    renderPage()
+
+    await screen.findByText('Reservado por Marina')
+    expect(screen.getByText('Em 4 de agosto')).toBeInTheDocument()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Liberar Jogo de toalhas' }))
+    expect(screen.getByRole('heading', { name: 'Liberar reserva' })).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'Liberar presente' }))
+
+    expect(mocks.deleteAdminReservation).toHaveBeenCalledWith('gift-2')
+    await waitFor(() => expect(mocks.refresh).toHaveBeenCalled())
+    expect(await screen.findByRole('status')).toHaveTextContent(
+      'Reserva liberada; o presente voltou a ficar disponível.',
+    )
+  })
+
+  it('mantém a reserva aberta quando a liberação falha', async () => {
+    mocks.deleteAdminReservation.mockRejectedValueOnce(new Error('indisponível'))
+    renderPage()
+
+    await screen.findByText('Reservado por Marina')
+    fireEvent.click(screen.getByRole('button', { name: 'Liberar Jogo de toalhas' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Liberar presente' }))
+
+    expect(await screen.findByRole('status')).toHaveTextContent(
+      'Não foi possível liberar esta reserva. Tente novamente.',
+    )
+    expect(screen.getByRole('heading', { name: 'Liberar reserva' })).toBeInTheDocument()
+    expect(
+      within(screen.getByLabelText('Reservas da lista')).getByText('Jogo de toalhas'),
+    ).toBeInTheDocument()
   })
 })

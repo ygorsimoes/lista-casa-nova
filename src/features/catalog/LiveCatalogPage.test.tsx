@@ -9,15 +9,29 @@ vi.mock('@/app/GiftListProvider', () => ({
 }))
 
 vi.mock('@/components/ui/Dialog', () => ({
-  Dialog: ({ children, open, title }: { children: React.ReactNode; open: boolean; title: string }) =>
-    open ? <section aria-label={title}>{children}</section> : null,
+  Dialog: ({
+    children,
+    open,
+    title,
+  }: {
+    children: React.ReactNode
+    open: boolean
+    title: string
+  }) => (open ? <section aria-label={title}>{children}</section> : null),
 }))
 
 import { ReservationDialog } from './LiveCatalogPage'
 
 const firstGift: Gift = {
-  id: 'gift-1', name: 'Chaleira', imageUrl: null, color: null, description: null,
-  preferences: [], referenceValue: null, referenceUrl: null, sortOrder: 1,
+  id: 'gift-1',
+  name: 'Chaleira',
+  imageUrl: null,
+  color: null,
+  description: null,
+  preferences: [],
+  referenceValue: null,
+  referenceUrl: null,
+  sortOrder: 1,
 }
 
 const secondGift: Gift = { ...firstGift, id: 'gift-2', name: 'Jogo de panelas' }

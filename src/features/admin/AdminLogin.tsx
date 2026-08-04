@@ -12,7 +12,10 @@ export function AdminLogin({ onEnter }: { onEnter(): void }) {
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setError(null)
-    const { error: signInError } = await getSupabaseClient().auth.signInWithPassword({ email, password })
+    const { error: signInError } = await getSupabaseClient().auth.signInWithPassword({
+      email,
+      password,
+    })
     if (signInError) {
       setError('E-mail ou senha inválidos.')
       return
@@ -26,10 +29,26 @@ export function AdminLogin({ onEnter }: { onEnter(): void }) {
         <h1 id="admin-login-title">Painel da lista</h1>
         <p>Entre para adicionar presentes e ver as reservas.</p>
         <form onSubmit={submit}>
-          <Input label="E-mail" type="email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} required />
-          <Input label="Senha" type="password" autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} required />
+          <Input
+            label="E-mail"
+            type="email"
+            autoComplete="email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            required
+          />
+          <Input
+            label="Senha"
+            type="password"
+            autoComplete="current-password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            required
+          />
           {error ? <p role="alert">{error}</p> : null}
-          <Button type="submit" fullWidth>Entrar</Button>
+          <Button type="submit" fullWidth>
+            Entrar
+          </Button>
         </form>
       </Card>
     </section>

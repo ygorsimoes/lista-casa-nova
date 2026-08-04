@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:development": "tsc -b && vite build --mode development",
     "preview": "vite preview",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
@@ -17,9 +18,10 @@
     "test": "vitest run --coverage",
     "test:unit": "vitest run",
     "test:watch": "vitest",
-    "test:e2e": "npm run build && playwright test",
+    "test:integration:dev": "node --env-file-if-exists=.env.local --env-file=.env.development.local scripts/verify-development-supabase.mjs",
+    "test:e2e": "npm run build:development && playwright test",
     "test:e2e:ci": "playwright test",
-    "test:e2e:headed": "npm run build && playwright test --headed"
+    "test:e2e:headed": "npm run build:development && playwright test --headed"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.112.0",

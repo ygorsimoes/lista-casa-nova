@@ -60,3 +60,8 @@ export async function deleteAdminGift(id: string) {
   const { error } = await getSupabaseClient().from('gifts').delete().eq('id', id)
   if (error) throw error
 }
+
+export async function deleteAdminReservation(giftId: string) {
+  const { error } = await getSupabaseClient().from('reservations').delete().eq('gift_id', giftId)
+  if (error) throw error
+}

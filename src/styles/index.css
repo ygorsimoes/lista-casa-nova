@@ -375,9 +375,7 @@ a {
 }
 
 .reservation-dialog .ui-dialog__surface {
-  background:
-    radial-gradient(circle at 100% 0, rgb(169 79 52 / 0.1), transparent 35%),
-    white;
+  background: radial-gradient(circle at 100% 0, rgb(169 79 52 / 0.1), transparent 35%), white;
   padding: clamp(1.25rem, 4vw, 2rem);
 }
 
@@ -476,15 +474,38 @@ a {
   animation: reservation-heart-rise 900ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
 }
 
-.reservation-celebration__particle--1 { left: 10%; animation-delay: 30ms; }
-.reservation-celebration__particle--2 { left: 34%; font-size: 0.8rem; animation-delay: 110ms; }
-.reservation-celebration__particle--3 { right: 18%; font-size: 1.05rem; animation-delay: 70ms; }
-.reservation-celebration__particle--4 { right: 2%; font-size: 0.75rem; animation-delay: 150ms; }
+.reservation-celebration__particle--1 {
+  left: 10%;
+  animation-delay: 30ms;
+}
+.reservation-celebration__particle--2 {
+  left: 34%;
+  font-size: 0.8rem;
+  animation-delay: 110ms;
+}
+.reservation-celebration__particle--3 {
+  right: 18%;
+  font-size: 1.05rem;
+  animation-delay: 70ms;
+}
+.reservation-celebration__particle--4 {
+  right: 2%;
+  font-size: 0.75rem;
+  animation-delay: 150ms;
+}
 
 @keyframes reservation-heart-rise {
-  0% { opacity: 0; transform: translate3d(0, 0.65rem, 0) scale(0.72); }
-  24% { opacity: 0.95; }
-  100% { opacity: 0; transform: translate3d(0.65rem, -2.4rem, 0) scale(1.08); }
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0.65rem, 0) scale(0.72);
+  }
+  24% {
+    opacity: 0.95;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(0.65rem, -2.4rem, 0) scale(1.08);
+  }
 }
 
 .reservation-dialog__success p {
@@ -1650,7 +1671,13 @@ a {
   bottom: 1.5rem;
   left: 1.5rem;
   width: 1px;
-  background: linear-gradient(to bottom, transparent, rgb(151 77 57 / 0.32) 14%, rgb(151 77 57 / 0.32) 86%, transparent);
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgb(151 77 57 / 0.32) 14%,
+    rgb(151 77 57 / 0.32) 86%,
+    transparent
+  );
   content: '';
 }
 
@@ -1806,7 +1833,9 @@ a {
   letter-spacing: -0.02em;
 }
 
-.catalog-filters__list-heading h2 svg { color: var(--color-terracotta-600); }
+.catalog-filters__list-heading h2 svg {
+  color: var(--color-terracotta-600);
+}
 
 .catalog-results {
   margin: 1.5rem 0 1rem;
@@ -1978,12 +2007,19 @@ a {
 }
 
 @media (min-width: 760px) {
-  .catalog-hero h1 { font-size: clamp(2.75rem, 5vw, 3.45rem); }
+  .catalog-hero h1 {
+    font-size: clamp(2.75rem, 5vw, 3.45rem);
+  }
 }
 
 @media (max-width: 560px) {
-  .live-catalog__heading { align-items: stretch; flex-direction: column; }
-  .live-catalog__filters { align-self: flex-start; }
+  .live-catalog__heading {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .live-catalog__filters {
+    align-self: flex-start;
+  }
 }
 
 .live-reservation-form {
@@ -2020,7 +2056,13 @@ a {
     left: 16.666%;
     width: auto;
     height: 1px;
-    background: linear-gradient(to right, transparent, rgb(151 77 57 / 0.32) 14%, rgb(151 77 57 / 0.32) 86%, transparent);
+    background: linear-gradient(
+      to right,
+      transparent,
+      rgb(151 77 57 / 0.32) 14%,
+      rgb(151 77 57 / 0.32) 86%,
+      transparent
+    );
   }
 
   .how-it-works__steps li {
@@ -2228,7 +2270,9 @@ a {
   font-weight: 700;
 }
 
-.admin-overview dt svg { color: var(--color-terracotta-600); }
+.admin-overview dt svg {
+  color: var(--color-terracotta-600);
+}
 
 .admin-overview dd {
   margin: 0.5rem 0 0;
@@ -2251,7 +2295,9 @@ a {
   padding: clamp(1.1rem, 3vw, 1.5rem);
 }
 
-.admin-section--form { background: rgb(252 243 237 / 0.76); }
+.admin-section--form {
+  background: rgb(252 243 237 / 0.76);
+}
 
 .admin-section__heading {
   justify-content: space-between;
@@ -2259,7 +2305,9 @@ a {
   margin-bottom: 1.25rem;
 }
 
-.admin-section h2 { font-size: 1.25rem; }
+.admin-section h2 {
+  font-size: 1.25rem;
+}
 
 .admin-gift-form {
   display: grid;
@@ -2269,9 +2317,13 @@ a {
 
 .admin-gift-form > :nth-child(4),
 .admin-gift-form > :nth-child(5),
-.admin-gift-form__actions { grid-column: 1 / -1; }
+.admin-gift-form__actions {
+  grid-column: 1 / -1;
+}
 
-.admin-gift-form__actions { padding-top: 0.25rem; }
+.admin-gift-form__actions {
+  padding-top: 0.25rem;
+}
 
 .admin-catalog-controls {
   justify-content: space-between;
@@ -2292,7 +2344,10 @@ a {
   color: var(--color-graphite-700);
 }
 
-.admin-search:focus-within { outline: 2px solid rgb(151 77 57 / 0.28); outline-offset: 2px; }
+.admin-search:focus-within {
+  outline: 2px solid rgb(151 77 57 / 0.28);
+  outline-offset: 2px;
+}
 
 .admin-search input,
 .admin-filter select {
@@ -2334,10 +2389,24 @@ a {
   padding: 0.9rem 0;
 }
 
-.admin-gift-row__identity { display: flex; min-width: 0; align-items: center; gap: 0.75rem; }
-.admin-gift-row__identity > div { min-width: 0; }
-.admin-gift-row h3 { font-size: 1rem; }
-.admin-gift-row p { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 0.875rem; }
+.admin-gift-row__identity {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.75rem;
+}
+.admin-gift-row__identity > div {
+  min-width: 0;
+}
+.admin-gift-row h3 {
+  font-size: 1rem;
+}
+.admin-gift-row p {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.875rem;
+}
 
 .admin-gift-row__mark {
   display: grid;
@@ -2350,37 +2419,95 @@ a {
   color: var(--color-terracotta-600);
 }
 
-.admin-gift-row__actions { display: flex; flex: 0 0 auto; gap: 0.2rem; }
-.admin-gift-row__actions .ui-button { min-height: 38px; padding-inline: 0.55rem; color: var(--color-graphite-700); }
-.admin-gift-row__actions .ui-button:last-child:hover { color: var(--color-terracotta-600); }
+.admin-gift-row__actions {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 0.2rem;
+}
+.admin-gift-row__actions .ui-button {
+  min-height: 38px;
+  padding-inline: 0.55rem;
+  color: var(--color-graphite-700);
+}
+.admin-gift-row__actions .ui-button:last-child:hover {
+  color: var(--color-terracotta-600);
+}
 
-.admin-reservation-row { border-top: 0; border-bottom: 1px solid rgb(63 59 55 / 0.11); }
-.admin-reservation-row strong { display: block; color: var(--color-graphite-900); }
-.admin-reservation-row span { display: block; font-size: 0.9rem; }
+.admin-reservation-row {
+  border-top: 0;
+  border-bottom: 1px solid rgb(63 59 55 / 0.11);
+}
+.admin-reservation-row__details {
+  display: grid;
+  gap: 0.18rem;
+}
+.admin-reservation-row strong {
+  display: block;
+  color: var(--color-graphite-900);
+}
+.admin-reservation-row span,
+.admin-reservation-row time {
+  display: block;
+  font-size: 0.9rem;
+}
+.admin-reservation-row time {
+  color: var(--color-graphite-700);
+}
+.admin-reservation-row__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.admin-reservation-row__actions .ui-button {
+  min-height: 2.5rem;
+}
 
-.admin-empty { padding: 0.75rem 0; font-size: 0.94rem; }
+.admin-empty {
+  padding: 0.75rem 0;
+  font-size: 0.94rem;
+}
 
 @media (min-width: 880px) {
-  .admin-page__content { grid-template-columns: minmax(0, 1.05fr) minmax(20rem, 0.95fr); align-items: start; }
-  .admin-section--form { grid-row: span 2; }
+  .admin-page__content {
+    grid-template-columns: minmax(0, 1.05fr) minmax(20rem, 0.95fr);
+    align-items: start;
+  }
+  .admin-section--form {
+    grid-row: span 2;
+  }
 }
 
 @media (max-width: 620px) {
   .admin-page__header,
   .admin-catalog-controls,
   .admin-gift-row,
-  .admin-reservation-row { align-items: stretch; flex-direction: column; }
-  .admin-page__header-actions { justify-content: flex-start; }
-  .admin-overview { grid-template-columns: 1fr; }
-  .admin-gift-form { grid-template-columns: 1fr; }
+  .admin-reservation-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .admin-page__header-actions {
+    justify-content: flex-start;
+  }
+  .admin-overview {
+    grid-template-columns: 1fr;
+  }
+  .admin-gift-form {
+    grid-template-columns: 1fr;
+  }
   .admin-gift-form > :nth-child(4),
   .admin-gift-form > :nth-child(5),
-  .admin-gift-form__actions { grid-column: auto; }
-  .admin-gift-row__actions { justify-content: flex-start; }
+  .admin-gift-form__actions {
+    grid-column: auto;
+  }
+  .admin-gift-row__actions {
+    justify-content: flex-start;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .reservation-celebration { display: none; }
+  .reservation-celebration {
+    display: none;
+  }
 
   *,
   *::before,

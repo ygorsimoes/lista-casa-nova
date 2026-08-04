@@ -34,13 +34,18 @@ export function ReservationDialog({ gift, onClose }: { gift: Gift | null; onClos
         <div className="reservation-dialog__success">
           <span className="reservation-celebration" aria-hidden="true">
             {['💛', '🤍', '💗', '✨'].map((particle, index) => (
-              <span className={`reservation-celebration__particle reservation-celebration__particle--${index + 1}`} key={`${particle}-${index}`}>
+              <span
+                className={`reservation-celebration__particle reservation-celebration__particle--${index + 1}`}
+                key={`${particle}-${index}`}
+              >
                 {particle}
               </span>
             ))}
           </span>
           <p role="status">Pronto! Este presente ficou reservado em seu nome.</p>
-          <Button fullWidth onClick={onClose}>Voltar para a lista</Button>
+          <Button fullWidth onClick={onClose}>
+            Voltar para a lista
+          </Button>
         </div>
       ) : (
         <form className="live-reservation-form" onSubmit={submit} noValidate>
@@ -53,15 +58,23 @@ export function ReservationDialog({ gift, onClose }: { gift: Gift | null; onClos
             required
           />
           <div className="live-reservation-form__feedback">
-            {result?.kind === 'already-reserved' ? <p role="alert">Este presente já foi reservado.</p> : null}
-            {result?.kind === 'unavailable' ? <p role="alert">Este presente não está mais disponível.</p> : null}
-            {result?.kind === 'failure' ? <p role="alert">Não foi possível reservar agora. Tente novamente.</p> : null}
+            {result?.kind === 'already-reserved' ? (
+              <p role="alert">Este presente já foi reservado.</p>
+            ) : null}
+            {result?.kind === 'unavailable' ? (
+              <p role="alert">Este presente não está mais disponível.</p>
+            ) : null}
+            {result?.kind === 'failure' ? (
+              <p role="alert">Não foi possível reservar agora. Tente novamente.</p>
+            ) : null}
           </div>
           <div className="reservation-form__actions">
             <Button type="submit" fullWidth disabled={submitting || !name.trim()}>
               {submitting ? 'Reservando…' : 'Confirmar reserva'}
             </Button>
-            <Button variant="secondary" fullWidth onClick={onClose}>Agora não</Button>
+            <Button variant="secondary" fullWidth onClick={onClose}>
+              Agora não
+            </Button>
           </div>
         </form>
       )}
@@ -73,7 +86,10 @@ export function LiveCatalogPage() {
   const { error, gifts, loading, reservedGiftIds, refresh } = useGiftList()
   const [selectedGift, setSelectedGift] = useState<Gift | null>(null)
   const [showAllGifts, setShowAllGifts] = useState(false)
-  const availableGifts = useMemo(() => gifts.filter((gift) => !reservedGiftIds.has(gift.id)), [gifts, reservedGiftIds])
+  const availableGifts = useMemo(
+    () => gifts.filter((gift) => !reservedGiftIds.has(gift.id)),
+    [gifts, reservedGiftIds],
+  )
   const orderedGifts = useMemo(
     () => [...availableGifts, ...gifts.filter((gift) => reservedGiftIds.has(gift.id))],
     [availableGifts, gifts, reservedGiftIds],
@@ -89,14 +105,27 @@ export function LiveCatalogPage() {
       <section aria-labelledby="catalog-list-title" aria-label="Presentes para escolher">
         <div className="catalog-filters__list-heading live-catalog__heading">
           <div>
-            <h2 id="catalog-list-title"><Sparkles aria-hidden="true" size={20} strokeWidth={1.8} />Presentes para escolher</h2>
+            <h2 id="catalog-list-title">
+              <Sparkles aria-hidden="true" size={20} strokeWidth={1.8} />
+              Presentes para escolher
+            </h2>
           </div>
           <div className="live-catalog__filters" aria-label="Exibição dos presentes">
-            <Button variant={showAllGifts ? 'ghost' : 'secondary'} aria-pressed={!showAllGifts} onClick={() => setShowAllGifts(false)}>
-              <GiftIcon aria-hidden="true" size={16} />Disponíveis ({availableGifts.length})
+            <Button
+              variant={showAllGifts ? 'ghost' : 'secondary'}
+              aria-pressed={!showAllGifts}
+              onClick={() => setShowAllGifts(false)}
+            >
+              <GiftIcon aria-hidden="true" size={16} />
+              Disponíveis ({availableGifts.length})
             </Button>
-            <Button variant={showAllGifts ? 'secondary' : 'ghost'} aria-pressed={showAllGifts} onClick={() => setShowAllGifts(true)}>
-              <Grid2X2 aria-hidden="true" size={16} />Todos ({gifts.length})
+            <Button
+              variant={showAllGifts ? 'secondary' : 'ghost'}
+              aria-pressed={showAllGifts}
+              onClick={() => setShowAllGifts(true)}
+            >
+              <Grid2X2 aria-hidden="true" size={16} />
+              Todos ({gifts.length})
             </Button>
           </div>
         </div>
@@ -104,7 +133,9 @@ export function LiveCatalogPage() {
         {error ? (
           <div>
             <p role="alert">{error}</p>
-            <Button variant="secondary" onClick={() => void refresh()}>Tentar novamente</Button>
+            <Button variant="secondary" onClick={() => void refresh()}>
+              Tentar novamente
+            </Button>
           </div>
         ) : null}
         {!loading && !error ? (
@@ -112,27 +143,54 @@ export function LiveCatalogPage() {
             {visibleGifts.map((gift) => {
               const reserved = reservedGiftIds.has(gift.id)
               return (
-                <Card key={gift.id} variant="flat" className={`gift-card${reserved ? ' gift-card--chosen' : ' gift-card--available'}`}>
+                <Card
+                  key={gift.id}
+                  variant="flat"
+                  className={`gift-card${reserved ? ' gift-card--chosen' : ' gift-card--available'}`}
+                >
                   <article>
-                    {gift.imageUrl ? <img className="gift-visual gift-visual--image" src={gift.imageUrl} alt="" /> : <span className="gift-visual gift-visual--fallback" aria-hidden="true"><GiftIcon size={20} strokeWidth={1.65} /></span>}
+                    {gift.imageUrl ? (
+                      <img className="gift-visual gift-visual--image" src={gift.imageUrl} alt="" />
+                    ) : (
+                      <span className="gift-visual gift-visual--fallback" aria-hidden="true">
+                        <GiftIcon size={20} strokeWidth={1.65} />
+                      </span>
+                    )}
                     <div className="gift-card__content">
                       {gift.color ? <p className="gift-card__category">{gift.color}</p> : null}
                       <h3>{gift.name}</h3>
-                      <p className="gift-card__preference">{gift.preferences.slice(0, 2).join(' · ') || gift.description}</p>
+                      <p className="gift-card__preference">
+                        {gift.preferences.slice(0, 2).join(' · ') || gift.description}
+                      </p>
                       <p className="gift-card__status">{reserved ? 'Reservado' : 'Disponível'}</p>
                     </div>
-                    <Button className="gift-card__open" variant={reserved ? 'secondary' : 'primary'} disabled={reserved} onClick={() => setSelectedGift(gift)}>
+                    <Button
+                      className="gift-card__open"
+                      variant={reserved ? 'secondary' : 'primary'}
+                      disabled={reserved}
+                      onClick={() => setSelectedGift(gift)}
+                    >
                       {reserved ? 'Reservado' : 'Reservar'}
                     </Button>
                   </article>
                 </Card>
               )
             })}
-            {!visibleGifts.length ? <p className="live-catalog__empty">Todos os presentes desta lista já foram reservados. Obrigado pelo carinho!</p> : null}
+            {!visibleGifts.length ? (
+              <p className="live-catalog__empty">
+                Todos os presentes desta lista já foram reservados. Obrigado pelo carinho!
+              </p>
+            ) : null}
           </div>
         ) : null}
       </section>
-      <ReservationDialog key={selectedGift?.id ?? 'closed'} gift={selectedGift} onClose={() => { setSelectedGift(null) }} />
+      <ReservationDialog
+        key={selectedGift?.id ?? 'closed'}
+        gift={selectedGift}
+        onClose={() => {
+          setSelectedGift(null)
+        }}
+      />
     </>
   )
 }

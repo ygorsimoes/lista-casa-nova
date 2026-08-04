@@ -13,7 +13,10 @@ const pixReceiverCity = import.meta.env.VITE_PIX_RECEIVER_CITY as string | undef
 export function PixPage() {
   const [copied, setCopied] = useState(false)
   const [qrCodeUrl, setQrCodeUrl] = useState<string | null>(null)
-  const payload = pixCode && pixReceiverName && pixReceiverCity ? createPixPayload(pixCode, pixReceiverName, pixReceiverCity) : null
+  const payload =
+    pixCode && pixReceiverName && pixReceiverCity
+      ? createPixPayload(pixCode, pixReceiverName, pixReceiverCity)
+      : null
 
   useEffect(() => {
     if (!payload) return
@@ -29,18 +32,32 @@ export function PixPage() {
   return (
     <AppShell>
       <section className="pix-page" aria-labelledby="pix-title">
-        <Link className="pix-page__back" to="/">Nossa lista</Link>
-        <p className="pix-page__eyebrow">Outra forma de presentear <span aria-hidden="true">✨</span></p>
-        <h1 id="pix-title" tabIndex={-1}>Contribuir por Pix</h1>
-        <p className="pix-page__intro">Se preferir, qualquer valor ajuda nos planos para o nosso novo lar.</p>
+        <Link className="pix-page__back" to="/">
+          Nossa lista
+        </Link>
+        <p className="pix-page__eyebrow">
+          Outra forma de presentear <span aria-hidden="true">✨</span>
+        </p>
+        <h1 id="pix-title" tabIndex={-1}>
+          Contribuir por Pix
+        </h1>
+        <p className="pix-page__intro">
+          Se preferir, qualquer valor ajuda nos planos para o nosso novo lar.
+        </p>
         {payload ? (
           <>
             <Card variant="flat" className="pix-page__card">
               <p className="pix-page__label">Pix Copia e Cola</p>
               <code>{payload}</code>
-              {qrCodeUrl ? <img src={qrCodeUrl} alt="QR Code para contribuição por Pix" /> : <p>Gerando QR Code…</p>}
+              {qrCodeUrl ? (
+                <img src={qrCodeUrl} alt="QR Code para contribuição por Pix" />
+              ) : (
+                <p>Gerando QR Code…</p>
+              )}
             </Card>
-            <Button variant="secondary" fullWidth onClick={() => void copyPix()}>Copiar código Pix</Button>
+            <Button variant="secondary" fullWidth onClick={() => void copyPix()}>
+              Copiar código Pix
+            </Button>
             {copied ? <p role="status">Código Pix copiado.</p> : null}
           </>
         ) : (

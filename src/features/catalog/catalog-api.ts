@@ -5,7 +5,9 @@ import { getPublicSupabaseClient } from '@/lib/supabase'
 export async function fetchGifts(): Promise<Gift[]> {
   const { data, error } = await getPublicSupabaseClient()
     .from('gifts')
-    .select('id,name,image_url,color,description,preferences,reference_value,reference_url,sort_order')
+    .select(
+      'id,name,image_url,color,description,preferences,reference_value,reference_url,sort_order',
+    )
     .order('sort_order')
 
   if (error) throw error

@@ -19,10 +19,12 @@
 ### Task 1: Refino visual do topo e dos passos
 
 **Files:**
+
 - Modify: `src/styles/index.css`
 - Test: `src/features/catalog/HeroSection.test.tsx`
 
 **Interfaces:**
+
 - Consumes: a marcação existente de `.catalog-hero` e `.journey-steps` em `HeroSection`.
 - Produces: mesma estrutura React com aparência compacta e três cartões de orientação.
 
@@ -48,10 +50,22 @@ Expected: PASS, pois a mudança é puramente visual.
 Compactar o espaçamento da hero e redefinir a faixa como uma jornada contínua:
 
 ```css
-.catalog-hero { gap: 1rem; }
-.journey-steps { position: relative; display: grid; gap: 1rem; background: transparent; }
-.journey-steps::before { background: linear-gradient(to right, transparent, rgb(151 77 57 / 0.32), transparent); }
-.journey-steps li { background: transparent; padding: 0.15rem 0; }
+.catalog-hero {
+  gap: 1rem;
+}
+.journey-steps {
+  position: relative;
+  display: grid;
+  gap: 1rem;
+  background: transparent;
+}
+.journey-steps::before {
+  background: linear-gradient(to right, transparent, rgb(151 77 57 / 0.32), transparent);
+}
+.journey-steps li {
+  background: transparent;
+  padding: 0.15rem 0;
+}
 ```
 
 Manter ícones em círculos claros, usar um coração no fechamento "Obrigado" e garantir linha vertical em telas pequenas e horizontal em telas largas.

@@ -1,6 +1,14 @@
 import type { Gift, ReserveResult } from '@/domain/gifts'
 import { fetchGifts, fetchReservedGiftIds, reserveGift } from '@/features/catalog/catalog-api'
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type PropsWithChildren } from 'react'
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type PropsWithChildren,
+} from 'react'
 
 interface GiftListContextValue {
   gifts: Gift[]
@@ -23,7 +31,10 @@ export function GiftListProvider({ children }: PropsWithChildren) {
     setLoading(true)
     setError(null)
     try {
-      const [nextGifts, nextReservedGiftIds] = await Promise.all([fetchGifts(), fetchReservedGiftIds()])
+      const [nextGifts, nextReservedGiftIds] = await Promise.all([
+        fetchGifts(),
+        fetchReservedGiftIds(),
+      ])
       setGifts(nextGifts)
       setReservedGiftIds(nextReservedGiftIds)
     } catch {
