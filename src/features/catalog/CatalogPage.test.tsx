@@ -8,7 +8,7 @@ describe('CatalogPage', () => {
   it('não promove coleções como destino do catálogo', () => {
     renderWithApp(<CatalogPage />)
 
-    expect(document.querySelector('a[href^="/colecao/"]')).not.toBeInTheDocument()
+    expect(document.querySelector('a[href^="#/colecao/"]')).not.toBeInTheDocument()
   })
 
   it('combina busca, categoria e disponibilidade', async () => {
