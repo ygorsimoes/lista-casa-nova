@@ -19,7 +19,12 @@ export default function AdminPage() {
     if (data.session) setReservations(await fetchAdminReservations())
   }
 
-  useEffect(() => { void loadAdminData() }, [])
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      void loadAdminData()
+    }, 0)
+    return () => window.clearTimeout(timer)
+  }, [])
 
   async function addGift(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()

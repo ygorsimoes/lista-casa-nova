@@ -34,7 +34,10 @@ export function GiftListProvider({ children }: PropsWithChildren) {
   }, [])
 
   useEffect(() => {
-    void refresh()
+    const timer = window.setTimeout(() => {
+      void refresh()
+    }, 0)
+    return () => window.clearTimeout(timer)
   }, [refresh])
 
   const reserve = useCallback(
