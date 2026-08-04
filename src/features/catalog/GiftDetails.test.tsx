@@ -15,7 +15,7 @@ describe('GiftDetailsPage', () => {
     expect(screen.getByRole('link', { name: /voltar ao catálogo/i })).toHaveAttribute('href', '/')
   })
 
-  it('mostra preferências, equivalência e uma sugestão sem abrir site externo', async () => {
+  it('mostra preferências, equivalência e uma referência sem abrir site externo', async () => {
     const user = userEvent.setup()
     renderWithApp(<GiftDetailsPage />, {
       route: '/item/CZ-001',
@@ -24,9 +24,9 @@ describe('GiftDetailsPage', () => {
 
     expect(screen.getByText(/aceitamos um produto equivalente/i)).toBeVisible()
     expect(screen.getByText('inox, acabamento fosco, tons neutros')).toBeVisible()
-    await user.click(screen.getByRole('button', { name: /ver sugestão/i }))
+    await user.click(screen.getByRole('button', { name: 'Ver uma referência opcional' }))
 
-    expect(screen.getAllByText(/nenhum site externo foi aberto/i)).toHaveLength(2)
+    expect(screen.getByRole('status')).toHaveTextContent('Nenhum site externo foi aberto.')
   })
 
   it('explica que um item indisponível não pode receber reservas', () => {
@@ -35,47 +35,56 @@ describe('GiftDetailsPage', () => {
       routePath: '/item/:code',
     })
 
-    expect(screen.getByText(/não está mais disponível/i)).toBeVisible()
+    expect(screen.getByText('Este presente já foi escolhido por outra pessoa.')).toBeVisible()
     expect(
       screen.queryByRole('button', { name: /quero dar este presente/i }),
     ).not.toBeInTheDocument()
   })
 
-  it('mantém os campos e mostra recuperação após conflito', async () => {
+  it('troca detalhe por reserva e preserva o nome ao voltar', async () => {
     const user = userEvent.setup()
-    renderWithApp(<GiftDetailsPage />, {
-      route: '/item/CZ-004',
-      routePath: '/item/:code',
-    })
+    renderWithApp(<GiftDetailsPage />, { route: '/item/CZ-001', routePath: '/item/:code' })
 
-    await user.click(screen.getByRole('button', { name: /quero dar este presente/i }))
-    await user.type(screen.getByLabelText(/primeiro nome/i), 'Nina')
-    await user.click(screen.getByRole('button', { name: /confirmar reserva/i }))
+    await user.click(screen.getByRole('button', { name: 'Quero dar este presente' }))
+    expect(screen.queryByText('Nossa preferência')).not.toBeInTheDocument()
+    await user.type(screen.getByLabelText('Seu primeiro nome'), 'Nina')
+    await user.click(screen.getByRole('button', { name: 'Ver detalhes' }))
+    expect(screen.getByText('Nossa preferência')).toBeVisible()
 
-    expect(screen.getByRole('alert')).toHaveTextContent(/acabou de ser reservado/i)
-    expect(screen.getByLabelText(/primeiro nome/i)).toHaveValue('Nina')
-    expect(screen.getByRole('link', { name: /escolher outro presente/i })).toHaveAttribute(
-      'href',
-      '/',
-    )
+    await user.click(screen.getByRole('button', { name: 'Quero dar este presente' }))
+    expect(screen.getByLabelText('Seu primeiro nome')).toHaveValue('Nina')
   })
 
-  it('cria uma reserva com token determinístico e oferece o próximo passo', async () => {
+  it('mantém conflito dentro do formulário e preserva o rascunho', async () => {
     const user = userEvent.setup()
-    renderWithApp(<GiftDetailsPage />, {
-      route: '/item/CZ-001',
-      routePath: '/item/:code',
-    })
+    renderWithApp(<GiftDetailsPage />, { route: '/item/CZ-004', routePath: '/item/:code' })
 
-    await user.click(screen.getByRole('button', { name: /quero dar este presente/i }))
-    await user.type(screen.getByLabelText(/primeiro nome/i), 'Nina')
-    await user.click(screen.getByRole('button', { name: /confirmar reserva/i }))
+    await user.click(screen.getByRole('button', { name: 'Quero dar este presente' }))
+    await user.type(screen.getByLabelText('Seu primeiro nome'), 'Nina')
+    await user.click(screen.getByRole('button', { name: 'Confirmar reserva' }))
 
-    expect(screen.getByText(/pronto, este presente está reservado para você/i)).toBeVisible()
-    expect(screen.getByRole('link', { name: /gerenciar esta reserva/i })).toHaveAttribute(
+    expect(screen.getByRole('alert')).toHaveTextContent('Este presente acabou de ser reservado.')
+    expect(screen.getByRole('alert')).toHaveFocus()
+    expect(screen.getByLabelText('Seu primeiro nome')).toHaveValue('Nina')
+    expect(screen.getByRole('button', { name: 'Confirmar reserva' })).toBeVisible()
+  })
+
+  it('substitui o formulário pela confirmação e foca seu título', async () => {
+    const user = userEvent.setup()
+    renderWithApp(<GiftDetailsPage />, { route: '/item/CZ-001', routePath: '/item/:code' })
+
+    await user.click(screen.getByRole('button', { name: 'Quero dar este presente' }))
+    await user.type(screen.getByLabelText('Seu primeiro nome'), 'Nina')
+    await user.click(screen.getByRole('button', { name: 'Confirmar reserva' }))
+
+    const title = screen.getByRole('heading', { name: 'Este presente ficou com você' })
+    expect(title).toHaveFocus()
+    expect(screen.getByText('3 · Combine a entrega')).toBeVisible()
+    expect(screen.getByRole('link', { name: 'Ver minha reserva' })).toHaveAttribute(
       'href',
       '/minha-reserva/reserva-cz-001-1',
     )
-    expect(screen.queryByText(/não está mais disponível/i)).not.toBeInTheDocument()
+    expect(screen.queryByLabelText('Seu primeiro nome')).not.toBeInTheDocument()
+    expect(screen.queryByText('Nossa preferência')).not.toBeInTheDocument()
   })
 })

@@ -7,7 +7,7 @@ interface GiftGridProps {
 
 export function GiftGrid({ entries }: GiftGridProps) {
   return (
-    <div className="gift-grid" aria-label="Presentes encontrados">
+    <div className="gift-grid" aria-labelledby="catalog-list-title">
       {entries.map(({ gift }) => (
         <GiftCard key={gift.code} code={gift.code} />
       ))}

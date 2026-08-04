@@ -12,7 +12,9 @@ export function AdminGiftList() {
     <section className="admin-panel" aria-labelledby="admin-gifts-title">
       <div className="admin-panel__header">
         <div>
-          <h2 id="admin-gifts-title">Presentes da lista</h2>
+          <h2 id="admin-gifts-title" tabIndex={-1}>
+            Presentes da lista
+          </h2>
           <p>Código, categoria e disponibilidade são calculados a partir das reservas atuais.</p>
         </div>
       </div>

@@ -51,4 +51,23 @@ describe('AdminPage', () => {
     expect(document.querySelector('.site-header')).not.toBeInTheDocument()
     expect(document.querySelector('.admin-shell')).toBeInTheDocument()
   })
+
+  it('indica a seção ativa e move foco sem criar abas', async () => {
+    const user = userEvent.setup()
+    renderWithApp(<AdminPage />, { route: '/admin' })
+    await user.click(screen.getByRole('button', { name: 'Entrar na demonstração' }))
+
+    const giftsButton = screen.getByRole('button', { name: 'Presentes' })
+    await user.click(giftsButton)
+    expect(giftsButton).toHaveAttribute('aria-current', 'location')
+    expect(screen.getByRole('heading', { name: 'Presentes da lista' })).toHaveFocus()
+    expect(screen.getByRole('heading', { name: 'Reservas' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Configurações da lista' })).toBeInTheDocument()
+
+    const reservationsButton = screen.getByRole('button', { name: 'Reservas' })
+    await user.click(reservationsButton)
+    expect(giftsButton).not.toHaveAttribute('aria-current')
+    expect(reservationsButton).toHaveAttribute('aria-current', 'location')
+    expect(screen.getByRole('heading', { name: 'Reservas' })).toHaveFocus()
+  })
 })

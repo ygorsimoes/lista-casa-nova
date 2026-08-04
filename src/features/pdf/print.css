@@ -17,15 +17,12 @@
 }
 
 .pdf-preview h1 {
+  font-family: var(--font-affective);
   margin: 0;
   color: var(--color-graphite-900);
-  font-size: clamp(2.25rem, 10vw, 4rem);
-  letter-spacing: -0.06em;
+  font-size: clamp(1.875rem, 8vw, 2.125rem);
+  letter-spacing: -0.02em;
   line-height: 0.98;
-}
-
-.pdf-preview h1:focus-visible {
-  outline: 0;
 }
 
 .pdf-preview__intro {
@@ -47,18 +44,45 @@
   align-items: center;
 }
 
-.printable-sheet {
+.pdf-preview__summary {
+  margin: 0;
+  color: var(--color-graphite-700);
+}
+
+.pdf-preview__summary a {
+  color: var(--color-terracotta-600);
+  font-weight: 700;
+  text-underline-offset: 0.2em;
+}
+
+.printable-sheet-frame {
   width: min(100%, 794px);
   min-width: 0;
-  aspect-ratio: 210 / 297;
-  display: grid;
-  align-content: start;
-  gap: clamp(1rem, 3vw, 1.75rem);
   margin-inline: auto;
   overflow: hidden;
+}
+
+.printable-sheet-sizer {
+  position: relative;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.printable-sheet-canvas {
+  transform-origin: top left;
+}
+
+.printable-sheet {
+  display: grid;
+  width: 794px;
+  height: 1123px;
+  align-content: start;
+  gap: 1.5rem;
+  overflow: hidden;
+  border: 1px solid var(--border-soft);
   background: white;
-  padding: clamp(1.25rem, 5vw, 3rem);
-  box-shadow: var(--shadow-card);
+  padding: 3rem;
+  box-shadow: none;
 }
 
 .printable-sheet__header {
@@ -212,78 +236,13 @@
     min-width: 0;
     padding-inline: 0.5rem;
   }
-
-  .printable-sheet {
-    aspect-ratio: auto;
-  }
-
-  .printable-sheet__header .illustrative-qr {
-    display: none;
-  }
-
-  .printable-sheet__table,
-  .printable-sheet__table tbody,
-  .printable-sheet__table tr,
-  .printable-sheet__table th,
-  .printable-sheet__table td {
-    display: block;
-  }
-
-  .printable-sheet__table thead {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-    white-space: nowrap;
-  }
-
-  .printable-sheet__table tr {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: 0 0.75rem;
-    border-bottom: 1px solid rgb(63 59 55 / 0.14);
-    padding-block: 0.75rem;
-  }
-
-  .printable-sheet__table th,
-  .printable-sheet__table td {
-    width: 100%;
-    border: 0;
-    padding: 0.2rem 0;
-  }
-
-  .printable-sheet__table th:nth-child(1),
-  .printable-sheet__table th:nth-child(2),
-  .printable-sheet__table th:nth-child(3) {
-    width: 100%;
-  }
-
-  .printable-sheet__table th::before,
-  .printable-sheet__table td::before {
-    content: attr(data-label);
-    display: block;
-    margin-bottom: 0.15rem;
-    color: var(--color-graphite-700);
-    font-size: 0.7rem;
-    font-weight: 750;
-    text-transform: uppercase;
-  }
-
-  .printable-sheet__signature {
-    min-height: 1.5rem;
-  }
-
-  .printable-sheet__footer {
-    display: grid;
-    gap: 0.25rem;
-  }
 }
 
 @media print {
   .prototype-controls,
   .pdf-preview__back,
   .pdf-preview__intro,
+  .pdf-preview__summary,
   .pdf-preview__notice,
   .pdf-preview__feedback,
   .site-header,
@@ -297,8 +256,19 @@
     padding: 0;
   }
 
+  .printable-sheet-frame,
+  .printable-sheet-sizer,
+  .printable-sheet-canvas {
+    width: 210mm !important;
+    height: 297mm !important;
+    overflow: visible;
+    transform: none !important;
+  }
+
   .printable-sheet {
-    width: 100%;
+    width: 210mm;
+    height: 297mm;
+    border: 0;
     box-shadow: none;
   }
 }

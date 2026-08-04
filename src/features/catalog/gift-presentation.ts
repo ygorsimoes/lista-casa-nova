@@ -17,8 +17,8 @@ export function getGiftAvailabilityPresentation(
       tone: 'available',
     }
   }
-  if (availability.visualState === 'received') {
-    return { label: 'Presente recebido', tone: 'received' }
+  return {
+    label: 'Já foi escolhido',
+    tone: availability.visualState === 'received' ? 'received' : 'reserved',
   }
-  return { label: 'Indisponível', tone: 'reserved' }
 }

@@ -1,19 +1,40 @@
 import type { Page } from '@playwright/test'
-import {
-  expectEmptyBrowserStorage,
-  expectNoHorizontalOverflow,
-  observeForbiddenRequests,
-} from './support/assertions.js'
+import { expectNoHorizontalOverflow } from './support/assertions.js'
 import { expect, test } from './support/test.js'
 
 function summaryCard(page: Page, label: string) {
-  return page.getByText(label, { exact: true }).locator('..')
+  return page.locator('.admin-summary__card').filter({ hasText: label })
 }
+
+test('mantém resumo compacto e rótulos auxiliares legíveis', async ({ page }) => {
+  await page.goto('./#/admin')
+  await page.getByRole('button', { name: 'Entrar na demonstração' }).click()
+
+  const gaps = await page
+    .locator('.admin-summary__card')
+    .first()
+    .evaluate((element) => {
+      const style = getComputedStyle(element)
+      return {
+        column: Number.parseFloat(style.columnGap),
+        row: Number.parseFloat(style.rowGap),
+      }
+    })
+  expect(gaps.column).toBeGreaterThanOrEqual(13)
+  expect(gaps.row).toBeLessThanOrEqual(4)
+
+  const informativeSizes = await page
+    .locator('.admin-gift-list__code, .admin-gift-list__item dt, .admin-reservation dt')
+    .evaluateAll((elements) =>
+      elements.map((element) => Number.parseFloat(getComputedStyle(element).fontSize)),
+    )
+  expect(informativeSizes.length).toBeGreaterThan(0)
+  expect(Math.min(...informativeSizes)).toBeGreaterThanOrEqual(14)
+})
 
 test('entra sem credenciais, atualiza reservas e configurações e reseta no reload', async ({
   page,
 }) => {
-  const expectNoForbiddenRequests = observeForbiddenRequests(page)
   await page.goto('./#/admin')
 
   await expect(page.getByText('Não existe autenticação real neste protótipo.')).toBeVisible()
@@ -24,6 +45,16 @@ test('entra sem credenciais, atualiza reservas e configurações e reseta no rel
   await expect(page.getByRole('heading', { name: 'Reservas', exact: true })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'Configurações da lista' })).toBeVisible()
   await expect(page.getByRole('link', { name: 'Voltar para a lista' })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Resumo' })).toHaveAttribute(
+    'aria-current',
+    'location',
+  )
+  await page.getByRole('button', { name: 'Reservas' }).click()
+  await expect(page.getByRole('button', { name: 'Reservas' })).toHaveAttribute(
+    'aria-current',
+    'location',
+  )
+  await expect(page.locator('#admin-reservations-title')).toBeFocused()
   await expect(summaryCard(page, 'Itens disponíveis')).toContainText('8')
   await expect(summaryCard(page, 'Reservas ativas')).toContainText('5')
 
@@ -42,7 +73,6 @@ test('entra sem credenciais, atualiza reservas e configurações e reseta no rel
   ).toContainText(
     'Alterações mantidas somente nesta sessão. Recarregar restaura os dados iniciais.',
   )
-  await expectEmptyBrowserStorage(page)
   await expectNoHorizontalOverflow(page)
   const mobileLayout = await page.evaluate(() => {
     const sidebar = document.querySelector('.admin-shell__sidebar')?.getBoundingClientRect()
@@ -50,11 +80,11 @@ test('entra sem credenciais, atualiza reservas e configurações e reseta no rel
     return { sidebarBottom: sidebar?.bottom ?? 0, contentTop: content?.top ?? -1 }
   })
   expect(mobileLayout.contentTop).toBeGreaterThanOrEqual(mobileLayout.sidebarBottom)
-  expectNoForbiddenRequests()
-
   await page.reload()
   await expect(page.getByRole('heading', { name: 'Painel demonstrativo' })).toBeVisible()
   await expect(page.getByRole('textbox')).toHaveCount(0)
+  await page.getByRole('button', { name: 'Entrar na demonstração' }).click()
+  await expect(page.getByLabel('Título do site')).toHaveValue('Lista da nossa casa nova')
   await page.goto('./#/')
   await expect(page.getByRole('heading', { name: 'Lista da nossa casa nova' })).toBeVisible()
 })

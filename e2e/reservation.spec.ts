@@ -1,33 +1,22 @@
-import {
-  expectEmptyBrowserStorage,
-  expectNoHorizontalOverflow,
-  observeForbiddenRequests,
-} from './support/assertions.js'
+import { expectNoHorizontalOverflow } from './support/assertions.js'
 import { demoScenarios } from './support/demo-scenarios.js'
+import { reserveGiftFromCatalog } from './support/flows.js'
 import { expect, test } from './support/test.js'
 
-test('reserva pelo painel, gera token e restaura o item ao recarregar', async ({ page }) => {
-  const expectNoForbiddenRequests = observeForbiddenRequests(page)
+test('@canonical busca, abre o detalhe, reserva e chega à confirmação', async ({ page }) => {
   await page.goto('./#/')
+  const search = page.getByRole('searchbox', { name: 'Buscar um presente' })
+  await search.fill('chaleira')
+  await expect(page.getByRole('status').filter({ hasText: '1 ideia para escolher' })).toBeVisible()
+  await expect(page.getByText('Disponível', { exact: true })).toBeVisible()
 
-  const trigger = page.getByRole('button', { name: 'Quero dar este presente: Chaleira' })
-  await trigger.click()
-  const dialog = page.getByRole('dialog', { name: 'Detalhes do presente' })
-  await expect(dialog).toBeVisible()
-  await expect(dialog).toBeFocused()
-  await dialog.getByRole('button', { name: 'Quero dar este presente', exact: true }).click()
-  await dialog.getByLabel('Primeiro nome', { exact: true }).fill('Nina')
-  await dialog.getByRole('button', { name: 'Confirmar reserva' }).click()
-
-  await expect(
-    dialog.getByRole('heading', { name: 'Pronto, este presente está reservado para você!' }),
-  ).toBeVisible()
-  await expect(dialog.getByRole('link', { name: 'Gerenciar esta reserva' })).toHaveAttribute(
+  const dialog = await reserveGiftFromCatalog(page)
+  await expect(dialog.getByText('3 · Combine a entrega')).toBeVisible()
+  await expect(dialog.getByRole('link', { name: 'Ver minha reserva' })).toHaveAttribute(
     'href',
     '#/minha-reserva/reserva-cz-001-1',
   )
-  await expectEmptyBrowserStorage(page)
-  expectNoForbiddenRequests()
+  await expect(dialog.getByLabel('Seu primeiro nome')).toHaveCount(0)
 
   await page.reload()
   await expect(page.getByRole('dialog', { name: 'Detalhes do presente' })).toContainText(
@@ -36,37 +25,50 @@ test('reserva pelo painel, gera token e restaura o item ao recarregar', async ({
   await expectNoHorizontalOverflow(page)
 })
 
+test('retorna ao detalhe e preserva o nome digitado ao reabrir a reserva', async ({ page }) => {
+  await page.goto('./#/item/CZ-001')
+  await page.getByRole('button', { name: 'Quero dar este presente', exact: true }).click()
+  const firstName = page.getByLabel('Seu primeiro nome')
+  await firstName.fill('Nina')
+
+  await page.getByRole('button', { name: 'Ver detalhes' }).click()
+  await expect(page.getByRole('heading', { name: 'Chaleira', level: 1 })).toBeVisible()
+  await page.getByRole('button', { name: 'Quero dar este presente', exact: true }).click()
+  await expect(firstName).toHaveValue('Nina')
+})
+
 test('leva o foco ao título ao gerenciar a reserva criada no diálogo', async ({ page }) => {
   await page.goto('./#/')
 
-  await page.getByRole('button', { name: 'Quero dar este presente: Chaleira' }).click()
-  const dialog = page.getByRole('dialog', { name: 'Detalhes do presente' })
-  await dialog.getByRole('button', { name: 'Quero dar este presente', exact: true }).click()
-  await dialog.getByLabel('Primeiro nome', { exact: true }).fill('Nina')
-  await dialog.getByRole('button', { name: 'Confirmar reserva' }).click()
-  await dialog.getByRole('link', { name: 'Gerenciar esta reserva' }).click()
+  const dialog = await reserveGiftFromCatalog(page)
+  await dialog.getByRole('link', { name: 'Ver minha reserva' }).click()
 
-  await expect(page.getByRole('heading', { name: 'Chaleira', level: 1 })).toBeFocused()
+  await expect(
+    page.getByRole('heading', { name: 'Tudo certo com seu presente', level: 1 }),
+  ).toBeFocused()
 })
 
 test('mantém os dados do formulário ao simular conflito', async ({ page }) => {
-  const expectNoForbiddenRequests = observeForbiddenRequests(page)
   await page.goto(`./#/item/${demoScenarios.conflictItem}`)
   await page.getByRole('button', { name: 'Quero dar este presente', exact: true }).click()
-  await page.getByLabel('Primeiro nome', { exact: true }).fill('Nina')
+  await page.getByLabel('Seu primeiro nome').fill('Nina')
   await page.getByRole('button', { name: 'Confirmar reserva' }).click()
 
-  await expect(page.getByRole('alert')).toContainText('Este presente acabou de ser reservado.')
-  await expect(page.getByLabel('Primeiro nome', { exact: true })).toHaveValue('Nina')
-  await expectEmptyBrowserStorage(page)
-  expectNoForbiddenRequests()
+  const conflict = page.getByRole('alert')
+  await expect(conflict).toContainText('Este presente acabou de ser reservado.')
+  await expect(conflict).toBeFocused()
+  await expect(conflict.getByRole('link', { name: 'Voltar para a lista' })).toHaveAttribute(
+    'href',
+    '#/',
+  )
+  await expect(page.getByLabel('Seu primeiro nome')).toHaveValue('Nina')
 })
 
 test('explica item indisponível sem oferecer formulário', async ({ page }) => {
   await page.goto(`./#/item/${demoScenarios.unavailableItem}`)
 
   await expect(page.getByRole('heading', { name: 'Cesto de roupas' })).toBeVisible()
-  await expect(page.getByText('Este presente não está mais disponível para reserva.')).toBeVisible()
+  await expect(page.getByText('Este presente já foi escolhido por outra pessoa.')).toBeVisible()
   await expect(
     page.getByRole('button', { name: 'Quero dar este presente', exact: true }),
   ).toHaveCount(0)

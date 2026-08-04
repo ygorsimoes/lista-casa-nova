@@ -8,7 +8,7 @@ export function SiteFooter() {
   return (
     <footer className="site-footer">
       <nav className="site-footer__links" aria-label="Links do protótipo">
-        <Link to="/">Catálogo</Link>
+        <Link to="/">Nossa lista</Link>
         <Link to="/pdf">Prévia para impressão</Link>
         <Link to="/admin">Painel demonstrativo</Link>
       </nav>

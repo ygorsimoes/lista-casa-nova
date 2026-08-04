@@ -1,5 +1,15 @@
 import { describe, expect, it } from 'vitest'
-import { validateReservationForm } from './reservation-validation'
+import { createReservationFormValues, validateReservationForm } from './reservation-validation'
+
+describe('createReservationFormValues', () => {
+  it('cria um novo rascunho válido com quantidade um', () => {
+    const first = createReservationFormValues()
+    const second = createReservationFormValues()
+
+    expect(first).toEqual({ firstName: '', contact: '', quantity: 1 })
+    expect(first).not.toBe(second)
+  })
+})
 
 describe('validateReservationForm', () => {
   it('rejeita nome curto e quantidade maior que a disponível', () => {

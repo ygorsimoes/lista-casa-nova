@@ -42,11 +42,11 @@ export function AdminSummary({ summary }: AdminSummaryProps) {
     <dl className="admin-summary">
       {summaryCards.map(({ key, label, Icon, tone }) => (
         <div className={`admin-summary__card admin-summary__card--${tone}`} key={key}>
-          <Icon aria-hidden="true" size={28} strokeWidth={1.8} />
-          <div>
-            <dd className="admin-summary__value">{summary[key]}</dd>
-            <dt>{label}</dt>
-          </div>
+          <dt className="admin-summary__label">
+            <Icon aria-hidden="true" size={28} strokeWidth={1.8} />
+            <span>{label}</span>
+          </dt>
+          <dd className="admin-summary__value">{summary[key]}</dd>
         </div>
       ))}
     </dl>

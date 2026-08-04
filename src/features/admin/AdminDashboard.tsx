@@ -1,8 +1,9 @@
 import { useDemoSelector } from '@/app/DemoStateProvider'
 import { Button } from '@/components/ui/Button'
+import { Notice } from '@/components/ui/Notice'
 import { selectAdminSummary } from '@/domain/selectors'
 import { ArrowLeft, ClipboardList, Gift, House, Info, LogOut, Settings } from 'lucide-react'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router'
 import { AdminGiftList } from './AdminGiftList'
 import { AdminReservations } from './AdminReservations'
@@ -20,16 +21,24 @@ const sectionLinks = [
   { id: 'site-settings-title', label: 'Configurações', Icon: Settings },
 ] as const
 
+type AdminSectionId = (typeof sectionLinks)[number]['id']
+
 export function AdminDashboard({ onExit }: AdminDashboardProps) {
   const summary = useDemoSelector(selectAdminSummary)
   const headingRef = useRef<HTMLHeadingElement>(null)
+  const [activeSectionId, setActiveSectionId] = useState<AdminSectionId>('admin-dashboard-title')
 
   useEffect(() => {
     headingRef.current?.focus()
   }, [])
 
-  function moveToSection(id: string) {
-    document.getElementById(id)?.scrollIntoView({ block: 'start' })
+  function moveToSection(id: AdminSectionId) {
+    const heading = document.getElementById(id)
+    if (!heading) return
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    setActiveSectionId(id)
+    heading.scrollIntoView({ block: 'start', behavior: reducedMotion ? 'auto' : 'smooth' })
+    heading.focus({ preventScroll: true })
   }
 
   return (
@@ -43,7 +52,12 @@ export function AdminDashboard({ onExit }: AdminDashboardProps) {
         </div>
         <nav className="admin-shell__nav" aria-label="Administração">
           {sectionLinks.map(({ Icon, id, label }) => (
-            <button key={id} type="button" onClick={() => moveToSection(id)}>
+            <button
+              key={id}
+              type="button"
+              aria-current={activeSectionId === id ? 'location' : undefined}
+              onClick={() => moveToSection(id)}
+            >
               <Icon aria-hidden="true" size={20} strokeWidth={1.8} />
               {label}
             </button>
@@ -62,10 +76,14 @@ export function AdminDashboard({ onExit }: AdminDashboardProps) {
       </aside>
       <main className="admin-shell__content">
         <section className="admin-dashboard" aria-labelledby="admin-dashboard-title">
-          <aside className="admin-dashboard__notice" aria-label="Modo demonstrativo">
-            <Info aria-hidden="true" size={20} strokeWidth={1.8} />
+          <Notice
+            className="admin-dashboard__notice"
+            tone="demo"
+            icon={<Info size={20} strokeWidth={1.8} />}
+            aria-label="Modo demonstrativo"
+          >
             Modo demonstração — alterações não são salvas
-          </aside>
+          </Notice>
           <header className="admin-dashboard__header">
             <h1 id="admin-dashboard-title" ref={headingRef} tabIndex={-1}>
               Painel da lista

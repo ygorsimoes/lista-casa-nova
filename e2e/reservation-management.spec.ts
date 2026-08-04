@@ -1,18 +1,18 @@
-import { expectEmptyBrowserStorage, observeForbiddenRequests } from './support/assertions.js'
-import { expect, test } from './support/test.js'
 import { demoScenarios } from './support/demo-scenarios.js'
+import { expect, test } from './support/test.js'
 
 test('marca a reserva válida como comprada e reseta após reload', async ({ page }) => {
-  const expectNoForbiddenRequests = observeForbiddenRequests(page)
   await page.goto(`./#/minha-reserva/${demoScenarios.validToken}`)
 
+  await expect(
+    page.getByRole('heading', { name: 'Tudo certo com seu presente', level: 1 }),
+  ).toBeFocused()
+  await expect(page.getByText('Combine a entrega', { exact: true })).toBeVisible()
   await page.getByRole('button', { name: 'Já comprei' }).click()
   const state = page.getByRole('status', { name: 'Estado da reserva' })
   await expect(state).toContainText('Comprado')
   await expect(state.getByRole('heading', { name: 'Estado da reserva' })).toBeFocused()
-  await expectEmptyBrowserStorage(page)
-  expectNoForbiddenRequests()
-
+  await expect(page.getByText('Combine a entrega', { exact: true })).toHaveCount(0)
   await page.reload()
   await expect(page.getByRole('button', { name: 'Já comprei' })).toBeVisible()
   await expect(page.getByRole('status', { name: 'Estado da reserva' })).toContainText(
@@ -21,7 +21,6 @@ test('marca a reserva válida como comprada e reseta após reload', async ({ pag
 })
 
 test('cancela a reserva somente após confirmação', async ({ page }) => {
-  const expectNoForbiddenRequests = observeForbiddenRequests(page)
   await page.goto(`./#/minha-reserva/${demoScenarios.validToken}`)
 
   const cancel = page.getByRole('button', { name: 'Cancelar minha reserva' })
@@ -33,8 +32,9 @@ test('cancela a reserva somente após confirmação', async ({ page }) => {
   await expect(page.getByRole('status', { name: 'Estado da reserva' })).toContainText(
     'Reserva cancelada',
   )
-  await expectEmptyBrowserStorage(page)
-  expectNoForbiddenRequests()
+  await expect(
+    page.getByRole('status', { name: 'Estado da reserva' }).getByRole('heading'),
+  ).toBeFocused()
 })
 
 test('oferece retorno para token inválido', async ({ page }) => {

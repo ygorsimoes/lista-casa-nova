@@ -1,6 +1,7 @@
 import { useDemoActions, useDemoSelector } from '@/app/DemoStateProvider'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
+import { Notice } from '@/components/ui/Notice'
 import { Textarea } from '@/components/ui/Textarea'
 import { useToast } from '@/components/ui/Toast'
 import type { EditableSiteSettings } from '@/domain/types'
@@ -65,7 +66,9 @@ export function SiteSettingsForm() {
     <section className="admin-panel" aria-labelledby="site-settings-title">
       <div className="admin-panel__header">
         <div>
-          <h2 id="site-settings-title">Configurações da lista</h2>
+          <h2 id="site-settings-title" tabIndex={-1}>
+            Configurações da lista
+          </h2>
           <p>Edite somente o conteúdo público do protótipo. Nada é persistido ao recarregar.</p>
         </div>
       </div>
@@ -102,14 +105,16 @@ export function SiteSettingsForm() {
           <code>{settings.pix.copyAndPaste}</code>
         </aside>
         <div className="site-settings-form__actions">
-          <Button type="submit">Salvar alterações</Button>
+          <Button type="submit" variant="secondary">
+            Salvar alterações
+          </Button>
           <p>As alterações existem apenas nesta aba.</p>
         </div>
       </form>
       {saved ? (
-        <p className="admin-panel__feedback" role="status">
+        <Notice className="admin-panel__feedback" tone="success" role="status">
           Alterações mantidas somente nesta sessão. Recarregar restaura os dados iniciais.
-        </p>
+        </Notice>
       ) : null}
     </section>
   )

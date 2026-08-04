@@ -6,6 +6,10 @@ export interface ReservationFormValues {
 
 export type ReservationFormErrors = Partial<Record<'firstName' | 'contact' | 'quantity', string>>
 
+export function createReservationFormValues(): ReservationFormValues {
+  return { firstName: '', contact: '', quantity: 1 }
+}
+
 export function validateReservationForm(
   values: ReservationFormValues,
   availableQuantity: number,

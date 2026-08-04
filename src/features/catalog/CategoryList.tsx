@@ -1,4 +1,5 @@
 import type { Category } from '@/domain/types'
+import { getCategoryEmoji } from './GiftVisual'
 
 interface CategoryListProps {
   categories: readonly Category[]
@@ -25,6 +26,7 @@ export function CategoryList({ categories, onSelect, selectedSlug }: CategoryLis
           aria-pressed={selectedSlug === category.slug}
           onClick={() => onSelect(category.slug)}
         >
+          <span aria-hidden="true">{getCategoryEmoji(category.icon)}</span>
           {category.name}
         </button>
       ))}

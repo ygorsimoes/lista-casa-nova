@@ -1,30 +1,19 @@
-import { expectNoHorizontalOverflow } from './support/assertions.js'
+import {
+  expectNoHorizontalClipping,
+  expectNoHorizontalOverflow,
+  expectSingleEditorialColumn,
+} from './support/assertions.js'
 import { expect, test } from './support/test.js'
 
-test('@desktop organiza catálogo em múltiplas colunas dentro do contêiner', async ({ page }) => {
+test('@desktop mantém catálogo editorial em uma coluna na primeira viewport', async ({ page }) => {
   await page.goto('./#/')
-
   const cards = page.locator('.gift-card')
   await expect(cards).toHaveCount(11)
-  const layout = await page.evaluate(() => {
-    const main = document.querySelector('.app-shell__main')
-    const cards = Array.from(document.querySelectorAll('.gift-card'))
-    const firstTop = cards[0]?.getBoundingClientRect().top
-    const mainBox = main?.getBoundingClientRect()
-    return {
-      firstRowColumns: cards.filter(
-        (card) =>
-          firstTop !== undefined && Math.abs(card.getBoundingClientRect().top - firstTop) < 2,
-      ).length,
-      mainLeft: mainBox?.left ?? 0,
-      mainRight: mainBox?.right ?? 0,
-      viewportWidth: document.documentElement.clientWidth,
-    }
-  })
-
-  expect(layout.firstRowColumns).toBeGreaterThan(1)
-  expect(layout.mainLeft).toBeGreaterThan(0)
-  expect(layout.viewportWidth - layout.mainRight).toBeGreaterThan(0)
+  await expectSingleEditorialColumn(cards)
+  await expect(page.locator('.gift-grid .ui-button--primary')).toHaveCount(0)
+  const firstCard = await cards.first().boundingBox()
+  expect(firstCard).not.toBeNull()
+  expect((firstCard?.y ?? 901) + (firstCard?.height ?? 0)).toBeLessThanOrEqual(900)
   await expectNoHorizontalOverflow(page)
 })
 
@@ -42,16 +31,27 @@ test('@desktop apresenta quatro cards administrativos na mesma linha', async ({ 
     elements.map((element) => Math.round(element.getBoundingClientRect().top)),
   )
   expect(new Set(rowTops).size).toBe(1)
+  const layout = await page.evaluate(() => {
+    const sidebar = document.querySelector('.admin-shell__sidebar')?.getBoundingClientRect()
+    const content = document.querySelector('.admin-shell__content')?.getBoundingClientRect()
+    return { sidebarRight: sidebar?.right ?? 0, contentLeft: content?.left ?? 0 }
+  })
+  expect(layout.contentLeft).toBeGreaterThanOrEqual(layout.sidebarRight)
   await expectNoHorizontalOverflow(page)
 })
 
 test('@desktop mantém a prévia A4 centralizada e sem overflow', async ({ page }) => {
   await page.goto('./#/pdf')
 
-  const sheet = page.getByRole('region', { name: 'Folha A4 demonstrativa' })
-  const box = await sheet.boundingBox()
-  expect(box).not.toBeNull()
-  expect(box?.width).toBeLessThanOrEqual(794)
-  expect(Math.abs((box?.width ?? 0) / (box?.height ?? 1) - 210 / 297)).toBeLessThan(0.03)
+  const frame = page.locator('.printable-sheet-frame')
+  const canvas = page.locator('.printable-sheet-canvas')
+  await expectNoHorizontalClipping(frame)
+  const [frameBox, canvasBox] = await Promise.all([frame.boundingBox(), canvas.boundingBox()])
+  expect(frameBox).not.toBeNull()
+  expect(canvasBox).not.toBeNull()
+  expect(canvasBox?.width).toBeLessThanOrEqual(frameBox?.width ?? 0)
+  expect(Math.abs((canvasBox?.width ?? 0) / (canvasBox?.height ?? 1) - 210 / 297)).toBeLessThan(
+    0.03,
+  )
   await expectNoHorizontalOverflow(page)
 })

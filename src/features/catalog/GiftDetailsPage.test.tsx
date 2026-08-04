@@ -7,8 +7,8 @@ describe('GiftDetailsPage', () => {
   it.each([
     ['CZ-001', 'Disponível'],
     ['CZ-003', '1 de 2 disponíveis'],
-    ['LV-001', 'Indisponível'],
-    ['BN-002', 'Presente recebido'],
+    ['LV-001', 'Já foi escolhido'],
+    ['BN-002', 'Já foi escolhido'],
   ])('expõe o status canônico de %s', (code, status) => {
     renderWithApp(<GiftDetailsPage />, {
       route: `/item/${code}`,

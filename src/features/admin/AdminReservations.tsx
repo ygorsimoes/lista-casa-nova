@@ -2,6 +2,7 @@ import { useDemoActions, useDemoSelector } from '@/app/DemoStateProvider'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
+import { Notice } from '@/components/ui/Notice'
 import { useToast } from '@/components/ui/Toast'
 import type { DemoReservation, ReservationStatus } from '@/domain/types'
 import { useEffect, useRef, useState } from 'react'
@@ -64,14 +65,16 @@ export function AdminReservations() {
     <section className="admin-panel" aria-labelledby="admin-reservations-title">
       <div className="admin-panel__header">
         <div>
-          <h2 id="admin-reservations-title">Reservas</h2>
+          <h2 id="admin-reservations-title" tabIndex={-1}>
+            Reservas
+          </h2>
           <p>Acompanhe as reservas fictícias e ajuste apenas os estados permitidos.</p>
         </div>
       </div>
       {feedback ? (
-        <p className="admin-panel__feedback" role="status">
+        <Notice className="admin-panel__feedback" tone="success" role="status">
           {feedback}
-        </p>
+        </Notice>
       ) : null}
       <div className="admin-reservations" aria-label="Reservas demonstrativas">
         {reservations.map((reservation) => {

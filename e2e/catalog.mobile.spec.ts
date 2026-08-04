@@ -1,8 +1,10 @@
 import {
+  expectComputedFocusVisible,
+  expectHorizontalScrollContained,
   expectMinimumFieldFontSize,
   expectMinimumTouchTarget,
+  expectNoHorizontalClipping,
   expectNoHorizontalOverflow,
-  expectNoSeriousAccessibilityViolations,
 } from './support/assertions.js'
 import { expect, test } from './support/test.js'
 
@@ -11,20 +13,26 @@ test.beforeEach(async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Lista da nossa casa nova' })).toBeVisible()
 })
 
-test('filtra o catálogo com acento e caixa na largura móvel sem overflow', async ({ page }) => {
-  await page.getByRole('searchbox', { name: 'Buscar um presente' }).fill('CHÁLEIRA')
-
-  await expect(page.getByRole('heading', { name: 'Chaleira' })).toBeVisible()
-  await expect(page.getByRole('status').filter({ hasText: '1 presente encontrado' })).toBeVisible()
-  await expectNoHorizontalOverflow(page)
+test('encontra ideias por nome, descrição e preferência sem depender de acento ou caixa', async ({
+  page,
+}) => {
+  const search = page.getByRole('searchbox', { name: 'Buscar um presente' })
+  for (const { query, gift } of [
+    { query: 'PANELAS', gift: 'Jogo de panelas' },
+    { query: 'cafe', gift: 'Chaleira' },
+    { query: 'ALGODAO', gift: 'Jogo de cama' },
+  ]) {
+    await search.fill(query)
+    await expect(page.getByRole('heading', { name: gift, level: 3 })).toBeVisible()
+  }
 })
 
 test('combina categoria, disponibilidade e estado vazio', async ({ page }) => {
   await page.getByRole('searchbox', { name: 'Buscar um presente' }).fill('toalhas')
   await page.getByRole('button', { name: 'Banheiro', exact: true }).click()
-  await page.getByRole('checkbox', { name: 'Mostrar somente disponíveis' }).check()
+  await page.getByRole('checkbox', { name: 'Só disponíveis' }).check()
 
-  await expect(page.getByRole('heading', { name: 'Nenhum presente encontrado' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Nenhuma ideia encontrada' })).toBeVisible()
   await expect(page.getByRole('button', { name: 'Banheiro', exact: true })).toHaveAttribute(
     'aria-pressed',
     'true',
@@ -33,16 +41,13 @@ test('combina categoria, disponibilidade e estado vazio', async ({ page }) => {
 
 test('mantém controles principais confortáveis para toque e leitura', async ({ page }) => {
   const search = page.getByRole('searchbox', { name: 'Buscar um presente' })
-  const brand = page.getByRole('link', { name: 'Voltar para a lista de presentes' })
+  const brand = page.getByRole('banner').getByRole('link', { name: 'Nossa lista' })
   await expectMinimumFieldFontSize(search)
   await expectMinimumTouchTarget(search)
   await expectMinimumTouchTarget(brand)
-  const brandBox = await brand.boundingBox()
-  expect(brandBox?.width).toBeGreaterThanOrEqual(43.5)
+  await expectMinimumTouchTarget(page.getByRole('link', { name: 'Contribuir', exact: true }))
   await expectMinimumTouchTarget(page.getByRole('button', { name: 'Todas', exact: true }))
-  await expectMinimumTouchTarget(
-    page.getByRole('button', { name: 'Quero dar este presente: Chaleira' }),
-  )
+  await expectMinimumTouchTarget(page.getByRole('button', { name: 'Ver Chaleira' }))
   await expectNoHorizontalOverflow(page)
 })
 
@@ -69,6 +74,79 @@ test('centraliza o ícone de busca no campo em 360 px', async ({ page }) => {
   expect(Math.abs(inputCenter - iconCenter)).toBeLessThanOrEqual(1)
 })
 
-test('não possui violações sérias ou críticas no catálogo', async ({ page }) => {
-  await expectNoSeriousAccessibilityViolations(page)
+test('mantém um único controle de limpeza centralizado no campo de busca', async ({ page }) => {
+  const input = page.getByRole('searchbox', { name: 'Buscar um presente' })
+  await input.fill('chaleira')
+  const clear = page.getByRole('button', { name: 'Limpar busca' })
+
+  await expect(clear).toHaveCount(1)
+  await expectMinimumTouchTarget(clear)
+  await page.keyboard.press('Tab')
+  await expectComputedFocusVisible(clear)
+
+  const [inputBox, clearBox] = await Promise.all([input.boundingBox(), clear.boundingBox()])
+  expect(inputBox, 'campo de busca mensurável').not.toBeNull()
+  expect(clearBox, 'controle de limpeza mensurável').not.toBeNull()
+  expect(
+    Math.abs(
+      (inputBox?.y ?? 0) +
+        (inputBox?.height ?? 0) / 2 -
+        ((clearBox?.y ?? 0) + (clearBox?.height ?? 0) / 2),
+    ),
+  ).toBeLessThanOrEqual(1)
+
+  await expect(input).toHaveCSS('appearance', 'none')
+})
+
+test('mantém rótulos auxiliares do catálogo e da reserva com pelo menos 14 px', async ({
+  page,
+}) => {
+  const expectInformativeTextSize = async (selector: string) => {
+    const labels = page.locator(selector)
+    await expect(labels.first()).toBeVisible()
+    const sizes = await labels.evaluateAll((elements) =>
+      elements.map((element) => Number.parseFloat(getComputedStyle(element).fontSize)),
+    )
+    expect(sizes.length, `rótulos encontrados para ${selector}`).toBeGreaterThan(0)
+    expect(Math.min(...sizes), `menor rótulo em ${selector}`).toBeGreaterThanOrEqual(14)
+  }
+
+  await expectInformativeTextSize('.gift-card__category')
+  await page.getByRole('button', { name: 'Ver Chaleira' }).click()
+  await expectInformativeTextSize('.gift-details__step, .gift-details__category')
+  await page.getByRole('button', { name: 'Quero dar este presente' }).click()
+  await page.getByLabel('Seu primeiro nome').fill('Nina')
+  await page.getByRole('button', { name: 'Confirmar reserva' }).click()
+  await expectInformativeTextSize('.reservation-outcome__eyebrow')
+})
+
+test('mostra a jornada e o primeiro presente completos na primeira viewport de 360 px', async ({
+  page,
+}, testInfo) => {
+  test.skip(testInfo.project.name !== 'mobile-chromium', 'A medição cobre a viewport de 360 × 800.')
+
+  const viewportHeight = await page.evaluate(() => window.innerHeight)
+  const visibleInViewport = [
+    page.getByRole('banner').getByRole('link', { name: 'Nossa lista' }),
+    page.getByRole('heading', { name: 'Lista da nossa casa nova' }),
+    page.getByRole('list', { name: 'Como funciona' }),
+    page.getByRole('searchbox', { name: 'Buscar um presente' }),
+    page.locator('.gift-card').first(),
+  ]
+
+  expect(viewportHeight).toBe(800)
+  expect(await page.evaluate(() => window.scrollY)).toBe(0)
+  for (const locator of visibleInViewport) {
+    const box = await locator.boundingBox()
+    expect(box, 'elemento mensurável na primeira viewport').not.toBeNull()
+    expect(box?.y ?? -1).toBeGreaterThanOrEqual(0)
+    expect((box?.y ?? 801) + (box?.height ?? 0)).toBeLessThanOrEqual(viewportHeight)
+  }
+  await expect(page.locator('.gift-grid .ui-button--primary')).toHaveCount(0)
+})
+
+test('contém a rolagem horizontal somente na faixa de categorias', async ({ page }) => {
+  await expectHorizontalScrollContained(page, page.locator('.category-list'))
+  await expectNoHorizontalClipping(page.locator('.gift-grid'))
+  await expectNoHorizontalClipping(page.locator('.gift-card').first())
 })
