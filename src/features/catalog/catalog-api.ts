@@ -1,9 +1,9 @@
 import type { Gift, ReserveResult } from '@/domain/gifts'
 import { mapGift } from '@/domain/gifts'
-import { getSupabaseClient } from '@/lib/supabase'
+import { getPublicSupabaseClient } from '@/lib/supabase'
 
 export async function fetchGifts(): Promise<Gift[]> {
-  const { data, error } = await getSupabaseClient()
+  const { data, error } = await getPublicSupabaseClient()
     .from('gifts')
     .select('id,name,image_url,color,description,preferences,reference_value,reference_url,sort_order')
     .order('sort_order')
@@ -13,13 +13,13 @@ export async function fetchGifts(): Promise<Gift[]> {
 }
 
 export async function fetchReservedGiftIds(): Promise<Set<string>> {
-  const { data, error } = await getSupabaseClient().from('reservations').select('gift_id')
+  const { data, error } = await getPublicSupabaseClient().from('reservations').select('gift_id')
   if (error) throw error
   return new Set(data.map((reservation) => reservation.gift_id))
 }
 
 export async function reserveGift(giftId: string, guestName: string): Promise<ReserveResult> {
-  const { error } = await getSupabaseClient()
+  const { error } = await getPublicSupabaseClient()
     .from('reservations')
     .insert({ gift_id: giftId, guest_name: guestName.trim() })
 
