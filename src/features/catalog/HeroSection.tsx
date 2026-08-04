@@ -1,4 +1,4 @@
-import { Gift, HeartHandshake, Truck } from 'lucide-react'
+import { Gift, Heart, HeartHandshake } from 'lucide-react'
 
 interface HeroSectionProps {
   title: string
@@ -8,7 +8,7 @@ interface HeroSectionProps {
 const steps = [
   { icon: Gift, text: 'Escolha um presente' },
   { icon: HeartHandshake, text: 'Reserve em seu nome' },
-  { icon: Truck, text: 'Combine a entrega' },
+  { icon: Heart, text: 'Obrigado' },
 ]
 
 export function HeroSection({ message, title }: HeroSectionProps) {
@@ -24,13 +24,12 @@ export function HeroSection({ message, title }: HeroSectionProps) {
         <p className="catalog-hero__message">{message}</p>
       </div>
       <ol className="how-it-works__steps" aria-label="Como funciona">
-        {steps.map(({ icon: Icon, text }, index) => (
+        {steps.map(({ icon: Icon, text }) => (
           <li key={text}>
             <span className="how-it-works__icon">
               <Icon aria-hidden="true" size={22} strokeWidth={1.8} />
-              <span className="how-it-works__number">{index + 1}</span>
             </span>
-            <span>{text}</span>
+            <span className="how-it-works__label">{text}</span>
           </li>
         ))}
       </ol>

@@ -48,6 +48,12 @@ jobs:
       - name: Instalar dependências
         run: npm ci
       - name: Gerar build
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
+          VITE_PIX_COPY_AND_PASTE: ${{ secrets.VITE_PIX_COPY_AND_PASTE }}
+          VITE_PIX_RECEIVER_NAME: ${{ secrets.VITE_PIX_RECEIVER_NAME }}
+          VITE_PIX_RECEIVER_CITY: ${{ secrets.VITE_PIX_RECEIVER_CITY }}
         run: npm run build
       - name: Configurar GitHub Pages
         uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0

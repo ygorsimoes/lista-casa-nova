@@ -1,38 +1,55 @@
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
-import { Info } from 'lucide-react'
-import { useEffect, useRef } from 'react'
+import { Input } from '@/components/ui/Input'
+import { getSupabaseClient } from '@/lib/supabase'
+import { useState, type FormEvent } from 'react'
 
-interface AdminLoginProps {
-  onEnter(): void
-  focusTitle?: boolean
-}
+export function AdminLogin({ onEnter }: { onEnter(): void }) {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState<string | null>(null)
 
-export function AdminLogin({ focusTitle = false, onEnter }: AdminLoginProps) {
-  const headingRef = useRef<HTMLHeadingElement>(null)
-
-  useEffect(() => {
-    if (focusTitle) headingRef.current?.focus()
-  }, [focusTitle])
+  async function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    setError(null)
+    const { error: signInError } = await getSupabaseClient().auth.signInWithPassword({
+      email,
+      password,
+    })
+    if (signInError) {
+      setError('E-mail ou senha inválidos.')
+      return
+    }
+    onEnter()
+  }
 
   return (
     <section className="admin-login" aria-labelledby="admin-login-title">
       <Card className="admin-login__panel" variant="flat">
-        <Info aria-hidden="true" size={32} strokeWidth={1.8} />
-        <h1 id="admin-login-title" ref={headingRef} tabIndex={-1}>
-          Painel demonstrativo
-        </h1>
-        <p>
-          Não existe autenticação real neste protótipo. Entre sem credenciais para conhecer o resumo
-          da lista.
-        </p>
-        <p className="admin-login__notice">
-          O acesso e qualquer alteração existem apenas em memória; recarregar a página restaura a
-          demonstração inicial.
-        </p>
-        <Button fullWidth onClick={onEnter}>
-          Entrar na demonstração
-        </Button>
+        <h1 id="admin-login-title">Painel da lista</h1>
+        <p>Entre para adicionar presentes e ver as reservas.</p>
+        <form onSubmit={submit}>
+          <Input
+            label="E-mail"
+            type="email"
+            autoComplete="email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            required
+          />
+          <Input
+            label="Senha"
+            type="password"
+            autoComplete="current-password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            required
+          />
+          {error ? <p role="alert">{error}</p> : null}
+          <Button type="submit" fullWidth>
+            Entrar
+          </Button>
+        </form>
       </Card>
     </section>
   )
