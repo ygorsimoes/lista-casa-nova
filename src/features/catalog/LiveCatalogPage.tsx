@@ -23,13 +23,14 @@ function ReservationDialog({ gift, onClose }: { gift: Gift | null; onClose(): vo
 
   return (
     <Dialog
+      className="reservation-dialog"
       open={gift !== null}
       title={gift ? `Reservar ${gift.name}` : 'Reservar presente'}
       description="Informe apenas seu nome para marcar este presente."
       onClose={onClose}
     >
       {result?.kind === 'reserved' ? (
-        <div>
+        <div className="reservation-dialog__success">
           <p role="status">Pronto! Este presente ficou reservado em seu nome.</p>
           <Button fullWidth onClick={onClose}>Voltar para a lista</Button>
         </div>
