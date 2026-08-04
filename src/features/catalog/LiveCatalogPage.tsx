@@ -7,7 +7,7 @@ import type { Gift, ReserveResult } from '@/domain/gifts'
 import { HeroSection } from './HeroSection'
 import { useState, type FormEvent } from 'react'
 
-function ReservationDialog({ gift, onClose }: { gift: Gift | null; onClose(): void }) {
+export function ReservationDialog({ gift, onClose }: { gift: Gift | null; onClose(): void }) {
   const { reserve } = useGiftList()
   const [name, setName] = useState('')
   const [result, setResult] = useState<ReserveResult | null>(null)
@@ -107,7 +107,7 @@ export function LiveCatalogPage() {
           </div>
         ) : null}
       </section>
-      <ReservationDialog gift={selectedGift} onClose={() => { setSelectedGift(null) }} />
+      <ReservationDialog key={selectedGift?.id ?? 'closed'} gift={selectedGift} onClose={() => { setSelectedGift(null) }} />
     </>
   )
 }
