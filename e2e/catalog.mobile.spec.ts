@@ -1,4 +1,5 @@
 import {
+  expectComputedFocusVisible,
   expectHorizontalScrollContained,
   expectMinimumFieldFontSize,
   expectMinimumTouchTarget,
@@ -71,6 +72,52 @@ test('centraliza o ícone de busca no campo em 360 px', async ({ page }) => {
   const inputCenter = inputBox.y + inputBox.height / 2
   const iconCenter = iconBox.y + iconBox.height / 2
   expect(Math.abs(inputCenter - iconCenter)).toBeLessThanOrEqual(1)
+})
+
+test('mantém um único controle de limpeza centralizado no campo de busca', async ({ page }) => {
+  const input = page.getByRole('searchbox', { name: 'Buscar um presente' })
+  await input.fill('chaleira')
+  const clear = page.getByRole('button', { name: 'Limpar busca' })
+
+  await expect(clear).toHaveCount(1)
+  await expectMinimumTouchTarget(clear)
+  await page.keyboard.press('Tab')
+  await expectComputedFocusVisible(clear)
+
+  const [inputBox, clearBox] = await Promise.all([input.boundingBox(), clear.boundingBox()])
+  expect(inputBox, 'campo de busca mensurável').not.toBeNull()
+  expect(clearBox, 'controle de limpeza mensurável').not.toBeNull()
+  expect(
+    Math.abs(
+      (inputBox?.y ?? 0) +
+        (inputBox?.height ?? 0) / 2 -
+        ((clearBox?.y ?? 0) + (clearBox?.height ?? 0) / 2),
+    ),
+  ).toBeLessThanOrEqual(1)
+
+  await expect(input).toHaveCSS('appearance', 'none')
+})
+
+test('mantém rótulos auxiliares do catálogo e da reserva com pelo menos 14 px', async ({
+  page,
+}) => {
+  const expectInformativeTextSize = async (selector: string) => {
+    const labels = page.locator(selector)
+    await expect(labels.first()).toBeVisible()
+    const sizes = await labels.evaluateAll((elements) =>
+      elements.map((element) => Number.parseFloat(getComputedStyle(element).fontSize)),
+    )
+    expect(sizes.length, `rótulos encontrados para ${selector}`).toBeGreaterThan(0)
+    expect(Math.min(...sizes), `menor rótulo em ${selector}`).toBeGreaterThanOrEqual(14)
+  }
+
+  await expectInformativeTextSize('.gift-card__category')
+  await page.getByRole('button', { name: 'Ver Chaleira' }).click()
+  await expectInformativeTextSize('.gift-details__step, .gift-details__category')
+  await page.getByRole('button', { name: 'Quero dar este presente' }).click()
+  await page.getByLabel('Seu primeiro nome').fill('Nina')
+  await page.getByRole('button', { name: 'Confirmar reserva' }).click()
+  await expectInformativeTextSize('.reservation-outcome__eyebrow')
 })
 
 test('mostra a jornada e o primeiro presente completos na primeira viewport de 360 px', async ({

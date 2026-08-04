@@ -6,6 +6,32 @@ function summaryCard(page: Page, label: string) {
   return page.locator('.admin-summary__card').filter({ hasText: label })
 }
 
+test('mantém resumo compacto e rótulos auxiliares legíveis', async ({ page }) => {
+  await page.goto('./#/admin')
+  await page.getByRole('button', { name: 'Entrar na demonstração' }).click()
+
+  const gaps = await page
+    .locator('.admin-summary__card')
+    .first()
+    .evaluate((element) => {
+      const style = getComputedStyle(element)
+      return {
+        column: Number.parseFloat(style.columnGap),
+        row: Number.parseFloat(style.rowGap),
+      }
+    })
+  expect(gaps.column).toBeGreaterThanOrEqual(13)
+  expect(gaps.row).toBeLessThanOrEqual(4)
+
+  const informativeSizes = await page
+    .locator('.admin-gift-list__code, .admin-gift-list__item dt, .admin-reservation dt')
+    .evaluateAll((elements) =>
+      elements.map((element) => Number.parseFloat(getComputedStyle(element).fontSize)),
+    )
+  expect(informativeSizes.length).toBeGreaterThan(0)
+  expect(Math.min(...informativeSizes)).toBeGreaterThanOrEqual(14)
+})
+
 test('entra sem credenciais, atualiza reservas e configurações e reseta no reload', async ({
   page,
 }) => {

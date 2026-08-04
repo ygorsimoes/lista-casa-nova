@@ -64,6 +64,12 @@ export async function expectMinimumFieldFontSize(locator: Locator) {
 
 export async function expectComputedFocusVisible(locator: Locator) {
   await expect(locator).toBeFocused()
+  await locator.evaluate(
+    () =>
+      new Promise<void>((resolve) =>
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+      ),
+  )
   const style = await locator.evaluate((element) => {
     const computed = getComputedStyle(element)
     return {

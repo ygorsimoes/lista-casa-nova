@@ -4,7 +4,7 @@ import { unlockDemoAdmin } from './support/flows.js'
 import { expect, test } from './support/test.js'
 
 async function tabTo(page: Page, target: Locator, limit = 30) {
-  for (let index = 0; index < limit; index += 1) {
+  for (let index = 0; index <= limit; index += 1) {
     if (await target.evaluate((element) => element === document.activeElement)) {
       await target.evaluate(
         () =>
@@ -14,10 +14,22 @@ async function tabTo(page: Page, target: Locator, limit = 30) {
       )
       return
     }
+    if (index === limit) break
     await page.keyboard.press('Tab')
   }
   throw new Error(`Foco não alcançou o controle após ${limit} Tabs.`)
 }
+
+test('reconhece o foco alcançado no último Tab permitido', async ({ page }) => {
+  await page.goto('./#/')
+  const brand = page.getByRole('banner').getByRole('link', { name: 'Nossa lista' })
+  const contribute = page.getByRole('link', { name: 'Contribuir', exact: true })
+
+  await brand.focus()
+  await tabTo(page, contribute, 1)
+
+  await expect(contribute).toBeFocused()
+})
 
 test('conclui a reserva pelo teclado com foco visível em cada etapa', async ({ page }) => {
   await page.goto('./#/')
@@ -51,7 +63,11 @@ test('conclui a reserva pelo teclado com foco visível em cada etapa', async ({ 
   await expectComputedFocusVisible(confirm)
   await page.keyboard.press('Enter')
 
-  await expect(page.getByRole('heading', { name: 'Este presente ficou com você' })).toBeFocused()
+  const confirmationTitle = page.getByRole('heading', { name: 'Este presente ficou com você' })
+  await expectComputedFocusVisible(confirmationTitle)
+  await expect(confirmationTitle).toHaveCSS('outline-width', '2px')
+  await expect(confirmationTitle).toHaveCSS('outline-offset', '5px')
+  await expect(confirmationTitle).toHaveCSS('outline-color', 'rgb(153, 80, 57)')
 })
 
 test('opera filtros com Enter e Espaço', async ({ page }) => {
