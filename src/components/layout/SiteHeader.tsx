@@ -9,7 +9,8 @@ export function SiteHeader() {
         <span>Nossa lista</span>
       </Link>
       <Link className="site-header__contribute" to="/pix">
-        Contribuir
+        <Heart aria-hidden="true" size={16} strokeWidth={2} />
+        <span>Contribuir por Pix</span>
       </Link>
     </header>
   )
