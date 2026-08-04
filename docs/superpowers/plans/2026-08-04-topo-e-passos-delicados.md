@@ -2,9 +2,9 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Tornar a primeira dobra mais compacta e transformar os três passos em uma orientação amigável, delicada e estática.
+**Goal:** Tornar a primeira dobra mais compacta e transformar os três passos em uma jornada contínua, amigável, delicada e estática.
 
-**Architecture:** A `HeroSection` preserva os mesmos três textos e ícones. A alteração é limitada às classes existentes no CSS global, removendo a moldura contínua da jornada e aplicando cartões independentes, responsivos e sem impacto em reservas ou dados.
+**Architecture:** A `HeroSection` mantém a mesma marcação semântica de lista, com o fechamento textual "Obrigado". A alteração é limitada às classes existentes no CSS global, usando uma linha, pontos e ícones discretos em vez de cartões, sem impacto em reservas ou dados.
 
 **Tech Stack:** React, TypeScript, CSS, Vitest e Testing Library.
 
@@ -45,15 +45,16 @@ Expected: PASS, pois a mudança é puramente visual.
 
 - [ ] **Step 3: Aplicar o CSS mínimo**
 
-Compactar o espaçamento da hero e redefinir a faixa para uma grade de três itens sem borda compartilhada:
+Compactar o espaçamento da hero e redefinir a faixa como uma jornada contínua:
 
 ```css
 .catalog-hero { gap: 1rem; }
-.journey-steps { display: grid; gap: 0.75rem; border: 0; background: transparent; }
-.journey-steps li { border: 1px solid rgb(151 77 57 / 0.12); border-radius: 1rem; background: rgb(255 255 255 / 0.56); }
+.journey-steps { position: relative; display: grid; gap: 1rem; background: transparent; }
+.journey-steps::before { background: linear-gradient(to right, transparent, rgb(151 77 57 / 0.32), transparent); }
+.journey-steps li { background: transparent; padding: 0.15rem 0; }
 ```
 
-Manter ícones em superfícies terracota suaves, remover destaque numérico e garantir uma coluna em tela pequena, três colunas em telas largas.
+Manter ícones em círculos claros, usar um coração no fechamento "Obrigado" e garantir linha vertical em telas pequenas e horizontal em telas largas.
 
 - [ ] **Step 4: Validar renderização e comportamento**
 

@@ -1485,13 +1485,22 @@ a {
 }
 
 .how-it-works__steps {
+  position: relative;
   display: grid;
-  gap: 0.75rem;
-  margin: 0;
-  border: 0;
-  background: transparent;
+  gap: 1rem;
+  margin: 0.25rem 0 0;
   padding: 0;
   list-style: none;
+}
+
+.how-it-works__steps::before {
+  position: absolute;
+  top: 1.5rem;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, rgb(151 77 57 / 0.32) 14%, rgb(151 77 57 / 0.32) 86%, transparent);
+  content: '';
 }
 
 .how-it-works__steps li {
@@ -1499,37 +1508,31 @@ a {
   grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
   min-width: 0;
-  gap: var(--space-3);
-  border: 1px solid rgb(151 77 57 / 0.12);
-  border-radius: var(--radius-surface);
-  background: rgb(255 255 255 / 0.56);
-  padding: 0.875rem;
+  gap: 0.875rem;
+  padding: 0.15rem 0;
   font-size: 0.875rem;
   font-weight: 700;
   line-height: 1.2;
 }
 
-.how-it-works__steps li + li {
-  border-left: 1px solid rgb(151 77 57 / 0.12);
-}
-
-.how-it-works__steps li > span:last-child {
+.how-it-works__label {
   font-size: 0.875rem;
   font-weight: 700;
+  color: var(--color-graphite-800);
 }
 
 .how-it-works__icon {
+  position: relative;
+  z-index: 1;
   display: grid;
-  width: 2.75rem;
-  height: 2.75rem;
+  width: 3rem;
+  height: 3rem;
   place-items: center;
-  border-radius: 0.875rem;
-  background: rgb(169 79 52 / 0.1);
+  border: 1px solid rgb(151 77 57 / 0.18);
+  border-radius: 50%;
+  background: var(--color-sand-50);
   color: var(--color-terracotta-500);
-}
-
-.how-it-works__number {
-  display: none;
+  box-shadow: 0 0.25rem 0.75rem rgb(151 77 57 / 0.08);
 }
 
 .catalog-filters {
@@ -1771,10 +1774,22 @@ a {
 @media (min-width: 640px) {
   .how-it-works__steps {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(1rem, 4vw, 3rem);
+  }
+
+  .how-it-works__steps::before {
+    top: 1.5rem;
+    right: 16.666%;
+    bottom: auto;
+    left: 16.666%;
+    width: auto;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgb(151 77 57 / 0.32) 14%, rgb(151 77 57 / 0.32) 86%, transparent);
   }
 
   .how-it-works__steps li {
     grid-template-columns: minmax(0, 1fr);
+    gap: 0.625rem;
     justify-items: center;
     text-align: center;
   }

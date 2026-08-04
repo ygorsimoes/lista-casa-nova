@@ -12,7 +12,7 @@ describe('HeroSection', () => {
     expect(within(steps).getAllByRole('listitem')).toHaveLength(3)
     expect(steps).toHaveTextContent('Escolha um presente')
     expect(steps).toHaveTextContent('Reserve em seu nome')
-    expect(steps).toHaveTextContent('Escolha onde comprar')
+    expect(steps).toHaveTextContent('Obrigado')
     expect(screen.queryByRole('link')).not.toBeInTheDocument()
   })
 })
