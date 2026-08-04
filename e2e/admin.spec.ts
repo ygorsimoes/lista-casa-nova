@@ -3,7 +3,7 @@ import { expectNoHorizontalOverflow } from './support/assertions.js'
 import { expect, test } from './support/test.js'
 
 function summaryCard(page: Page, label: string) {
-  return page.getByText(label, { exact: true }).locator('..')
+  return page.locator('.admin-summary__card').filter({ hasText: label })
 }
 
 test('entra sem credenciais, atualiza reservas e configurações e reseta no reload', async ({
@@ -19,6 +19,16 @@ test('entra sem credenciais, atualiza reservas e configurações e reseta no rel
   await expect(page.getByRole('heading', { name: 'Reservas', exact: true })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'Configurações da lista' })).toBeVisible()
   await expect(page.getByRole('link', { name: 'Voltar para a lista' })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Resumo' })).toHaveAttribute(
+    'aria-current',
+    'location',
+  )
+  await page.getByRole('button', { name: 'Reservas' }).click()
+  await expect(page.getByRole('button', { name: 'Reservas' })).toHaveAttribute(
+    'aria-current',
+    'location',
+  )
+  await expect(page.locator('#admin-reservations-title')).toBeFocused()
   await expect(summaryCard(page, 'Itens disponíveis')).toContainText('8')
   await expect(summaryCard(page, 'Reservas ativas')).toContainText('5')
 
@@ -47,6 +57,8 @@ test('entra sem credenciais, atualiza reservas e configurações e reseta no rel
   await page.reload()
   await expect(page.getByRole('heading', { name: 'Painel demonstrativo' })).toBeVisible()
   await expect(page.getByRole('textbox')).toHaveCount(0)
+  await page.getByRole('button', { name: 'Entrar na demonstração' }).click()
+  await expect(page.getByLabel('Título do site')).toHaveValue('Lista da nossa casa nova')
   await page.goto('./#/')
   await expect(page.getByRole('heading', { name: 'Lista da nossa casa nova' })).toBeVisible()
 })

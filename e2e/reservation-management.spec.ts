@@ -4,10 +4,15 @@ import { expect, test } from './support/test.js'
 test('marca a reserva válida como comprada e reseta após reload', async ({ page }) => {
   await page.goto(`./#/minha-reserva/${demoScenarios.validToken}`)
 
+  await expect(
+    page.getByRole('heading', { name: 'Tudo certo com seu presente', level: 1 }),
+  ).toBeFocused()
+  await expect(page.getByText('Combine a entrega', { exact: true })).toBeVisible()
   await page.getByRole('button', { name: 'Já comprei' }).click()
   const state = page.getByRole('status', { name: 'Estado da reserva' })
   await expect(state).toContainText('Comprado')
   await expect(state.getByRole('heading', { name: 'Estado da reserva' })).toBeFocused()
+  await expect(page.getByText('Combine a entrega', { exact: true })).toHaveCount(0)
   await page.reload()
   await expect(page.getByRole('button', { name: 'Já comprei' })).toBeVisible()
   await expect(page.getByRole('status', { name: 'Estado da reserva' })).toContainText(
@@ -27,6 +32,9 @@ test('cancela a reserva somente após confirmação', async ({ page }) => {
   await expect(page.getByRole('status', { name: 'Estado da reserva' })).toContainText(
     'Reserva cancelada',
   )
+  await expect(
+    page.getByRole('status', { name: 'Estado da reserva' }).getByRole('heading'),
+  ).toBeFocused()
 })
 
 test('oferece retorno para token inválido', async ({ page }) => {

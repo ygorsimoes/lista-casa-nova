@@ -28,6 +28,9 @@ export async function reserveGiftFromCatalog(
 export async function unlockDemoAdmin(page: Page) {
   await page.goto('./#/admin')
   const enter = page.getByRole('button', { name: 'Entrar na demonstração' })
+  const dashboardTitle = page.getByRole('heading', { name: 'Painel da lista' })
+  await expect(enter.or(dashboardTitle)).toBeVisible()
   if (await enter.isVisible()) await enter.click()
-  await expect(page.getByRole('heading', { name: 'Painel da lista' })).toBeFocused()
+  else await page.getByRole('button', { name: 'Resumo' }).click()
+  await expect(dashboardTitle).toBeFocused()
 }
