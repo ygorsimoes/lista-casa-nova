@@ -31,6 +31,7 @@ describe('ReservationDialog', () => {
     fireEvent.change(screen.getByLabelText('Seu nome'), { target: { value: 'Ana' } })
     fireEvent.click(screen.getByRole('button', { name: 'Confirmar reserva' }))
     await screen.findByRole('status')
+    expect(document.querySelectorAll('.reservation-celebration__particle')).toHaveLength(4)
 
     view.rerender(<ReservationDialog key={secondGift.id} gift={secondGift} onClose={onClose} />)
 

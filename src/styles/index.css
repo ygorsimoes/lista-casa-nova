@@ -452,8 +452,39 @@ a {
 }
 
 .reservation-dialog__success {
+  position: relative;
   display: grid;
   gap: 1.25rem;
+}
+
+.reservation-celebration {
+  position: absolute;
+  z-index: 1;
+  top: 0.7rem;
+  left: 50%;
+  width: 8rem;
+  height: 3.5rem;
+  pointer-events: none;
+  transform: translateX(-50%);
+}
+
+.reservation-celebration__particle {
+  position: absolute;
+  bottom: 0;
+  opacity: 0;
+  font-size: 1rem;
+  animation: reservation-heart-rise 900ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
+}
+
+.reservation-celebration__particle--1 { left: 10%; animation-delay: 30ms; }
+.reservation-celebration__particle--2 { left: 34%; font-size: 0.8rem; animation-delay: 110ms; }
+.reservation-celebration__particle--3 { right: 18%; font-size: 1.05rem; animation-delay: 70ms; }
+.reservation-celebration__particle--4 { right: 2%; font-size: 0.75rem; animation-delay: 150ms; }
+
+@keyframes reservation-heart-rise {
+  0% { opacity: 0; transform: translate3d(0, 0.65rem, 0) scale(0.72); }
+  24% { opacity: 0.95; }
+  100% { opacity: 0; transform: translate3d(0.65rem, -2.4rem, 0) scale(1.08); }
 }
 
 .reservation-dialog__success p {
@@ -2349,6 +2380,8 @@ a {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .reservation-celebration { display: none; }
+
   *,
   *::before,
   *::after {

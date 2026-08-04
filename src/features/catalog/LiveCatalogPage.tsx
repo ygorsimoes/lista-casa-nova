@@ -32,6 +32,13 @@ export function ReservationDialog({ gift, onClose }: { gift: Gift | null; onClos
     >
       {result?.kind === 'reserved' ? (
         <div className="reservation-dialog__success">
+          <span className="reservation-celebration" aria-hidden="true">
+            {['💛', '🤍', '💗', '✨'].map((particle, index) => (
+              <span className={`reservation-celebration__particle reservation-celebration__particle--${index + 1}`} key={`${particle}-${index}`}>
+                {particle}
+              </span>
+            ))}
+          </span>
           <p role="status">Pronto! Este presente ficou reservado em seu nome.</p>
           <Button fullWidth onClick={onClose}>Voltar para a lista</Button>
         </div>
